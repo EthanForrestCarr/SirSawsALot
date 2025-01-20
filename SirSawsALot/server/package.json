@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",
+    "migrate": "psql -d sirsawsalot -f db/initialize.sql",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
