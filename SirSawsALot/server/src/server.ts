@@ -2,6 +2,8 @@ import express, { Application, Request, Response } from 'express';
 import { query } from './db';
 import { hashPassword } from './utils/auth';
 import { comparePassword, generateToken } from './utils/auth';
+import { authenticateToken } from './middleware/authMiddleware';
+import { AuthenticatedRequest } from './middleware/authMiddleware';
 
 const app: Application = express();
 const port = 3000;
@@ -27,6 +29,12 @@ app.get('/api/test-db', async (req, res) => {
     console.error(error);
     res.status(500).json({ message: 'Database connection failed' });
   }
+});
+
+// Example protected route
+app.get('/protected', authenticateToken, (req: AuthenticatedRequest, res: Response): void => {
+  const userId = req.user; // Access the user ID added by the middleware
+  res.json({ message: `Hello, user with ID ${userId}! You are authorized.` });
 });
 
 app.post('/auth/signup', async (req: Request, res: Response): Promise<void> => {
