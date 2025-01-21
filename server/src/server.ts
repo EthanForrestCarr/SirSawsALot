@@ -116,28 +116,31 @@ app.post('/auth/login', async (req: Request, res: Response): Promise<void> => {
 });
 
 app.post('/requests', authenticateToken, async (req: Request, res: Response): Promise<void> => {
-  const { name, email, address, description, images } = req.body;
-  const userId = (req as any).user || null; // Extract user ID from token, or use null for unauthenticated users
-
-  if (!description) {
-    res.status(400).json({ message: 'Description is required' });
-    return;
-  }
+  const {
+    description,
+    address,
+    images,
+    wood_keep,
+    wood_arrangement,
+    stump_grinding,
+    branch_height,
+  } = req.body;
+  const userId = (req as any).user || null;
 
   try {
     const result = await query(
-      `INSERT INTO requests (user_id, name, email, address, description, images) 
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
-      [userId, name, email, address, description, images]
+      `INSERT INTO requests (user_id, description, address, images, wood_keep, wood_arrangement, stump_grinding, branch_height)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
+      [userId, description, address, images, wood_keep, wood_arrangement, stump_grinding, branch_height]
     );
 
-    const requestId = result.rows[0].id;
-    res.status(201).json({ message: 'Work request submitted successfully', requestId });
+    res.status(201).json({ message: 'Work request submitted successfully', requestId: result.rows[0].id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 
 app.get('/requests', authenticateToken, async (req: Request, res: Response): Promise<void> => {

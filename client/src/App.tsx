@@ -5,7 +5,7 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignUpPage';
 import UserDashboard from './pages/UserDashboard';
-import WorkRequestForm from './pages/WorkRequestForm';
+import WorkRequestForm from './pages/WorkRequest';
 
 const App: React.FC = () => {
   return (
