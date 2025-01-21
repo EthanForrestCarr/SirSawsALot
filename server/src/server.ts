@@ -190,6 +190,30 @@ app.get('/admin/requests', authenticateToken, async (req: AuthenticatedRequest, 
   }
 });
 
+app.get('/admin/requests/:id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  if (!req.isAdmin) {
+    res.status(403).json({ message: 'Forbidden: Admin access only' });
+    return;
+  }
+
+  const { id } = req.params;
+
+  try {
+    const result = await query('SELECT * FROM requests WHERE id = $1', [id]);
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ message: 'Request not found' });
+      return;
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 app.patch('/admin/requests/:id', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   if (!req.isAdmin) {
     res.status(403).json({ message: 'Forbidden: Admin access only' });

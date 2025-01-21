@@ -7,6 +7,7 @@ import SignupPage from './pages/SignUpPage';
 import UserDashboard from './pages/UserDashboard';
 import WorkRequestForm from './pages/WorkRequest';
 import AdminDashboard from './pages/AdminDashboard';
+import RequestDetailsPage from './pages/RequestDetails';
 
 const App: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const App: React.FC = () => {
         <Route path="/dashboard" element={<UserDashboard />} />
         <Route path="/work-request" element={<WorkRequestForm />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/requests/:id" element={<RequestDetailsPage />} />
       </Routes>
     </Router>
   );

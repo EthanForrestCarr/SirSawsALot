@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import axios from 'axios';
 
 const AdminDashboard: React.FC = () => {
@@ -7,6 +8,9 @@ const AdminDashboard: React.FC = () => {
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('created_at');
   const [message, setMessage] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const navigate = useNavigate(); // Initialize navigate function
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -29,11 +33,12 @@ const AdminDashboard: React.FC = () => {
     const value = e.target.value;
     setFilter(value);
 
-    if (value === 'all') {
-      setFilteredRequests(requests);
-    } else {
-      setFilteredRequests(requests.filter((req: any) => req.status === value));
-    }
+    const updatedRequests =
+      value === 'all'
+        ? requests
+        : requests.filter((req: any) => req.status === value);
+    setFilteredRequests(updatedRequests);
+    setCurrentPage(1); // Reset to the first page
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -50,6 +55,7 @@ const AdminDashboard: React.FC = () => {
     });
 
     setFilteredRequests(sortedRequests);
+    setCurrentPage(1); // Reset to the first page
   };
 
   const updateRequestStatus = async (id: number, status: string) => {
@@ -72,6 +78,10 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = filteredRequests.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+
   return (
     <div style={{ padding: '2rem' }}>
       <h2>Admin Dashboard</h2>
@@ -93,39 +103,66 @@ const AdminDashboard: React.FC = () => {
         </select>
       </div>
 
-      {filteredRequests.length > 0 ? (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>ID</th>
-              <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Description</th>
-              <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Address</th>
-              <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Status</th>
-              <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredRequests.map((request: any) => (
-              <tr key={request.id}>
-                <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{request.id}</td>
-                <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{request.description}</td>
-                <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{request.address}</td>
-                <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{request.status}</td>
-                <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>
-                  <button
-                    onClick={() => updateRequestStatus(request.id, 'approved')}
-                    style={{ marginRight: '0.5rem' }}
-                  >
-                    Approve
-                  </button>
-                  <button onClick={() => updateRequestStatus(request.id, 'denied')}>
-                    Deny
-                  </button>
-                </td>
+      {currentItems.length > 0 ? (
+        <>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>ID</th>
+                <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Description</th>
+                <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Address</th>
+                <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Status</th>
+                <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {currentItems.map((request: any) => (
+                <tr key={request.id}>
+                  <td
+                    style={{ border: '1px solid #ccc', padding: '0.5rem', cursor: 'pointer', color: 'blue' }}
+                    onClick={() => navigate(`/admin/requests/${request.id}`)} // Use navigate function
+                  >
+                    {request.id}
+                  </td>
+                  <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{request.description}</td>
+                  <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{request.address}</td>
+                  <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{request.status}</td>
+                  <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>
+                    <button
+                      onClick={() => updateRequestStatus(request.id, 'approved')}
+                      style={{ marginRight: '0.5rem' }}
+                    >
+                      Approve
+                    </button>
+                    <button onClick={() => updateRequestStatus(request.id, 'denied')}>
+                      Deny
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div style={{ marginTop: '1rem' }}>
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              style={{ marginRight: '1rem' }}
+            >
+              Previous
+            </button>
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              style={{ marginLeft: '1rem' }}
+            >
+              Next
+            </button>
+          </div>
+        </>
       ) : (
         <p>No requests found.</p>
       )}
@@ -134,3 +171,4 @@ const AdminDashboard: React.FC = () => {
 };
 
 export default AdminDashboard;
+
