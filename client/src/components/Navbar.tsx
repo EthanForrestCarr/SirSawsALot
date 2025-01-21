@@ -13,6 +13,12 @@ const Navbar: React.FC = () => {
       <Link to="/login" style={{ color: '#fff', textDecoration: 'none' }}>
         Login
       </Link>
+      <Link to="/signup" style={{ color: '#fff', marginLeft: '1rem', textDecoration: 'none' }}>
+        Sign Up
+      </Link>
+      <Link to="/dashboard" style={{ color: '#fff', marginLeft: '1rem', textDecoration: 'none' }}>
+        Dashboard
+      </Link>
     </nav>
   );
 };

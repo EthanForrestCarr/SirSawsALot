@@ -4,9 +4,17 @@ import { hashPassword } from './utils/auth';
 import { comparePassword, generateToken } from './utils/auth';
 import { authenticateToken } from './middleware/authMiddleware';
 import { AuthenticatedRequest } from './middleware/authMiddleware';
+import cors from 'cors';
 
 const app: Application = express();
 const port = 3000;
+
+// Allow requests from the frontend
+app.use(cors({
+  origin: 'http://localhost:5173', // Replace with your frontend's URL in production
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Allowed HTTP methods
+  credentials: true, // Allow cookies if needed
+}));
 
 // Middleware to parse JSON requests
 app.use(express.json());
