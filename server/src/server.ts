@@ -45,6 +45,20 @@ app.get('/protected', authenticateToken, (req: AuthenticatedRequest, res: Respon
   res.json({ message: `Hello, user with ID ${userId}! You are authorized.` });
 });
 
+app.get('/user', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const user = await query('SELECT name, email, is_admin FROM users WHERE id = $1', [req.user]);
+    if (user.rows.length === 0) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+    res.json(user.rows[0]); // Includes is_admin
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 app.post('/auth/signup', async (req: Request, res: Response): Promise<void> => {
   const { email, password, name, address, contact_info } = req.body;
 
