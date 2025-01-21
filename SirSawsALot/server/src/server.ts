@@ -80,7 +80,6 @@ app.post('/auth/login', async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
-    // Fetch the user by email
     const result = await query('SELECT id, password FROM users WHERE email = $1', [email]);
     if (result.rows.length === 0) {
       res.status(401).json({ message: 'Invalid email or password' });
@@ -89,16 +88,18 @@ app.post('/auth/login', async (req: Request, res: Response): Promise<void> => {
 
     const { id, password: hashedPassword } = result.rows[0];
 
-    // Compare the provided password with the stored hash
+    // Log the hashed password and the comparison result
+    console.log('Hashed password from DB:', hashedPassword);
+
     const isMatch = await comparePassword(password, hashedPassword);
+    console.log('Password comparison result:', isMatch);
+
     if (!isMatch) {
       res.status(401).json({ message: 'Invalid email or password' });
       return;
     }
 
-    // Generate a JWT token
     const token = generateToken(id);
-
     res.status(200).json({ message: 'Login successful', token });
   } catch (error) {
     console.error(error);
@@ -106,9 +107,9 @@ app.post('/auth/login', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-app.post('/requests', async (req: Request, res: Response): Promise<void> => {
+app.post('/requests', authenticateToken, async (req: Request, res: Response): Promise<void> => {
   const { name, email, address, description, images } = req.body;
-  const userId = (req as any).user || null; // User ID from middleware, or null for unauthenticated users
+  const userId = (req as any).user || null; // Extract user ID from token, or use null for unauthenticated users
 
   if (!description) {
     res.status(400).json({ message: 'Description is required' });
@@ -117,13 +118,80 @@ app.post('/requests', async (req: Request, res: Response): Promise<void> => {
 
   try {
     const result = await query(
-      `INSERT INTO requests (user_id, name, email, address, description, images)
+      `INSERT INTO requests (user_id, name, email, address, description, images) 
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
       [userId, name, email, address, description, images]
     );
 
     const requestId = result.rows[0].id;
     res.status(201).json({ message: 'Work request submitted successfully', requestId });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+app.get('/requests', authenticateToken, async (req: Request, res: Response): Promise<void> => {
+  const userId = (req as any).user; // Extract user ID from the token
+
+  try {
+    const result = await query(
+      `SELECT id, description, images, status, created_at 
+       FROM requests 
+       WHERE user_id = $1 ORDER BY created_at DESC`,
+      [userId]
+    );
+
+    res.status(200).json({ requests: result.rows });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/admin/requests', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  if (!req.isAdmin) {
+    res.status(403).json({ message: 'Forbidden: Admin access only' });
+    return;
+  }
+
+  try {
+    const result = await query('SELECT * FROM requests ORDER BY created_at DESC');
+    res.status(200).json({ requests: result.rows });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.patch('/admin/requests/:id', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  if (!req.isAdmin) {
+    res.status(403).json({ message: 'Forbidden: Admin access only' });
+    return;
+  }
+
+  const { id } = req.params;
+  const { status } = req.body;
+  const validStatuses = ['approved', 'denied', 'pending'];
+  
+  if (!validStatuses.includes(status)) {
+    res.status(400).json({ message: 'Invalid status' });
+    return;
+  }
+
+  try {
+    const result = await query(
+      `UPDATE requests SET status = $1 WHERE id = $2 RETURNING id, status`,
+      [status, id]
+    );
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ message: 'Request not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'Request updated', request: result.rows[0] });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
