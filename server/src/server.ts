@@ -246,3 +246,39 @@ app.patch('/admin/requests/:id', authenticateToken, async (req: AuthenticatedReq
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+app.put('/admin/requests/:id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  if (!req.isAdmin) {
+    res.status(403).json({ message: 'Forbidden: Admin access only' });
+    return;
+  }
+
+  const { id } = req.params;
+  const {
+    description,
+    address,
+    wood_keep,
+    wood_arrangement,
+    stump_grinding,
+    branch_height,
+  } = req.body;
+
+  try {
+    const result = await query(
+      `UPDATE requests
+       SET description = $1, address = $2, wood_keep = $3, wood_arrangement = $4, stump_grinding = $5, branch_height = $6
+       WHERE id = $7 RETURNING *`,
+      [description, address, wood_keep, wood_arrangement, stump_grinding, branch_height, id]
+    );
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ message: 'Request not found' });
+      return;
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
