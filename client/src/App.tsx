@@ -8,6 +8,7 @@ import UserDashboard from './pages/UserDashboard';
 import WorkRequestForm from './pages/WorkRequest';
 import AdminDashboard from './pages/AdminDashboard';
 import RequestDetailsPage from './pages/RequestDetails';
+import UserProfile from './pages/UserProfile';
 
 const App: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const App: React.FC = () => {
         <Route path="/work-request" element={<WorkRequestForm />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/requests/:id" element={<RequestDetailsPage />} />
+        <Route path="/profile" element={<UserProfile />} />
       </Routes>
     </Router>
   );

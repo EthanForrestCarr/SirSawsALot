@@ -52,6 +52,9 @@ const Navbar: React.FC = () => {
           >
             Dashboard
           </Link>
+          <Link to="/profile" style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
+            Profile
+          </Link>
           <button
             onClick={handleSignOut}
             style={{
