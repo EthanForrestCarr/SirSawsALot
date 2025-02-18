@@ -1,4 +1,98 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+
+const AdminDashboard: React.FC = () => {
+  const [requests, setRequests] = useState([]);
+  const [approvedRequests, setApprovedRequests] = useState([]);
+  const [view, setView] = useState<'table' | 'calendar'>('table'); // Toggle between table and calendar
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await axios.get('http://localhost:3000/admin/requests', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = response.data.requests || [];
+        setRequests(data);
+        setApprovedRequests(data.filter((req: any) => req.status === 'approved'));
+      } catch (error: any) {
+        setMessage(error.response?.data?.message || 'Failed to fetch requests.');
+      }
+    };
+
+    fetchRequests();
+  }, []);
+
+  const getTileContent = ({ date }: { date: Date }) => {
+    const dateString = date.toISOString().split('T')[0];
+    const requestsForDate = approvedRequests.filter(
+      (req: any) => req.date === dateString
+    );
+
+    if (requestsForDate.length > 0) {
+      return (
+        <div style={{ background: 'lightgreen', borderRadius: '50%' }}>
+          {requestsForDate.length} Job(s)
+        </div>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div style={{ padding: '2rem' }}>
+      <h2>Admin Dashboard</h2>
+      {message && <p>{message}</p>}
+
+      <div style={{ marginBottom: '1rem' }}>
+        <button onClick={() => setView('table')} style={{ marginRight: '1rem' }}>
+          Table View
+        </button>
+        <button onClick={() => setView('calendar')}>Calendar View</button>
+      </div>
+
+      {view === 'table' ? (
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Description</th>
+              <th>Address</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {requests.map((req: any) => (
+              <tr key={req.id}>
+                <td>{req.id}</td>
+                <td>{req.description}</td>
+                <td>{req.address}</td>
+                <td>{req.status}</td>
+                <td>
+                  <button onClick={() => console.log('View Details')}>Details</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div>
+          <Calendar tileContent={getTileContent} />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AdminDashboard;
+
+
+/* import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import axios from 'axios';
 
@@ -171,4 +265,4 @@ const AdminDashboard: React.FC = () => {
 };
 
 export default AdminDashboard;
-
+ */

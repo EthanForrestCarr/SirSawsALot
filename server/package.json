@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",
-    "migrate": "psql -d sirsawsalot -f db/initialize.sql",
+    "create-db": "psql -d postgres -tc \"SELECT 1 FROM pg_database WHERE datname = 'sirsawsalot'\" | findstr 1 || psql -d postgres -c \"CREATE DATABASE sirsawsalot\"",
+    "migrate": "npm run create-db && psql -d sirsawsalot -f db/initialize.sql",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

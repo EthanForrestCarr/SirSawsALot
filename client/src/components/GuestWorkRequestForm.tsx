@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 const GuestWorkRequestForm: React.FC = () => {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -40,9 +43,10 @@ const GuestWorkRequestForm: React.FC = () => {
         ...formData,
         branch_height: parseInt(formData.branch_height, 10) || null,
         images: formData.images.split(',').map((url) => url.trim()), // Convert images to array
+        date: selectedDate ? selectedDate.toISOString().split('T')[0] : null,
       };
 
-      const response = await axios.post('http://localhost:3000/requests', data);
+      const response = await axios.post('http://localhost:3000/requests/guest', data);
       setMessage(response.data.message || 'Work request submitted successfully!');
       setFormData({
         name: '',
@@ -168,6 +172,11 @@ const GuestWorkRequestForm: React.FC = () => {
             onChange={handleChange}
             placeholder="Approximate branch height"
           />
+        </div>
+        <div>
+          <label>Select Date:</label>
+          <Calendar onChange={(value) => setSelectedDate(Array.isArray(value) ? value[0] : value)} />
+          {selectedDate && <p>Selected Date: {selectedDate.toDateString()}</p>}
         </div>
         <button type="submit">Submit</button>
       </form>
