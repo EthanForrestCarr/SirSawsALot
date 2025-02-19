@@ -17,9 +17,9 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS requests (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    name TEXT NOT NULL,
-    email TEXT NOT NULL,
-    phone TEXT NOT NULL,
+    name TEXT,
+    email TEXT,
+    phone TEXT,
     description TEXT NOT NULL,
     address TEXT NOT NULL,
     images TEXT[],
@@ -30,4 +30,13 @@ CREATE TABLE IF NOT EXISTS requests (
     status TEXT DEFAULT 'pending',
     date DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE, -- For registered users
+    guest_email TEXT, -- For guests (optional)
+    message TEXT NOT NULL,
+    status TEXT CHECK (status IN ('unread', 'read')) DEFAULT 'unread',
+    created_at TIMESTAMP DEFAULT NOW()
 );

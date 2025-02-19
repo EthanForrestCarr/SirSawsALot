@@ -406,3 +406,72 @@ app.post('/requests/guest', async (req: Request, res: Response): Promise<void> =
     res.status(500).json({ message: 'Server error.' });
   }
 });
+
+app.patch('/admin/requests/:id', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  if (!req.isAdmin) {
+    res.status(403).json({ message: 'Forbidden: Admin access only' });
+  }
+
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!['approved', 'denied'].includes(status)) {
+    res.status(400).json({ message: 'Invalid status' });
+    return;
+  }
+
+  try {
+    // Update request status
+    const result = await query(
+      `UPDATE requests SET status = $1 WHERE id = $2 RETURNING user_id, email`,
+      [status, id]
+    );
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ message: 'Request not found' });
+    }
+
+    const { user_id, email } = result.rows[0];
+
+    // Create a notification
+    const message = status === 'approved' 
+      ? 'Your work request has been approved.' 
+      : 'Your work request has been denied.';
+
+    await query(
+      `INSERT INTO notifications (user_id, guest_email, message) VALUES ($1, $2, $3)`,
+      [user_id, email, message]
+    );
+
+    res.status(200).json({ message: 'Request updated', request: result.rows[0] });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/notifications', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const notifications = await query(
+      `SELECT id, message, status, created_at FROM notifications WHERE user_id = $1 ORDER BY created_at DESC`,
+      [req.user]
+    );
+    res.json(notifications.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.patch('/notifications/mark-read', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    await query(
+      `UPDATE notifications SET status = 'read' WHERE user_id = $1`,
+      [req.user]
+    );
+    res.json({ message: 'Notifications marked as read' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
