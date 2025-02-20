@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import navigate function
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import CalendarPicker from '../components/CalendarPicker';
 
@@ -7,8 +7,8 @@ const AdminDashboard: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [message, setMessage] = useState('');
   const [view, setView] = useState<'table' | 'calendar'>('table');
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const navigate = useNavigate(); // Initialize navigate function
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   useEffect(() => {
     const fetchRequests = async () => {

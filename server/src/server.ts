@@ -486,3 +486,30 @@ app.post('/calendar/block-date', authenticateToken, async (req: AuthenticatedReq
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+app.get('/admin/approved-requests', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  if (!req.isAdmin) {
+    res.status(403).json({ message: 'Forbidden: Admin access only' });
+    return;
+  }
+
+  try {
+    const result = await query(`SELECT id, address, date FROM requests WHERE status = 'approved'`);
+    res.json(result.rows);
+    return;
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+    return;
+  }
+});
+
+app.get('/approved-requests', async (req: Request, res: Response) => {
+  try {
+    const result = await query(`SELECT id, address, date FROM requests WHERE status = 'approved'`);
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
