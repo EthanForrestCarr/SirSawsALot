@@ -475,3 +475,35 @@ app.patch('/notifications/mark-read', authenticateToken, async (req: Authenticat
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+app.get('/calendar/unavailable-dates', async (req: Request, res: Response) => {
+  try {
+    const result = await query('SELECT date FROM unavailable_dates');
+    res.json(result.rows.map((row) => row.date));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.post('/calendar/block-date', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  if (!req.isAdmin) {
+    res.status(403).json({ message: 'Forbidden: Admin access only' });
+    return;
+  }
+
+  const { date, reason } = req.body;
+
+  if (!date) {
+    res.status(400).json({ message: 'Date is required' });
+    return;
+  }
+
+  try {
+    await query('INSERT INTO unavailable_dates (date, reason) VALUES ($1, $2) ON CONFLICT (date) DO NOTHING', [date, reason || 'Unavailable']);
+    res.status(201).json({ message: 'Date blocked successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});

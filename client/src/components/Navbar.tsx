@@ -1,38 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Notifications from './Notifications'; // Import the Notifications component
+import Notifications from './Notifications';
 
-const Navbar: React.FC = () => {
+// Define props type
+interface NavbarProps {
+  isAdmin: boolean;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       setIsLoggedIn(true);
-      const fetchUserStatus = async () => {
-        try {
-          const response = await axios.get('http://localhost:3000/user', {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setIsAdmin(response.data.is_admin);
-        } catch (error) {
-          console.error('Failed to fetch user status:', error);
-          setIsLoggedIn(false);
-        }
-      };
-
-      fetchUserStatus();
     }
   }, []);
 
   const handleSignOut = () => {
-    localStorage.removeItem('token'); // Clear the token from local storage
-    navigate('/'); // Redirect to the landing page
+    localStorage.removeItem('token');
+    navigate('/');
     setIsLoggedIn(false);
-    setIsAdmin(false);
   };
 
   return (
@@ -43,15 +33,18 @@ const Navbar: React.FC = () => {
             Sir Saws A Lot
           </Link>
         </h1>
-        <Link to="/work-request" style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
-          Work Request
-        </Link>
+        {isAdmin ? (
+          <Link to="/calendar" style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
+            Calendar
+          </Link>
+        ) : (
+          <Link to="/work-request" style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
+            Work Request
+          </Link>
+        )}
         {isLoggedIn && (
           <>
-            <Link
-              to={isAdmin ? '/admin/dashboard' : '/dashboard'}
-              style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}
-            >
+            <Link to={isAdmin ? '/admin/dashboard' : '/dashboard'} style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
               Dashboard
             </Link>
             <Link to="/profile" style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
@@ -62,18 +55,11 @@ const Navbar: React.FC = () => {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        {isLoggedIn && <Notifications />} {/* Show notifications only when logged in */}
+        {isLoggedIn && <Notifications />}
         {isLoggedIn ? (
           <button
             onClick={handleSignOut}
-            style={{
-              background: 'none',
-              color: '#fff',
-              border: 'none',
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              marginLeft: '1rem',
-            }}
+            style={{ background: 'none', color: '#fff', border: 'none', cursor: 'pointer', textDecoration: 'underline', marginLeft: '1rem' }}
           >
             Sign Out
           </button>
@@ -93,6 +79,7 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
+
 
 
 /* import React from 'react';

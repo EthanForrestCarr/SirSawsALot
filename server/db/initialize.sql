@@ -34,6 +34,12 @@ CREATE TABLE IF NOT EXISTS requests (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS unavailable_dates (
+    id SERIAL PRIMARY KEY,
+    date DATE UNIQUE NOT NULL,
+    reason TEXT DEFAULT 'Fully booked' -- Optional: Let Jonah specify a reason
+);
+
 CREATE TABLE notifications (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id) ON DELETE CASCADE, -- For registered users
