@@ -6,6 +6,7 @@ import ImageInput from '../inputs/ImageInput';
 import WoodPreferenceInput from '../inputs/WoodPreferenceInput';
 import StumpGrindingInput from '../inputs/StumpGrindingInput';
 import BranchHeightInput from '../inputs/BranchHeightInput';
+import PhoneInput from '../inputs/PhoneInput'; // Import the reusable PhoneInput component
 
 const AuthenticatedWorkRequestForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -18,25 +19,35 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
     branch_height: '',
     address: '',
     name: '',
-    contact_info: '',
+    phone: '', // Replacing contact_info with phone
+    email: '', // Add email field
   });
 
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    // Prefill user details
+    // Fetch user details on component mount
     const fetchUserDetails = async () => {
       const token = localStorage.getItem('token');
       if (token) {
-        const response = await axios.get('http://localhost:3000/user', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setFormData((prev) => ({
-          ...prev,
-          address: response.data.address || '',
-          name: response.data.name || '',
-          contact_info: response.data.contact_info || '',
-        }));
+        try {
+          const response = await axios.get('http://localhost:3000/user', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          // Ensure response contains user details
+          if (response.data) {
+            setFormData((prev) => ({
+              ...prev,
+              address: response.data.address || '',
+              name: response.data.name || '',
+              phone: response.data.phone || '', // Fetch phone number
+              email: response.data.email || '', // Fetch email
+            }));
+          }
+        } catch (error) {
+          console.error('Error fetching user details:', error);
+        }
       }
     };
     fetchUserDetails();
@@ -87,9 +98,10 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
           <input type="text" value={formData.name} readOnly />
         </div>
         <div>
-          <label>Contact Info:</label>
-          <input type="text" value={formData.contact_info} readOnly />
+          <label>Email:</label>
+          <input type="email" value={formData.email} readOnly />
         </div>
+        <PhoneInput formData={formData} handleChange={handleChange} />
         <div>
           <label>Address:</label>
           <input type="text" value={formData.address} readOnly />

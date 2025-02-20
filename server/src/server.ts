@@ -48,7 +48,7 @@ app.get('/protected', authenticateToken, (req: AuthenticatedRequest, res: Respon
 
 app.get('/user', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const user = await query('SELECT name, email, is_admin FROM users WHERE id = $1', [req.user]);
+    const user = await query('SELECT name, email, address, phone, is_admin FROM users WHERE id = $1', [req.user]);
     if (user.rows.length === 0) {
       res.status(404).json({ message: 'User not found' });
       return;
@@ -61,7 +61,7 @@ app.get('/user', authenticateToken, async (req: AuthenticatedRequest, res: Respo
 });
 
 app.post('/auth/signup', async (req: Request, res: Response): Promise<void> => {
-  const { email, password, name, address, contact_info } = req.body;
+  const { email, password, name, address, phone } = req.body;
 
   if (!email || !password) {
     res.status(400).json({ message: 'Email and password are required' });
@@ -81,9 +81,9 @@ app.post('/auth/signup', async (req: Request, res: Response): Promise<void> => {
 
     // Insert the user into the database
     const result = await query(
-      `INSERT INTO users (email, password, name, address, contact_info)
+      `INSERT INTO users (email, password, name, address, phone)
        VALUES ($1, $2, $3, $4, $5) RETURNING id`,
-      [email, hashedPassword, name, address, contact_info]
+      [email, hashedPassword, name, address, phone]
     );
 
     const userId = result.rows[0].id;

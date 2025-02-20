@@ -2,15 +2,17 @@
 \connect sirsawsalot
 
 -- Create users table
-CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  password TEXT NOT NULL,
-  name VARCHAR(100),
-  address TEXT,
-  contact_info VARCHAR(50),
-  is_admin BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP DEFAULT NOW()
+DROP TABLE IF EXISTS users CASCADE;  -- Drop table to reset schema
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    name TEXT NOT NULL,
+    address TEXT NOT NULL,
+    phone TEXT NOT NULL,  -- Correctly replaces contact_info
+    is_admin BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create requests table

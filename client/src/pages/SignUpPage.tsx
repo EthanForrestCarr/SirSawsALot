@@ -7,7 +7,7 @@ const SignupPage: React.FC = () => {
     password: '',
     name: '',
     address: '',
-    contactInfo: '',
+    phone: '',
   });
 
   const [message, setMessage] = useState('');
@@ -36,8 +36,8 @@ const SignupPage: React.FC = () => {
         <input type="text" name="name" placeholder="Name" onChange={handleChange} required />
         <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
         <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-        <input type="text" name="address" placeholder="Address" onChange={handleChange} />
-        <input type="text" name="contactInfo" placeholder="Contact Info" onChange={handleChange} />
+        <input type="text" name="address" placeholder="Address" onChange={handleChange} required />
+        <input type="tel" name="phone" placeholder="Phone Number" onChange={handleChange} required />
         <button type="submit">Sign Up</button>
       </form>
       {message && <p>{message}</p>}
