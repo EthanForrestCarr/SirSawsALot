@@ -16,7 +16,9 @@ CREATE TABLE users (
 );
 
 -- Create requests table
-CREATE TABLE IF NOT EXISTS requests (
+DROP TABLE IF EXISTS requests CASCADE;  -- Drop table to reset schema
+
+CREATE TABLE requests (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
     name TEXT,

@@ -3,37 +3,45 @@ import axios from 'axios';
 
 const Notifications: React.FC = () => {
   interface Notification {
+    id: number;
     message: string;
     created_at: string;
-    status: string;
+    status: boolean;
   }
-  
+
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      const token = localStorage.getItem('token');
-      try {
-        const response = await axios.get('http://localhost:3000/notifications', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setNotifications(response.data);
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
-    };
-
     fetchNotifications();
   }, []);
+
+  const fetchNotifications = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const response = await axios.get('http://localhost:3000/notifications', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setNotifications(response.data);
+      setUnreadCount(response.data.filter((n: Notification) => !n.status).length);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
 
   const markAsRead = async () => {
     const token = localStorage.getItem('token');
     try {
-      await axios.patch('http://localhost:3000/notifications/mark-read', {}, {
+      const response = await axios.patch('http://localhost:3000/notifications/mark-read', {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setNotifications((prev) => prev.map((notif) => ({ ...notif, status: 'read' })));
+
+      // Update unread count from response
+      setUnreadCount(response.data.unreadCount);
+
+      // Update state to mark all as read
+      setNotifications((prev) => prev.map((notif) => ({ ...notif, is_read: true })));
     } catch (error) {
       console.error('Error marking notifications as read:', error);
     }
@@ -42,7 +50,7 @@ const Notifications: React.FC = () => {
   return (
     <div style={{ position: 'relative' }}>
       <button onClick={() => setShowDropdown(!showDropdown)}>
-        Notifications {notifications.length > 0 && `(${notifications.length})`}
+        Notifications {unreadCount > 0 && `(${unreadCount})`}
       </button>
 
       {showDropdown && (
@@ -54,7 +62,7 @@ const Notifications: React.FC = () => {
             <p>No new notifications</p>
           ) : (
             notifications.map((notif, index) => (
-              <div key={index} style={{ marginBottom: '5px' }}>
+              <div key={index} style={{ marginBottom: '5px', opacity: notif.status ? 0.5 : 1 }}>
                 <p>{notif.message}</p>
                 <small>{new Date(notif.created_at).toLocaleString()}</small>
               </div>

@@ -130,53 +130,33 @@ app.post('/auth/login', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+// 🔔 Notify Jonah when a new request is submitted
 app.post('/requests', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  const {
-    name,
-    email,
-    phone,
-    description,
-    address,
-    images,
-    wood_keep,
-    wood_arrangement,
-    stump_grinding,
-    branch_height,
-    date,
-  } = req.body;
+  console.log("Received Request Payload:", req.body); // <-- Add this line to debug
 
-  if (!name || !email || !phone || !description || !address) {
+  const { description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, name, email, phone } = req.body;
+
+  if (!description || !date || !address) { // <-- Ensure address is required
     res.status(400).json({ message: 'All required fields must be filled out.' });
     return;
   }
 
   try {
     const result = await query(
-      `INSERT INTO requests 
-      (name, email, phone, description, address, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, status)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'pending') 
-      RETURNING id`,
-      [
-        name,
-        email,
-        phone,
-        description,
-        address,
-        images,
-        wood_keep,
-        wood_arrangement,
-        stump_grinding,
-        branch_height,
-        date,
-      ]
+      `INSERT INTO requests (user_id, description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, name, email, phone) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id`,
+      [req.user, description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, name, email, phone]
     );
 
-    res.status(201).json({ message: 'Work request submitted successfully.', requestId: result.rows[0].id });
+    await query('INSERT INTO notifications (user_id, message) VALUES ($1, $2)', [1, 'New work request submitted!']);
+
+    res.status(201).json({ message: 'Work request submitted successfully!', requestId: result.rows[0].id });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error.' });
+    res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 app.get('/requests', authenticateToken, async (req: Request, res: Response): Promise<void> => {
   const userId = (req as any).user; // Extract user ID from the token
@@ -235,6 +215,7 @@ app.get('/admin/requests/:id', authenticateToken, async (req: AuthenticatedReque
 });
 
 
+// ✅ Notify the user when their request is updated
 app.patch('/admin/requests/:id', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   if (!req.isAdmin) {
     res.status(403).json({ message: 'Forbidden: Admin access only' });
@@ -243,25 +224,21 @@ app.patch('/admin/requests/:id', authenticateToken, async (req: AuthenticatedReq
 
   const { id } = req.params;
   const { status } = req.body;
-  const validStatuses = ['approved', 'denied', 'pending'];
-  
-  if (!validStatuses.includes(status)) {
+
+  if (!['approved', 'denied'].includes(status)) {
     res.status(400).json({ message: 'Invalid status' });
     return;
   }
 
   try {
-    const result = await query(
-      `UPDATE requests SET status = $1 WHERE id = $2 RETURNING id, status`,
-      [status, id]
-    );
+    const result = await query(`UPDATE requests SET status = $1 WHERE id = $2 RETURNING user_id`, [status, id]);
 
-    if (result.rows.length === 0) {
-      res.status(404).json({ message: 'Request not found' });
-      return;
+    if (result.rows.length > 0) {
+      const user_id = result.rows[0].user_id;
+      await query('INSERT INTO notifications (user_id, message) VALUES ($1, $2)', [user_id, `Your work request was ${status}.`]);
     }
 
-    res.status(200).json({ message: 'Request updated', request: result.rows[0] });
+    res.status(200).json({ message: 'Request updated' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
@@ -450,31 +427,33 @@ app.patch('/admin/requests/:id', authenticateToken, async (req: AuthenticatedReq
   }
 });
 
+// ✅ Fetch notifications for the logged-in user
 app.get('/notifications', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const notifications = await query(
-      `SELECT id, message, status, created_at FROM notifications WHERE user_id = $1 ORDER BY created_at DESC`,
-      [req.user]
-    );
-    res.json(notifications.rows);
+    const result = await query('SELECT * FROM notifications WHERE user_id = $1 ORDER BY created_at DESC', [req.user]);
+    res.json(result.rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
+
+// ✅ Mark all notifications as read for the logged-in user
 app.patch('/notifications/mark-read', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    await query(
-      `UPDATE notifications SET status = 'read' WHERE user_id = $1`,
-      [req.user]
-    );
-    res.json({ message: 'Notifications marked as read' });
+    await query('UPDATE notifications SET is_read = TRUE WHERE user_id = $1', [req.user]);
+
+    // Return the updated notification count
+    const updatedNotifications = await query('SELECT COUNT(*) FROM notifications WHERE user_id = $1 AND is_read = FALSE', [req.user]);
+
+    res.json({ message: 'All notifications marked as read', unreadCount: updatedNotifications.rows[0].count });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 app.get('/calendar/unavailable-dates', async (req: Request, res: Response) => {
   try {
