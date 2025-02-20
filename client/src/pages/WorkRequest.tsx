@@ -1,6 +1,6 @@
 import React from 'react';
-import AuthenticatedWorkRequestForm from '../components/AuthenticatedWorkRequestForm';
-import GuestWorkRequestForm from '../components/GuestWorkRequestForm';
+import AuthenticatedWorkRequestForm from '../components/forms/AuthenticatedWorkRequestForm';
+import GuestWorkRequestForm from '../components/forms/GuestWorkRequestForm';
 
 const WorkRequest: React.FC = () => {
   const isLoggedIn = !!localStorage.getItem('token'); // Check if token exists

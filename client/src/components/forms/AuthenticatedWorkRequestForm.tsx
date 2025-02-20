@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import CalendarPicker from '../CalendarPicker';
+import DescriptionInput from '../inputs/DescriptionInput';
+import ImageInput from '../inputs/ImageInput';
+import WoodPreferenceInput from '../inputs/WoodPreferenceInput';
+import StumpGrindingInput from '../inputs/StumpGrindingInput';
+import BranchHeightInput from '../inputs/BranchHeightInput';
 
 const AuthenticatedWorkRequestForm: React.FC = () => {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [formData, setFormData] = useState({
     description: '',
     images: '',
@@ -9,6 +16,9 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
     wood_arrangement: '',
     stump_grinding: false,
     branch_height: '',
+    address: '',
+    name: '',
+    contact_info: '',
   });
 
   const [message, setMessage] = useState('');
@@ -34,7 +44,7 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-  
+
     if (e.target instanceof HTMLInputElement && e.target.type === 'checkbox') {
       setFormData({
         ...formData,
@@ -47,7 +57,6 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
       });
     }
   };
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +66,7 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
         ...formData,
         branch_height: parseInt(formData.branch_height, 10),
         images: formData.images.split(',').map((url) => url.trim()), // Convert images to array
+        date: selectedDate ? selectedDate.toISOString().split('T')[0] : null,
       };
       const response = await axios.post('http://localhost:3000/requests', data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -71,12 +81,27 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
     <div>
       <h2>Authenticated Work Request Form</h2>
       <form onSubmit={handleSubmit}>
-        <textarea name="description" placeholder="Job description" required onChange={handleChange} />
-        <input type="text" name="images" placeholder="Image URLs (comma-separated)" onChange={handleChange} />
-        <input type="checkbox" name="wood_keep" onChange={handleChange} />
-        <input type="text" name="wood_arrangement" placeholder="How to arrange wood" onChange={handleChange} />
-        <input type="checkbox" name="stump_grinding" onChange={handleChange} />
-        <input type="number" name="branch_height" placeholder="Branch height (feet)" onChange={handleChange} />
+        {/* Prefilled user info (readonly) */}
+        <div>
+          <label>Name:</label>
+          <input type="text" value={formData.name} readOnly />
+        </div>
+        <div>
+          <label>Contact Info:</label>
+          <input type="text" value={formData.contact_info} readOnly />
+        </div>
+        <div>
+          <label>Address:</label>
+          <input type="text" value={formData.address} readOnly />
+        </div>
+
+        <DescriptionInput formData={formData} handleChange={handleChange} />
+        <ImageInput formData={formData} handleChange={handleChange} />
+        <WoodPreferenceInput formData={formData} handleChange={handleChange} />
+        <StumpGrindingInput formData={formData} handleChange={handleChange} />
+        <BranchHeightInput formData={formData} handleChange={handleChange} />
+        <CalendarPicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+
         <button type="submit">Submit</button>
       </form>
       {message && <p>{message}</p>}
