@@ -4,9 +4,8 @@ import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignUpPage';
-import UserDashboard from './pages/UserDashboard';
 import WorkRequestForm from './pages/WorkRequest';
-import AdminDashboard from './pages/AdminDashboard';
+import Dashboard from './pages/Dashboard'; // ✅ New Dashboard
 import RequestDetailsPage from './pages/RequestDetails';
 import UserProfile from './pages/UserProfile';
 import CalendarPage from './pages/Calendar';
@@ -39,9 +38,8 @@ const App: React.FC = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} /> {/* ✅ Unified Dashboard */}
         <Route path="/work-request" element={<WorkRequestForm />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/requests/:id" element={<RequestDetailsPage />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/calendar" element={<CalendarPage />} /> {/* Calendar Page for Admins */}
@@ -51,3 +49,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
