@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import NameInput from '../components/inputs/NameInput';
+import EmailInput from '../components/inputs/EmailInput';
+import PhoneInput from '../components/inputs/PhoneInput';
+import AddressInput from '../components/inputs/AddressInput';
+import CurrentPasswordInput from '../components/inputs/CurrentPasswordInput';
+import NewPasswordInput from '../components/inputs/NewPasswordInput';
 
 const UserProfile: React.FC = () => {
   const [userInfo, setUserInfo] = useState({
@@ -74,44 +80,13 @@ const UserProfile: React.FC = () => {
     <div style={{ padding: '2rem' }}>
       <h2>User Profile</h2>
       {message && <p>{message}</p>}
+
       {editMode ? (
         <>
-          <div>
-            <label>Name:</label>
-            <input
-              type="text"
-              name="name"
-              value={userInfo.name}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div>
-            <label>Email:</label>
-            <input
-              type="email"
-              name="email"
-              value={userInfo.email}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div>
-            <label>Phone:</label>
-            <input
-              type="tel"
-              name="phone"
-              value={userInfo.phone}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div>
-            <label>Address:</label>
-            <input
-              type="text"
-              name="address"
-              value={userInfo.address}
-              onChange={handleInputChange}
-            />
-          </div>
+          <NameInput formData={userInfo} handleChange={handleInputChange} />
+          <EmailInput formData={userInfo} handleChange={handleInputChange} />
+          <PhoneInput formData={userInfo} handleChange={handleInputChange} />
+          <AddressInput formData={userInfo} handleChange={handleInputChange} />
           <button onClick={saveUserInfo}>Save</button>
           <button onClick={() => setEditMode(false)}>Cancel</button>
         </>
@@ -124,25 +99,10 @@ const UserProfile: React.FC = () => {
           <button onClick={() => setEditMode(true)}>Edit</button>
         </>
       )}
+
       <h3>Change Password</h3>
-      <div>
-        <label>Current Password:</label>
-        <input
-          type="password"
-          name="currentPassword"
-          value={passwordData.currentPassword}
-          onChange={handlePasswordChange}
-        />
-      </div>
-      <div>
-        <label>New Password:</label>
-        <input
-          type="password"
-          name="newPassword"
-          value={passwordData.newPassword}
-          onChange={handlePasswordChange}
-        />
-      </div>
+      <CurrentPasswordInput value={passwordData.currentPassword} handleChange={handlePasswordChange} />
+      <NewPasswordInput value={passwordData.newPassword} handleChange={handlePasswordChange} />
       <button onClick={updatePassword}>Update Password</button>
     </div>
   );
