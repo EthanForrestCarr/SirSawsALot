@@ -56,7 +56,7 @@ const Notifications: React.FC = () => {
       {showDropdown && (
         <div style={{
           position: 'absolute', top: '40px', right: '0',
-          background: 'white', border: '1px solid #ccc', padding: '10px'
+          background: 'grey', border: '1px solid #ccc', padding: '10px'
         }}>
           {notifications.length === 0 ? (
             <p>No new notifications</p>
