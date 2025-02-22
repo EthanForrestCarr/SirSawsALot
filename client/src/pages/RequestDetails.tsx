@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import NameInput from '../components/inputs/NameInput';
+import PhoneInput from '../components/inputs/PhoneInput';
+import DescriptionInput from '../components/inputs/DescriptionInput';
+import ImageInput from '../components/inputs/ImageInput';
+import BranchHeightInput from '../components/inputs/BranchHeightInput';
+import StumpGrindingInput from '../components/inputs/StumpGrindingInput';
+import WoodPreferenceInput from '../components/inputs/WoodPreferenceInput';
 
 const RequestDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Get request ID from URL
@@ -62,65 +69,14 @@ const RequestDetailsPage: React.FC = () => {
       <p><strong>ID:</strong> {request.id}</p>
       {isEditing ? (
         <>
-          <div>
-            <label>Description:</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              style={{ width: '100%', height: '80px', marginBottom: '1rem' }}
-            />
-          </div>
-          <div>
-            <label>Address:</label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleInputChange}
-              style={{ width: '100%', marginBottom: '1rem' }}
-            />
-          </div>
-          <div>
-            <label>Keep the Wood:</label>
-            <input
-              type="checkbox"
-              name="wood_keep"
-              checked={formData.wood_keep}
-              onChange={handleInputChange}
-            />
-          </div>
-          {formData.wood_keep && (
-            <div>
-              <label>Wood Arrangement:</label>
-              <input
-                type="text"
-                name="wood_arrangement"
-                value={formData.wood_arrangement}
-                onChange={handleInputChange}
-                style={{ width: '100%', marginBottom: '1rem' }}
-              />
-            </div>
-          )}
-          <div>
-            <label>Grind the Stump:</label>
-            <input
-              type="checkbox"
-              name="stump_grinding"
-              checked={formData.stump_grinding}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div>
-            <label>Branch Height (feet):</label>
-            <input
-              type="number"
-              name="branch_height"
-              value={formData.branch_height}
-              onChange={handleInputChange}
-              style={{ width: '100%', marginBottom: '1rem' }}
-            />
-          </div>
+          <NameInput formData={formData} handleChange={handleInputChange} />
+          <PhoneInput formData={formData} handleChange={handleInputChange} />
+          <DescriptionInput formData={formData} handleChange={handleInputChange} />
+          <ImageInput formData={formData} handleChange={handleInputChange} />
+          <BranchHeightInput formData={formData} handleChange={handleInputChange} />
+          <WoodPreferenceInput formData={formData} handleChange={handleInputChange} />
+          <StumpGrindingInput formData={formData} handleChange={handleInputChange} />
+
           <button onClick={handleSave} style={{ marginRight: '1rem', padding: '0.5rem 1rem' }}>
             Save
           </button>
@@ -142,7 +98,7 @@ const RequestDetailsPage: React.FC = () => {
         </>
       )}
       <button
-        onClick={() => navigate('/admin/dashboard')}
+        onClick={() => navigate('/dashboard')}
         style={{ marginTop: '1rem', padding: '0.5rem 1rem', cursor: 'pointer' }}
       >
         Back to Dashboard
