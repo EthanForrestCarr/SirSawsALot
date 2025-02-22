@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import NameInput from '../components/inputs/NameInput';
+import EmailInput from '../components/inputs/EmailInput';
+import PhoneInput from '../components/inputs/PhoneInput';
+import AddressInput from '../components/inputs/AddressInput';
+import NewPasswordInput from '../components/inputs/NewPasswordInput';
 
 const SignupPage: React.FC = () => {
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: '',
-    name: '',
     address: '',
     phone: '',
   });
@@ -33,11 +38,11 @@ const SignupPage: React.FC = () => {
     <div style={{ padding: '2rem' }}>
       <h2>Signup</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Name" onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-        <input type="text" name="address" placeholder="Address" onChange={handleChange} required />
-        <input type="tel" name="phone" placeholder="Phone Number" onChange={handleChange} required />
+        <NameInput formData={formData} handleChange={handleChange} />
+        <EmailInput formData={formData} handleChange={handleChange} />
+        <NewPasswordInput value={formData.password} handleChange={handleChange} />
+        <AddressInput formData={formData} handleChange={handleChange} />
+        <PhoneInput formData={formData} handleChange={handleChange} />
         <button type="submit">Sign Up</button>
       </form>
       {message && <p>{message}</p>}

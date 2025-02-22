@@ -11,7 +11,7 @@ const NewPasswordInput: React.FC<NewPasswordInputProps> = ({ value, handleChange
       <label>New Password:</label>
       <input
         type="password"
-        name="newPassword"
+        name="password"
         value={value}
         onChange={handleChange}
         required
