@@ -214,8 +214,7 @@ app.get('/admin/requests/:id', authenticateToken, async (req: AuthenticatedReque
   }
 });
 
-
-// ✅ Notify the user when their request is updated
+// ✅ Consolidated PATCH route for updating request status and date
 app.patch('/admin/requests/:id', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   if (!req.isAdmin) {
     res.status(403).json({ message: 'Forbidden: Admin access only' });
@@ -223,25 +222,60 @@ app.patch('/admin/requests/:id', authenticateToken, async (req: AuthenticatedReq
   }
 
   const { id } = req.params;
-  const { status } = req.body;
+  const { status, date } = req.body;
 
-  if (!['approved', 'denied'].includes(status)) {
+  console.log(`📌 PATCH request received for request ${id} with status: ${status}, date: ${date}`);
+
+  if (status && !['approved', 'denied'].includes(status)) {
     res.status(400).json({ message: 'Invalid status' });
     return;
   }
 
   try {
-    const result = await query(`UPDATE requests SET status = $1 WHERE id = $2 RETURNING user_id`, [status, id]);
+    let queryText = 'UPDATE requests SET';
+    let queryParams: any[] = [];
+    let updateFields: string[] = [];
 
-    if (result.rows.length > 0) {
-      const user_id = result.rows[0].user_id;
-      await query('INSERT INTO notifications (user_id, message) VALUES ($1, $2)', [user_id, `Your work request was ${status}.`]);
+    if (status) {
+      updateFields.push(' status = $' + (queryParams.length + 1));
+      queryParams.push(status);
+    }
+    if (date) {
+      updateFields.push(' date = $' + (queryParams.length + 1));
+      queryParams.push(date);
     }
 
-    res.status(200).json({ message: 'Request updated' });
+    if (updateFields.length === 0) {
+        res.status(400).json({ message: 'No valid fields to update' });
+        return;
+    }
+
+    queryText += updateFields.join(', ') + ' WHERE id = $' + (queryParams.length + 1) + ' RETURNING id, status, date, user_id';
+    queryParams.push(id);
+
+    const result = await query(queryText, queryParams);
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ message: 'Request not found' });
+      return;
+    }
+
+    const updatedRequest = result.rows[0];
+    console.log(`✅ Successfully updated request ${id}:`, updatedRequest);
+
+    // ✅ Notify the user when their request status is updated
+    if (status) {
+      await query(
+        'INSERT INTO notifications (user_id, message) VALUES ($1, $2)',
+        [updatedRequest.user_id, `Your work request was ${status}.`]
+      );
+    }
+
+    res.status(200).json({ message: 'Request updated', request: updatedRequest });
   } catch (error) {
-    console.error(error);
+    console.error('❌ Error updating request:', error);
     res.status(500).json({ message: 'Server error' });
+    return;
   }
 });
 
@@ -384,49 +418,6 @@ app.post('/requests/guest', async (req: Request, res: Response): Promise<void> =
   }
 });
 
-app.patch('/admin/requests/:id', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  if (!req.isAdmin) {
-    res.status(403).json({ message: 'Forbidden: Admin access only' });
-  }
-
-  const { id } = req.params;
-  const { status } = req.body;
-
-  if (!['approved', 'denied'].includes(status)) {
-    res.status(400).json({ message: 'Invalid status' });
-    return;
-  }
-
-  try {
-    // Update request status
-    const result = await query(
-      `UPDATE requests SET status = $1 WHERE id = $2 RETURNING user_id, email`,
-      [status, id]
-    );
-
-    if (result.rows.length === 0) {
-      res.status(404).json({ message: 'Request not found' });
-    }
-
-    const { user_id, email } = result.rows[0];
-
-    // Create a notification
-    const message = status === 'approved' 
-      ? 'Your work request has been approved.' 
-      : 'Your work request has been denied.';
-
-    await query(
-      `INSERT INTO notifications (user_id, guest_email, message) VALUES ($1, $2, $3)`,
-      [user_id, email, message]
-    );
-
-    res.status(200).json({ message: 'Request updated', request: result.rows[0] });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
 // ✅ Fetch notifications for the logged-in user
 app.get('/notifications', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
@@ -510,6 +501,41 @@ app.get('/approved-requests', async (req: Request, res: Response) => {
     res.json(result.rows);
   } catch (error) {
     console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/admin/all-requests', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  if (!req.isAdmin) {
+    res.status(403).json({ message: 'Forbidden: Admin access only' });
+    return;
+  }
+
+  try {
+    // Fetch all requests regardless of status
+    const result = await query(`SELECT id, address, date, status FROM requests`);
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/auth/me', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    // Ensure the user exists in the database
+    const result = await query('SELECT id, is_admin FROM users WHERE id = $1', [req.user]);
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    const user = result.rows[0];
+
+    res.json({ id: user.id, is_admin: user.is_admin });
+  } catch (error) {
+    console.error('Error fetching user info:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

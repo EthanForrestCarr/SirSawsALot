@@ -97,7 +97,8 @@ const AdminDashboard: React.FC = () => {
           </tbody>
         </table>
       ) : (
-        <CalendarPicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+        <CalendarPicker />
+
       )}
     </div>
   );

@@ -112,7 +112,7 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
         <WoodPreferenceInput formData={formData} handleChange={handleChange} />
         <StumpGrindingInput formData={formData} handleChange={handleChange} />
         <BranchHeightInput formData={formData} handleChange={handleChange} />
-        <CalendarPicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+        <CalendarPicker />
 
         <button type="submit">Submit</button>
       </form>
