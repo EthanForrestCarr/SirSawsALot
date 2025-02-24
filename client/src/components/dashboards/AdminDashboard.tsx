@@ -60,9 +60,12 @@ const AdminDashboard: React.FC = () => {
           <thead>
             <tr>
               <th>ID</th>
+              <th>Date</th>
+              <th>Name</th>
               <th>Description</th>
               <th>Address</th>
               <th>Status</th>
+              <th>Details</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -70,12 +73,14 @@ const AdminDashboard: React.FC = () => {
             {requests.map((req) => (
               <tr key={req.id}>
                 <td>{req.id}</td>
+                <td>{new Date(req.date).toLocaleString()}</td>
+                <td>{req.name}</td>
                 <td>{req.description}</td>
                 <td>{req.address}</td>
                 <td>{req.status}</td>
+                <button onClick={() => navigate(`/admin/requests/${req.id}`)}>Details</button>
                 <td>
-                  <button onClick={() => navigate(`/admin/requests/${req.id}`)}>Details</button>
-                  {req.status === 'pending' && (
+                  {req.status && (
                     <>
                       <button
                         onClick={() => updateRequestStatus(req.id, 'approved')}

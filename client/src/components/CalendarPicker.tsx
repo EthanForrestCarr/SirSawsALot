@@ -7,23 +7,13 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import withDragAndDrop, { EventInteractionArgs } from 'react-big-calendar/lib/addons/dragAndDrop';
+import RequestDetailsModal from './modals/RequestDetailsModal';
+import { WorkRequestEvent } from '../interfaces/WorkRequestEvent';
 
 const locales = { 'en-US': enUS };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
 const DnDCalendar = withDragAndDrop<WorkRequestEvent>(Calendar);
-
-// Define the WorkRequestEvent type
-interface WorkRequestEvent extends RBCEvent {
-  id: number;
-  title: string;
-  start: Date;
-  end: Date;
-  status: 'pending' | 'approved' | 'denied';
-  address?: string;
-  user?: string;
-  type?: 'work-request' | 'blocked';
-}
 
 const CalendarPicker: React.FC = () => {
   const [events, setEvents] = useState<WorkRequestEvent[]>([]);
@@ -59,12 +49,12 @@ const CalendarPicker: React.FC = () => {
 
         const workRequests = requestsRes.data.map((req: any) => ({
           id: req.id,
-          title: `Work Request - ${req.address}`,
+          title: `job`,
           start: new Date(req.date),
           end: new Date(req.date),
           status: req.status as 'pending' | 'approved' | 'denied',
           address: req.address,
-          user: req.user,
+          name: req.name,
           type: 'work-request',
         }));
 
@@ -86,10 +76,6 @@ const CalendarPicker: React.FC = () => {
     fetchCalendarData();
   }, []);
 
-  useEffect(() => {
-    console.log("🔄 Modal State Updated:", { showModal, selectedEvent });
-  }, [showModal, selectedEvent]);
-
   const eventStyleGetter = (event: WorkRequestEvent) => {
     let style = {};
     if (event.type === 'blocked') {
@@ -110,15 +96,6 @@ const CalendarPicker: React.FC = () => {
 
   const handleEventDrop = async ({ event, start }: EventInteractionArgs<WorkRequestEvent>) => {
     console.log(`🟡 handleEventDrop triggered for Request ID: ${event.id}, Moving to: ${format(start, 'yyyy-MM-dd')}`);
-
-    if (!isAdmin || event.type !== 'work-request') {
-      console.warn("⚠️ Dragging not allowed for this event type or user.");
-      console.log("🔍 Checking Drag Permissions:");
-      console.log("➡️ isAdmin:", isAdmin);
-      console.log("➡️ event.type:", event.type);
-      console.log("➡️ event.id:", event.id);
-      return;
-    }
 
     try {
       const formattedDate = format(new Date(start), 'yyyy-MM-dd');
@@ -162,18 +139,7 @@ const CalendarPicker: React.FC = () => {
         />
 
         {showModal && selectedEvent && (
-          <div className="modal">
-            <h3>Request Details</h3>
-            <p><strong>Title:</strong> {selectedEvent.title}</p>
-            {selectedEvent.type === 'work-request' && (
-              <>
-                <p><strong>Address:</strong> {selectedEvent.address}</p>
-                <p><strong>Client:</strong> {selectedEvent.user}</p>
-                <p><strong>Status:</strong> {selectedEvent.status}</p>
-              </>
-            )}
-            <button onClick={handleCloseModal}>Close</button>
-          </div>
+          <RequestDetailsModal event={selectedEvent} onClose={handleCloseModal} />
         )}
       </div>
     </DndProvider>

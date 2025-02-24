@@ -44,16 +44,19 @@ const RequestDetailsPage: React.FC = () => {
 
   const handleSave = async () => {
     const token = localStorage.getItem('token');
+    console.log('Saving request with data:', formData); // Log the form data being sent
     try {
       const response = await axios.put(
         `http://localhost:3000/admin/requests/${id}`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      console.log('Response from server:', response.data); // Log the response from the server
       setRequest(response.data);
       setIsEditing(false);
       setMessage('Request updated successfully.');
     } catch (error: any) {
+      console.error('Error updating request:', error.response?.data?.message || error.message); // Log the error
       setMessage(error.response?.data?.message || 'Failed to update request.');
     }
   };
@@ -86,8 +89,10 @@ const RequestDetailsPage: React.FC = () => {
         </>
       ) : (
         <>
-          <p><strong>Description:</strong> {request.description}</p>
+          <p><strong>Name:</strong> {request.name}</p>
           <p><strong>Address:</strong> {request.address}</p>
+          <p><strong>Phone:</strong> {request.phone}</p>
+          <p><strong>Description:</strong> {request.description}</p>
           <p><strong>Keep the Wood:</strong> {request.wood_keep ? 'Yes' : 'No'}</p>
           {request.wood_keep && <p><strong>Wood Arrangement:</strong> {request.wood_arrangement}</p>}
           <p><strong>Grind the Stump:</strong> {request.stump_grinding ? 'Yes' : 'No'}</p>

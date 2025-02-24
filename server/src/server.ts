@@ -287,20 +287,26 @@ app.put('/admin/requests/:id', authenticateToken, async (req: AuthenticatedReque
 
   const { id } = req.params;
   const {
-    description,
+    name,
     address,
+    phone,
+    description,
+    images,
+    branch_height,
     wood_keep,
     wood_arrangement,
     stump_grinding,
-    branch_height,
+    date,
   } = req.body;
+
+  console.log('Received PUT request with data:', req.body); // Log the received data
 
   try {
     const result = await query(
       `UPDATE requests
-       SET description = $1, address = $2, wood_keep = $3, wood_arrangement = $4, stump_grinding = $5, branch_height = $6
-       WHERE id = $7 RETURNING *`,
-      [description, address, wood_keep, wood_arrangement, stump_grinding, branch_height, id]
+       SET name = $1, address = $2, phone = $3, description = $4, images = $5, branch_height = $6, wood_keep = $7, wood_arrangement = $8, stump_grinding = $9, date = $10
+       WHERE id = $11 RETURNING *`,
+      [name, address, phone, description, images, branch_height, wood_keep, wood_arrangement, stump_grinding, date, id]
     );
 
     if (result.rows.length === 0) {
@@ -308,9 +314,11 @@ app.put('/admin/requests/:id', authenticateToken, async (req: AuthenticatedReque
       return;
     }
 
+    console.log('Updated request:', result.rows[0]); // Log the updated request
+
     res.json(result.rows[0]);
   } catch (error) {
-    console.error(error);
+    console.error('Error updating request:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -513,7 +521,7 @@ app.get('/admin/all-requests', authenticateToken, async (req: AuthenticatedReque
 
   try {
     // Fetch all requests regardless of status
-    const result = await query(`SELECT id, address, date, status FROM requests`);
+    const result = await query(`SELECT id, name, address, date, status FROM requests`);
     res.json(result.rows);
   } catch (error) {
     console.error(error);
