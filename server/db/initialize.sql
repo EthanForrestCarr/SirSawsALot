@@ -47,6 +47,6 @@ CREATE TABLE notifications (
     user_id INT REFERENCES users(id) ON DELETE CASCADE, -- For registered users
     guest_email TEXT, -- For guests (optional)
     message TEXT NOT NULL,
-    status TEXT CHECK (status IN ('unread', 'read')) DEFAULT 'unread',
+    is_read BOOLEAN DEFAULT FALSE, -- Tracks whether notification is read
     created_at TIMESTAMP DEFAULT NOW()
 );

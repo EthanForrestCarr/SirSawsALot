@@ -571,3 +571,22 @@ app.delete('/calendar/unblock-date/:date', authenticateToken, async (req: Authen
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+app.patch('/notifications/mark-read', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    await query(
+      `UPDATE notifications SET is_read = TRUE WHERE user_id = $1`,
+      [req.user]
+    );
+
+    const unreadResult = await query(
+      `SELECT COUNT(*) FROM notifications WHERE user_id = $1 AND is_read = FALSE`,
+      [req.user]
+    );
+
+    res.status(200).json({ unreadCount: parseInt(unreadResult.rows[0].count, 10) });
+  } catch (error) {
+    console.error('Error marking notifications as read:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
