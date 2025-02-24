@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import CalendarPicker from '../CalendarPicker';
+import Pagination from '../buttons/Pagination';
+import AdminRequestsTable from '../tables/AdminRequestsTable'; // Import the new table component
+import AdminViewToggle from '../buttons/AdminViewToggle'; // Import the new view toggle component
 
 const AdminDashboard: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [message, setMessage] = useState('');
   const [view, setView] = useState<'table' | 'calendar'>('table');
-  const navigate = useNavigate(); // Initialize navigate function
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const requestsPerPage = 10;
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -26,7 +30,6 @@ const AdminDashboard: React.FC = () => {
     fetchRequests();
   }, []);
 
-  // Function to update request status
   const updateRequestStatus = async (id: number, status: string) => {
     const token = localStorage.getItem('token');
     try {
@@ -48,62 +51,28 @@ const AdminDashboard: React.FC = () => {
       <h2>Admin Dashboard</h2>
       {message && <p>{message}</p>}
 
-      <div style={{ marginBottom: '1rem' }}>
-        <button onClick={() => setView('table')} style={{ marginRight: '1rem' }}>
-          Table View
-        </button>
-        <button onClick={() => setView('calendar')}>Calendar View</button>
-      </div>
+      {/* View Toggle Component */}
+      <AdminViewToggle view={view} setView={setView} />
 
       {view === 'table' ? (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Date</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Address</th>
-              <th>Status</th>
-              <th>Details</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.map((req) => (
-              <tr key={req.id}>
-                <td>{req.id}</td>
-                <td>{new Date(req.date).toLocaleString()}</td>
-                <td>{req.name}</td>
-                <td>{req.description}</td>
-                <td>{req.address}</td>
-                <td>{req.status}</td>
-                <button onClick={() => navigate(`/admin/requests/${req.id}`)}>Details</button>
-                <td>
-                  {req.status && (
-                    <>
-                      <button
-                        onClick={() => updateRequestStatus(req.id, 'approved')}
-                        style={{ marginLeft: '0.5rem' }}
-                      >
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => updateRequestStatus(req.id, 'denied')}
-                        style={{ marginLeft: '0.5rem' }}
-                      >
-                        Deny
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <>
+          <AdminRequestsTable
+            requests={requests}
+            currentPage={currentPage}
+            requestsPerPage={requestsPerPage}
+            updateRequestStatus={updateRequestStatus}
+          />
+
+          {/* Pagination Component */}
+          <Pagination
+            currentPage={currentPage}
+            totalItems={requests.length}
+            itemsPerPage={requestsPerPage}
+            paginate={setCurrentPage}
+          />
+        </>
       ) : (
         <CalendarPicker />
-
       )}
     </div>
   );
