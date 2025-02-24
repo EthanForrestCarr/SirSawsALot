@@ -53,7 +53,8 @@ const BlockDateForm: React.FC = () => {
         <div>
             <h3>Block Off a Date</h3>
             <form onSubmit={handleBlockDate}>
-                <DateInput value={date} onChange={(e) => setDate(e.target.value)} required />
+            <DateInput selectedDate={date} onDateChange={setDate} required />
+
                 <button type="submit">Block Date</button>
             </form>
             {message && <p>{message}</p>}

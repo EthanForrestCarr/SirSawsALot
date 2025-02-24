@@ -91,7 +91,7 @@ const GuestWorkRequestForm: React.FC = () => {
         <WoodPreferenceInput formData={formData} handleChange={handleChange} />
         <StumpGrindingInput formData={formData} handleChange={handleChange} />
         <BranchHeightInput formData={formData} handleChange={handleChange} />
-        <DateInput value={selectedDate} onChange={handleDateChange} required /> {/* Use DateInput */}
+        <DateInput selectedDate={selectedDate} onDateChange={setSelectedDate} required />
         <button type="submit">Submit</button>
       </form>
       {message && <p>{message}</p>}

@@ -21,6 +21,7 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
     name: '',
     phone: '',
     email: '',
+    date: '',
   });
 
   const [message, setMessage] = useState('');
@@ -107,8 +108,7 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
           <label>Address:</label>
           <input type="text" value={formData.address} readOnly />
         </div>
-
-        <DateInput value={selectedDate} onChange={handleDateChange} required />
+        <DateInput selectedDate={selectedDate} onDateChange={setSelectedDate} required />
         <DescriptionInput formData={formData} handleChange={handleChange} />
         <ImageInput formData={formData} handleChange={handleChange} />
         <WoodPreferenceInput formData={formData} handleChange={handleChange} />
