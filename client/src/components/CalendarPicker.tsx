@@ -88,11 +88,29 @@ const CalendarPicker: React.FC = () => {
     return { style };
   };
 
-  const handleSelectEvent = (event: WorkRequestEvent) => {
+  const handleSelectEvent = async (event: WorkRequestEvent) => {
     console.log("✅ Event Clicked:", event);
-    setSelectedEvent(event);
-    setShowModal(true);
+  
+    if (event.type === 'blocked' && isAdmin) {
+      const confirmUnblock = window.confirm(`Do you want to unblock ${format(event.start, 'yyyy-MM-dd')}?`);
+      if (!confirmUnblock) return;
+  
+      try {
+        await axios.delete(`http://localhost:3000/calendar/unblock-date/${format(event.start, 'yyyy-MM-dd')}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+  
+        setEvents((prevEvents) => prevEvents.filter((e) => e.id !== event.id));
+        console.log(`✅ Successfully unblocked date: ${format(event.start, 'yyyy-MM-dd')}`);
+      } catch (error) {
+        console.error("❌ Error unblocking date:", error);
+      }
+    } else {
+      setSelectedEvent(event);
+      setShowModal(true);
+    }
   };
+  
 
   const handleEventDrop = async ({ event, start }: EventInteractionArgs<WorkRequestEvent>) => {
     console.log(`🟡 handleEventDrop triggered for Request ID: ${event.id}, Moving to: ${format(start, 'yyyy-MM-dd')}`);

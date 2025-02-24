@@ -1,11 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import DateInput from '../inputs/DateInput'; // Adjust the import path based on your file structure
 
 const BlockDateForm: React.FC = () => {
     const [date, setDate] = useState('');
     const [message, setMessage] = useState('');
+    const [blockedDates, setBlockedDates] = useState<string[]>([]);
     
-    const handleSubmit = async (e: React.FormEvent) => {
+    useEffect(() => {
+        const fetchBlockedDates = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/calendar/unavailable-dates');
+                setBlockedDates(response.data);
+            } catch (error) {
+                console.error('Error fetching blocked dates:', error);
+            }
+        };
+
+        fetchBlockedDates();
+    }, []);
+
+    const handleBlockDate = async (e: React.FormEvent) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
 
@@ -14,19 +29,44 @@ const BlockDateForm: React.FC = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessage(response.data.message || 'Date blocked successfully!');
+            setBlockedDates([...blockedDates, date]); // Update the UI immediately
         } catch (error: any) {
             setMessage(error.response?.data?.message || 'Error blocking date.');
+        }
+    };
+
+    const handleUnblockDate = async (blockedDate: string) => {
+        const token = localStorage.getItem('token');
+        try {
+            await axios.delete(`http://localhost:3000/calendar/unblock-date/${blockedDate}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            setBlockedDates(blockedDates.filter((d) => d !== blockedDate)); // Update UI
+            console.log(`✅ Successfully unblocked ${blockedDate}`);
+        } catch (error) {
+            console.error('❌ Error unblocking date:', error);
         }
     };
 
     return (
         <div>
             <h3>Block Off a Date</h3>
-            <form onSubmit={handleSubmit}>
-                <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+            <form onSubmit={handleBlockDate}>
+                <DateInput value={date} onChange={(e) => setDate(e.target.value)} required />
                 <button type="submit">Block Date</button>
             </form>
             {message && <p>{message}</p>}
+
+            <h4>Blocked Dates</h4>
+            <ul>
+                {blockedDates.map((blockedDate) => (
+                    <li key={blockedDate}>
+                        {blockedDate} 
+                        <button onClick={() => handleUnblockDate(blockedDate)}>Unblock</button>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };

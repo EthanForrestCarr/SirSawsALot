@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import CalendarPicker from '../CalendarPicker';
 import NameInput from '../inputs/NameInput';
 import EmailInput from '../inputs/EmailInput';
 import PhoneInput from '../inputs/PhoneInput';
@@ -10,9 +9,10 @@ import ImageInput from '../inputs/ImageInput';
 import WoodPreferenceInput from '../inputs/WoodPreferenceInput';
 import StumpGrindingInput from '../inputs/StumpGrindingInput';
 import BranchHeightInput from '../inputs/BranchHeightInput';
+import DateInput from '../inputs/DateInput'; // Import DateInput component
 
 const GuestWorkRequestForm: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -44,6 +44,10 @@ const GuestWorkRequestForm: React.FC = () => {
     }
   };
 
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedDate(e.target.value);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -51,7 +55,7 @@ const GuestWorkRequestForm: React.FC = () => {
         ...formData,
         branch_height: parseInt(formData.branch_height, 10) || null,
         images: formData.images.split(',').map((url) => url.trim()), // Convert images to array
-        date: selectedDate ? selectedDate.toISOString().split('T')[0] : null,
+        date: selectedDate, // Use the selected date from DateInput
       };
 
       const response = await axios.post('http://localhost:3000/requests/guest', data);
@@ -68,6 +72,7 @@ const GuestWorkRequestForm: React.FC = () => {
         stump_grinding: false,
         branch_height: '',
       });
+      setSelectedDate(''); // Reset selected date
     } catch (error: any) {
       setMessage(error.response?.data?.message || 'Error submitting work request.');
     }
@@ -86,7 +91,7 @@ const GuestWorkRequestForm: React.FC = () => {
         <WoodPreferenceInput formData={formData} handleChange={handleChange} />
         <StumpGrindingInput formData={formData} handleChange={handleChange} />
         <BranchHeightInput formData={formData} handleChange={handleChange} />
-        <CalendarPicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+        <DateInput value={selectedDate} onChange={handleDateChange} required /> {/* Use DateInput */}
         <button type="submit">Submit</button>
       </form>
       {message && <p>{message}</p>}

@@ -6,7 +6,7 @@ const CalendarPage: React.FC = () => {
     return (
         <div>
             <h2>Manage Schedule</h2>
-            <CalendarPicker selectedDate={null} setSelectedDate={() => {}} />
+            <CalendarPicker />
             <BlockDateForm />
         </div>
     );

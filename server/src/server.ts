@@ -547,3 +547,27 @@ app.get('/auth/me', authenticateToken, async (req: AuthenticatedRequest, res: Re
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+// ✅ Remove a blocked date (Admin Only)
+app.delete('/calendar/unblock-date/:date', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  if (!req.isAdmin) {
+    res.status(403).json({ message: 'Forbidden: Admin access only' });
+    return;
+  }
+
+  const { date } = req.params;
+
+  try {
+    const result = await query('DELETE FROM unavailable_dates WHERE date = $1 RETURNING date', [date]);
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ message: 'Blocked date not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'Date unblocked successfully', date: result.rows[0].date });
+  } catch (error) {
+    console.error('Error unblocking date:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
