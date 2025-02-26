@@ -39,7 +39,7 @@ const UserDashboard: React.FC = () => {
         <ul>
           {requests.map((req: any) => (
             <li key={req.id}>
-              <strong>{req.description}</strong> - {req.status} (Created: {new Date(req.created_at).toLocaleDateString()})
+              <strong>{req.id}</strong> - {req.status} (Created: {new Date(req.created_at).toLocaleDateString()})
             </li>
           ))}
         </ul>

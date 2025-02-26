@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import CalendarPicker from '../CalendarPicker';
 import Pagination from '../buttons/Pagination';
-import AdminRequestsTable from '../tables/AdminRequestsTable'; // Import the new table component
-import AdminViewToggle from '../buttons/AdminViewToggle'; // Import the new view toggle component
+import AdminRequestsTable from '../tables/AdminRequestsTable'; // Import the table component
+import AdminViewToggle from '../buttons/AdminViewToggle'; // Import the view toggle component
+import AdminInvoices from '../AdminInvoices'; // 📌 Import Invoice Management
 
 const AdminDashboard: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [message, setMessage] = useState('');
-  const [view, setView] = useState<'table' | 'calendar'>('table');
+  const [view, setView] = useState<'table' | 'calendar' | 'invoices'>('table');
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -71,8 +72,10 @@ const AdminDashboard: React.FC = () => {
             paginate={setCurrentPage}
           />
         </>
-      ) : (
+      ) : view === 'calendar' ? (
         <CalendarPicker />
+      ) : (
+        <AdminInvoices /> // ✅ Invoice Management Component
       )}
     </div>
   );

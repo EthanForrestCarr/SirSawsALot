@@ -50,3 +50,23 @@ CREATE TABLE notifications (
     is_read BOOLEAN DEFAULT FALSE, -- Tracks whether notification is read
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+-- Create the invoices table
+CREATE TABLE invoices (
+    id SERIAL PRIMARY KEY,
+    request_id INT REFERENCES requests(id) ON DELETE CASCADE, -- Link to work request
+    customer_name TEXT NOT NULL,
+    customer_email TEXT NOT NULL,
+    customer_phone TEXT NOT NULL,
+    address TEXT NOT NULL,
+    work_description TEXT NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL, -- Store the invoice amount
+    due_date DATE NOT NULL, -- When payment is due
+    status TEXT CHECK (status IN ('unpaid', 'paid', 'canceled')) DEFAULT 'unpaid',
+    notes TEXT, -- Optional field for extra details
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Indexes for faster lookups
+CREATE INDEX idx_invoices_request_id ON invoices(request_id);
+CREATE INDEX idx_invoices_status ON invoices(status);

@@ -1,8 +1,8 @@
 import React from 'react';
 
 interface AdminViewToggleProps {
-  view: 'table' | 'calendar';
-  setView: (view: 'table' | 'calendar') => void;
+  view: 'table' | 'calendar' | 'invoices';
+  setView: (view: 'table' | 'calendar' | 'invoices') => void;
 }
 
 const AdminViewToggle: React.FC<AdminViewToggleProps> = ({ view, setView }) => {
@@ -16,9 +16,15 @@ const AdminViewToggle: React.FC<AdminViewToggleProps> = ({ view, setView }) => {
       </button>
       <button 
         onClick={() => setView('calendar')} 
-        style={{ fontWeight: view === 'calendar' ? 'bold' : 'normal' }}
+        style={{ marginRight: '1rem', fontWeight: view === 'calendar' ? 'bold' : 'normal' }}
       >
         Calendar View
+      </button>
+      <button 
+        onClick={() => setView('invoices')} 
+        style={{ fontWeight: view === 'invoices' ? 'bold' : 'normal' }}
+      >
+        Invoices View
       </button>
     </div>
   );

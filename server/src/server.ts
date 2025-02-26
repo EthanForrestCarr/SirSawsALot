@@ -257,7 +257,7 @@ app.patch('/admin/requests/:id', authenticateToken, async (req: AuthenticatedReq
 
     if (result.rows.length === 0) {
       res.status(404).json({ message: 'Request not found' });
-      return;
+      return; 
     }
 
     const updatedRequest = result.rows[0];
@@ -587,6 +587,112 @@ app.patch('/notifications/mark-read', authenticateToken, async (req: Authenticat
     res.status(200).json({ unreadCount: parseInt(unreadResult.rows[0].count, 10) });
   } catch (error) {
     console.error('Error marking notifications as read:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Middleware to ensure only admins can access invoice routes
+app.use('/admin/invoices', authenticateToken, (req: AuthenticatedRequest, res, next) => {
+  if (!req.isAdmin) {
+    res.status(403).json({ message: 'Forbidden: Admin access only' });
+    return;
+  }
+  next();
+});
+
+// 📌 CREATE a new invoice
+app.post('/admin/invoices', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const { request_id, customer_name, customer_email, customer_phone, address, work_description, total_amount, due_date, notes } = req.body;
+
+  if (!request_id || !customer_name || !request_id || !customer_email || !customer_phone || !address || !work_description || !total_amount || !due_date) {
+    res.status(400).json({ message: 'All required fields must be filled out' });
+    return;
+  }
+
+  try {
+    const result = await query(
+      `INSERT INTO invoices (request_id, customer_name, customer_email, customer_phone, address, work_description, total_amount, due_date, notes) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      [request_id, customer_name, customer_email, customer_phone, address, work_description, total_amount, due_date, notes]
+    );
+    res.status(201).json({ message: 'Invoice created', invoice: result.rows[0] });
+  } catch (error) {
+    console.error('Error creating invoice:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// 📌 GET all invoices
+app.get('/admin/invoices', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  try {
+    const result = await query(`SELECT * FROM invoices ORDER BY created_at DESC`);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching invoices:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// 📌 GET a single invoice by ID
+app.get('/admin/invoices/:id', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await query(`SELECT * FROM invoices WHERE id = $1`, [id]);
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ message: 'Invoice not found' });
+      return;
+    }
+
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error fetching invoice:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// 📌 UPDATE invoice status (mark as paid/canceled)
+app.patch('/admin/invoices/:id', authenticateToken, async (req: AuthenticatedRequest, res): Promise<void> => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!['paid', 'canceled'].includes(status)) {
+    res.status(400).json({ message: 'Invalid status' });
+    return;
+  }
+
+  try {
+    const result = await query(`UPDATE invoices SET status = $1 WHERE id = $2 RETURNING *`, [status, id]);
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ message: 'Invoice not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'Invoice status updated', invoice: result.rows[0] });
+  } catch (error) {
+    console.error('Error updating invoice status:', error);
+    res.status(500).json({ message: 'Server error' });
+    return;
+  }
+});
+
+// 📌 DELETE an invoice
+app.delete('/admin/invoices/:id', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await query(`DELETE FROM invoices WHERE id = $1 RETURNING *`, [id]);
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ message: 'Invoice not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'Invoice deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting invoice:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
