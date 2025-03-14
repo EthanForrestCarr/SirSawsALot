@@ -6,7 +6,7 @@ import GenerateInvoiceButton from '../buttons/GenerateInvoiceButton';
 interface Request {
   id: number;
   date: string;
-  first_name: string; // Added first_name field
+  first_name: string;
   last_name: string;
   description: string;
   address: string;
@@ -21,7 +21,8 @@ interface AdminRequestsTableProps {
   currentPage: number;
   requestsPerPage: number;
   updateRequestStatus: (id: number, status: string) => void;
-  onInvoiceCreated?: () => void;
+  onPrefill: (prefillData: any) => void;
+  onOpenModal: (prefillData: any) => void; // Updated to accept prefillData
 }
 
 const AdminRequestsTable: React.FC<AdminRequestsTableProps> = ({
@@ -29,11 +30,14 @@ const AdminRequestsTable: React.FC<AdminRequestsTableProps> = ({
   currentPage,
   requestsPerPage,
   updateRequestStatus,
-  onInvoiceCreated = () => {},
+  onPrefill,
+  onOpenModal,
 }) => {
   const indexOfLastRequest = currentPage * requestsPerPage;
   const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
   const currentRequests = requests.slice(indexOfFirstRequest, indexOfLastRequest);
+
+  console.log("AdminRequestsTable rendering; currentRequests:", currentRequests);
 
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -63,7 +67,7 @@ const AdminRequestsTable: React.FC<AdminRequestsTableProps> = ({
               {req.status && (
                 <ApproveDenyButtons requestId={req.id} updateRequestStatus={updateRequestStatus} />
               )}
-              <GenerateInvoiceButton request={req} onInvoiceCreated={onInvoiceCreated} />
+              <GenerateInvoiceButton request={req} onOpenModal={onOpenModal} />
             </td>
           </tr>
         ))}

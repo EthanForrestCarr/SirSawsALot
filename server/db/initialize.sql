@@ -38,11 +38,15 @@ CREATE TABLE requests (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS unavailable_dates CASCADE;  -- Drop table to reset schema
+
 CREATE TABLE IF NOT EXISTS unavailable_dates (
     id SERIAL PRIMARY KEY,
     date DATE UNIQUE NOT NULL,
     reason TEXT DEFAULT 'Fully booked' -- Optional: Let Jonah specify a reason
 );
+
+DROP TABLE IF EXISTS notifications CASCADE;  -- Drop table to reset schema
 
 CREATE TABLE notifications (
     id SERIAL PRIMARY KEY,

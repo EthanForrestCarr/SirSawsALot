@@ -2,18 +2,22 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import CalendarPicker from '../CalendarPicker';
 import Pagination from '../buttons/Pagination';
-import AdminRequestsTable from '../tables/AdminRequestsTable'; // Import the table component
-import AdminViewToggle from '../buttons/AdminViewToggle'; // Import the view toggle component
-import AdminInvoices from '../AdminInvoices'; // 📌 Import Invoice Management
+import AdminRequestsTable from '../tables/AdminRequestsTable';
+import AdminViewToggle from '../buttons/AdminViewToggle';
+import AdminInvoices from '../AdminInvoices';
+import InvoiceModal from '../modals/InvoiceModal';
+import { InvoiceFormData } from '../forms/InvoiceForm';
 
 const AdminDashboard: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [message, setMessage] = useState('');
   const [view, setView] = useState<'table' | 'calendar' | 'invoices'>('table');
-
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const requestsPerPage = 10;
+
+  // New state for Invoice Modal
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [prefillData, setPrefillData] = useState<InvoiceFormData | null>(null);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -47,6 +51,19 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  // onOpenModal callback passed to the requests table and ultimately to the GenerateInvoiceButton.
+  const openModal = (data: InvoiceFormData) => {
+    console.log("AdminDashboard openModal called with data:", data);
+    setPrefillData(data);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    console.log("Closing Invoice Modal");
+    setModalOpen(false);
+    setPrefillData(null);
+  };
+
   return (
     <div style={{ padding: '2rem' }}>
       <h2>Admin Dashboard</h2>
@@ -62,8 +79,9 @@ const AdminDashboard: React.FC = () => {
             currentPage={currentPage}
             requestsPerPage={requestsPerPage}
             updateRequestStatus={updateRequestStatus}
+            onPrefill={(data) => console.log("Prefill data:", data)}
+            onOpenModal={openModal} // Pass callback so GenerateInvoiceButton can trigger the modal
           />
-
           {/* Pagination Component */}
           <Pagination
             currentPage={currentPage}
@@ -75,8 +93,19 @@ const AdminDashboard: React.FC = () => {
       ) : view === 'calendar' ? (
         <CalendarPicker />
       ) : (
-        <AdminInvoices /> // ✅ Invoice Management Component
+        <AdminInvoices />
       )}
+
+      {/* Render Invoice Modal if modalOpen is true */}
+      <InvoiceModal
+        open={modalOpen}
+        initialData={prefillData || undefined}
+        onClose={closeModal}
+        onUpdate={() => {
+          // You can add additional invoice update behaviors here if needed.
+          closeModal();
+        }}
+      />
     </div>
   );
 };
