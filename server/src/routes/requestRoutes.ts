@@ -6,11 +6,11 @@ import { query } from '../db';
 const router = express.Router();
 
 router.post('/', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  console.log("Received Request Payload:", req.body); // <-- Add this line to debug
+  console.log("Received Request Payload:", req.body);
 
   const { description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, firstName, lastName, email, phone } = req.body;
 
-  if (!description || !date || !address) { // <-- Ensure address is required
+  if (!description || !date || !address) {
     res.status(400).json({ message: 'All required fields must be filled out.' });
     return;
   }
@@ -18,7 +18,7 @@ router.post('/', authenticateToken, async (req: AuthenticatedRequest, res: Respo
   try {
     const result = await query(
       `INSERT INTO requests (user_id, description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, first_name, last_name, email, phone) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id`,
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id`,
       [req.user, description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, firstName, lastName, email, phone]
     );
 
@@ -31,9 +31,8 @@ router.post('/', authenticateToken, async (req: AuthenticatedRequest, res: Respo
   }
 });
 
-
 router.get('/', authenticateToken, async (req: Request, res: Response): Promise<void> => {
-  const userId = (req as any).user; // Extract user ID from the token
+  const userId = (req as any).user;
 
   try {
     const result = await query(
@@ -101,13 +100,13 @@ router.post('/guest', async (req: Request, res: Response): Promise<void> => {
 });
 
 router.get('/approved-requests', async (_req: Request, res: Response) => {
-    try {
-      const result = await query(`SELECT id, address, date FROM requests WHERE status = 'approved'`);
-      res.json(result.rows);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
-    }
-  });
+  try {
+    const result = await query(`SELECT id, address, date FROM requests WHERE status = 'approved'`);
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 export default router;

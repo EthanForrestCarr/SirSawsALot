@@ -1,14 +1,19 @@
 import React from 'react';
 import DetailsButton from '../buttons/DetailsButton';
 import ApproveDenyButtons from '../buttons/ApproveDenyButtons';
+import GenerateInvoiceButton from '../buttons/GenerateInvoiceButton';
 
 interface Request {
   id: number;
   date: string;
-  name: string;
+  first_name: string; // Added first_name field
+  last_name: string;
   description: string;
   address: string;
   status: string;
+  wood_keep?: boolean;
+  stump_grinding?: boolean;
+  // Include any additional fields you want to pass to the invoice.
 }
 
 interface AdminRequestsTableProps {
@@ -16,6 +21,7 @@ interface AdminRequestsTableProps {
   currentPage: number;
   requestsPerPage: number;
   updateRequestStatus: (id: number, status: string) => void;
+  onInvoiceCreated?: () => void;
 }
 
 const AdminRequestsTable: React.FC<AdminRequestsTableProps> = ({
@@ -23,6 +29,7 @@ const AdminRequestsTable: React.FC<AdminRequestsTableProps> = ({
   currentPage,
   requestsPerPage,
   updateRequestStatus,
+  onInvoiceCreated = () => {},
 }) => {
   const indexOfLastRequest = currentPage * requestsPerPage;
   const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
@@ -35,7 +42,6 @@ const AdminRequestsTable: React.FC<AdminRequestsTableProps> = ({
           <th>ID</th>
           <th>Date</th>
           <th>Name</th>
-          <th>Description</th>
           <th>Address</th>
           <th>Status</th>
           <th>Details</th>
@@ -47,15 +53,17 @@ const AdminRequestsTable: React.FC<AdminRequestsTableProps> = ({
           <tr key={req.id}>
             <td>{req.id}</td>
             <td>{new Date(req.date).toLocaleString()}</td>
-            <td>{req.name}</td>
-            <td>{req.description}</td>
+            <td>{`${req.first_name} ${req.last_name}`}</td>
             <td>{req.address}</td>
             <td>{req.status}</td>
             <td>
               <DetailsButton requestId={req.id} />
             </td>
             <td>
-              {req.status && <ApproveDenyButtons requestId={req.id} updateRequestStatus={updateRequestStatus} />}
+              {req.status && (
+                <ApproveDenyButtons requestId={req.id} updateRequestStatus={updateRequestStatus} />
+              )}
+              <GenerateInvoiceButton request={req} onInvoiceCreated={onInvoiceCreated} />
             </td>
           </tr>
         ))}

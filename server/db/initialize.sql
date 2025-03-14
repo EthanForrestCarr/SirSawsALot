@@ -54,22 +54,23 @@ CREATE TABLE notifications (
 );
 
 -- Create the invoices table
+DROP TABLE IF EXISTS invoices;
+
 CREATE TABLE invoices (
-    id SERIAL PRIMARY KEY,
-    request_id INT REFERENCES requests(id) ON DELETE CASCADE, -- Link to work request
-    customer_first_name TEXT NOT NULL,
-    customer_last_name TEXT NOT NULL,
-    customer_email TEXT NOT NULL,
-    customer_phone TEXT NOT NULL,
-    address TEXT NOT NULL,
-    work_description TEXT NOT NULL,
-    total_amount DECIMAL(10, 2) NOT NULL, -- Store the invoice amount
-    due_date DATE NOT NULL, -- When payment is due
-    status TEXT CHECK (status IN ('unpaid', 'paid', 'canceled')) DEFAULT 'unpaid',
-    notes TEXT, -- Optional field for extra details
-    created_at TIMESTAMP DEFAULT NOW()
+  id SERIAL PRIMARY KEY,
+  request_id INTEGER,
+  customer_first_name TEXT NOT NULL,
+  customer_last_name TEXT NOT NULL,
+  customer_email TEXT,
+  customer_phone TEXT,
+  address TEXT NOT NULL,
+  work_description TEXT NOT NULL,
+  total_amount NUMERIC NOT NULL,
+  due_date DATE NOT NULL,
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Indexes for faster lookups
+-- (Optional) Create indexes for faster lookups
 CREATE INDEX idx_invoices_request_id ON invoices(request_id);
-CREATE INDEX idx_invoices_status ON invoices(status);
+CREATE INDEX idx_invoices_status ON invoices((CASE WHEN notes IS NULL THEN 'pending' ELSE notes END));  -- Adjust accordingly if you add a status column

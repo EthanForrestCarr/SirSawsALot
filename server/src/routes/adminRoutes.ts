@@ -164,18 +164,39 @@ router.use('/invoices', authenticateToken, (req: AuthenticatedRequest, res, next
   
   // 📌 CREATE a new invoice
   router.post('/invoices', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { request_id, customer_name, customer_email, customer_phone, address, work_description, total_amount, due_date, notes } = req.body;
+    const {
+      request_id,
+      customer_first_name,
+      customer_last_name,
+      customer_email,
+      customer_phone,
+      address,
+      work_description,
+      total_amount,
+      due_date,
+      notes
+    } = req.body;
   
-    if (!request_id || !customer_name || !request_id || !customer_email || !customer_phone || !address || !work_description || !total_amount || !due_date) {
+    if (
+      !request_id ||
+      !customer_first_name ||
+      !customer_last_name ||
+      !address ||
+      !work_description ||
+      !total_amount ||
+      !due_date
+    ) {
       res.status(400).json({ message: 'All required fields must be filled out' });
       return;
     }
   
     try {
       const result = await query(
-        `INSERT INTO invoices (request_id, customer_name, customer_email, customer_phone, address, work_description, total_amount, due_date, notes) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-        [request_id, customer_name, customer_email, customer_phone, address, work_description, total_amount, due_date, notes]
+        `INSERT INTO invoices
+          (request_id, customer_first_name, customer_last_name, customer_email, customer_phone, address, work_description, total_amount, due_date, notes)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+         RETURNING *`,
+        [request_id, customer_first_name, customer_last_name, customer_email, customer_phone, address, work_description, total_amount, due_date, notes]
       );
       res.status(201).json({ message: 'Invoice created', invoice: result.rows[0] });
     } catch (error) {

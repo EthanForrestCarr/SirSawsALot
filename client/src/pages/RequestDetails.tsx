@@ -89,7 +89,8 @@ const RequestDetailsPage: React.FC = () => {
         </>
       ) : (
         <>
-          <p><strong>Name:</strong> {request.name}</p>
+          <p><strong>First Name:</strong> {request.first_name}</p>
+          <p><strong>Last Name:</strong> {request.last_name}</p>
           <p><strong>Address:</strong> {request.address}</p>
           <p><strong>Phone:</strong> {request.phone}</p>
           <p><strong>Description:</strong> {request.description}</p>
