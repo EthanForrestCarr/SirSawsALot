@@ -2,7 +2,8 @@ import React from 'react';
 
 interface NameInputProps {
   formData: {
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
   };
@@ -12,14 +13,24 @@ interface NameInputProps {
 const NameInput: React.FC<NameInputProps> = ({ formData, handleChange }) => {
   return (
       <>
-        <label>Name:</label>
+        <label>First Name:</label>
         <input
           type="text"
-          name="name"
-          value={formData.name}
+          name="firstName"
+          value={formData.firstName}
           onChange={handleChange}
           required
-          placeholder="Your full name"
+          placeholder="Your first name"
+        />
+        <br />
+        <label>Last Name:</label>
+        <input
+          type="text"
+          name="lastName"
+          value={formData.lastName}
+          onChange={handleChange}
+          required
+          placeholder="Your last name"
         />
       </>
   );

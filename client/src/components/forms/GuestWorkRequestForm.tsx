@@ -14,7 +14,8 @@ import DateInput from '../inputs/DateInput'; // Import DateInput component
 const GuestWorkRequestForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     description: '',
@@ -44,10 +45,6 @@ const GuestWorkRequestForm: React.FC = () => {
     }
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedDate(e.target.value);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -61,7 +58,8 @@ const GuestWorkRequestForm: React.FC = () => {
       const response = await axios.post('http://localhost:3000/requests/guest', data);
       setMessage(response.data.message || 'Work request submitted successfully!');
       setFormData({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         phone: '',
         description: '',

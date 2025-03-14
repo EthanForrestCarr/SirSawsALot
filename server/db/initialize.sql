@@ -8,9 +8,10 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    name TEXT NOT NULL,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
     address TEXT NOT NULL,
-    phone TEXT NOT NULL,  -- Correctly replaces contact_info
+    phone TEXT NOT NULL,
     is_admin BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -21,7 +22,8 @@ DROP TABLE IF EXISTS requests CASCADE;  -- Drop table to reset schema
 CREATE TABLE requests (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    name TEXT,
+    first_name TEXT,
+    last_name TEXT,
     email TEXT,
     phone TEXT,
     description TEXT NOT NULL,
@@ -55,7 +57,8 @@ CREATE TABLE notifications (
 CREATE TABLE invoices (
     id SERIAL PRIMARY KEY,
     request_id INT REFERENCES requests(id) ON DELETE CASCADE, -- Link to work request
-    customer_name TEXT NOT NULL,
+    customer_first_name TEXT NOT NULL,
+    customer_last_name TEXT NOT NULL,
     customer_email TEXT NOT NULL,
     customer_phone TEXT NOT NULL,
     address TEXT NOT NULL,

@@ -18,7 +18,8 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
     stump_grinding: false,
     branch_height: '',
     address: '',
-    name: '',
+    firstName: '',
+    lastName: '',
     phone: '',
     email: '',
     date: '',
@@ -39,7 +40,8 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
             setFormData((prev) => ({
               ...prev,
               address: response.data.address || '',
-              name: response.data.name || '',
+              firstName: response.data.first_name || '',
+              lastName: response.data.last_name || '',
               phone: response.data.phone || '',
               email: response.data.email || '',
             }));
@@ -68,10 +70,6 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
     }
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedDate(e.target.value);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
@@ -96,8 +94,12 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
       <h2>Authenticated Work Request Form</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Name:</label>
-          <input type="text" value={formData.name} readOnly />
+          <label>First Name:</label>
+          <input type="text" value={formData.firstName} readOnly />
+        </div>
+        <div>
+          <label>Last Name:</label>
+          <input type="text" value={formData.lastName} readOnly />
         </div>
         <div>
           <label>Email:</label>

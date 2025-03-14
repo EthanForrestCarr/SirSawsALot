@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   console.log("Received Request Payload:", req.body); // <-- Add this line to debug
 
-  const { description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, name, email, phone } = req.body;
+  const { description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, firstName, lastName, email, phone } = req.body;
 
   if (!description || !date || !address) { // <-- Ensure address is required
     res.status(400).json({ message: 'All required fields must be filled out.' });
@@ -17,9 +17,9 @@ router.post('/', authenticateToken, async (req: AuthenticatedRequest, res: Respo
 
   try {
     const result = await query(
-      `INSERT INTO requests (user_id, description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, name, email, phone) 
+      `INSERT INTO requests (user_id, description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, first_name, last_name, email, phone) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id`,
-      [req.user, description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, name, email, phone]
+      [req.user, description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, firstName, lastName, email, phone]
     );
 
     await query('INSERT INTO notifications (user_id, message) VALUES ($1, $2)', [1, 'New work request submitted!']);
@@ -52,7 +52,8 @@ router.get('/', authenticateToken, async (req: Request, res: Response): Promise<
 
 router.post('/guest', async (req: Request, res: Response): Promise<void> => {
   const {
-    name,
+    firstName,
+    lastName,
     email,
     phone,
     description,
@@ -65,7 +66,7 @@ router.post('/guest', async (req: Request, res: Response): Promise<void> => {
     date,
   } = req.body;
 
-  if (!name || !email || !phone || !description || !address) {
+  if (!firstName || !lastName || !email || !phone || !description || !address) {
     res.status(400).json({ message: 'All required fields must be filled out.' });
     return;
   }
@@ -73,11 +74,12 @@ router.post('/guest', async (req: Request, res: Response): Promise<void> => {
   try {
     const result = await query(
       `INSERT INTO requests 
-      (name, email, phone, description, address, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, status)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'pending') 
+      (first_name, last_name, email, phone, description, address, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, status)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'pending') 
       RETURNING id`,
       [
-        name,
+        firstName,
+        lastName,
         email,
         phone,
         description,

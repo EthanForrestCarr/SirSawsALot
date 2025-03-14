@@ -8,7 +8,7 @@ import { query } from '../db';
 const router = express.Router();
 
 router.post('/signup', async (req: Request, res: Response): Promise<void> => {
-  const { email, password, name, address, phone } = req.body;
+  const { email, password, firstName, lastName, address, phone } = req.body;
 
   if (!email || !password) {
     res.status(400).json({ message: 'Email and password are required' });
@@ -28,9 +28,9 @@ router.post('/signup', async (req: Request, res: Response): Promise<void> => {
 
     // Insert the user into the database
     const result = await query(
-      `INSERT INTO users (email, password, name, address, phone)
-       VALUES ($1, $2, $3, $4, $5) RETURNING id`,
-      [email, hashedPassword, name, address, phone]
+      `INSERT INTO users (email, password, first_name, last_name, address, phone)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
+      [email, hashedPassword, firstName, lastName, address, phone]
     );
 
     const userId = result.rows[0].id;

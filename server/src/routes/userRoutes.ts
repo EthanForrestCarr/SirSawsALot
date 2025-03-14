@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const user = await query('SELECT name, email, address, phone, is_admin FROM users WHERE id = $1', [req.user]);
+    const user = await query('SELECT first_name, last_name, email, address, phone, is_admin FROM users WHERE id = $1', [req.user]);
     if (user.rows.length === 0) {
       res.status(404).json({ message: 'User not found' });
       return;
@@ -20,28 +20,13 @@ router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Respon
   }
 });
 
-router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  const userId = req.user;
-  try {
-    const result = await query('SELECT name, email, phone, address FROM users WHERE id = $1', [userId]);
-    if (result.rows.length === 0) {
-      res.status(404).json({ message: 'User not found' });
-      return;
-    }
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
 router.put('/', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user;
-  const { name, email, phone, address } = req.body;
+  const { firstName, lastName, email, phone, address } = req.body;
   try {
     const result = await query(
-      'UPDATE users SET name = $1, email = $2, phone = $3, address = $4 WHERE id = $5 RETURNING name, email, phone, address',
-      [name, email, phone, address, userId]
+      'UPDATE users SET first_name = $1, last_name = $2, email = $3, phone = $4, address = $5 WHERE id = $6 RETURNING first_name, last_name, email, phone, address',
+      [firstName, lastName, email, phone, address, userId]
     );
     res.json(result.rows[0]);
   } catch (error) {

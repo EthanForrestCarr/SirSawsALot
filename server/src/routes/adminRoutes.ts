@@ -116,7 +116,8 @@ router.put('/requests/:id', authenticateToken, async (req: AuthenticatedRequest,
 
   const { id } = req.params;
   const {
-    name,
+    firstName,
+    lastName,
     address,
     phone,
     description,
@@ -133,9 +134,9 @@ router.put('/requests/:id', authenticateToken, async (req: AuthenticatedRequest,
   try {
     const result = await query(
       `UPDATE requests
-       SET name = $1, address = $2, phone = $3, description = $4, images = $5, branch_height = $6, wood_keep = $7, wood_arrangement = $8, stump_grinding = $9, date = $10
-       WHERE id = $11 RETURNING *`,
-      [name, address, phone, description, images, branch_height, wood_keep, wood_arrangement, stump_grinding, date, id]
+       SET first_name = $1, last_name = $2, address = $3, phone = $4, description = $5, images = $6, branch_height = $7, wood_keep = $8, wood_arrangement = $9, stump_grinding = $10, date = $11
+       WHERE id = $12 RETURNING *`,
+      [firstName, lastName, address, phone, description, images, branch_height, wood_keep, wood_arrangement, stump_grinding, date, id]
     );
 
     if (result.rows.length === 0) {
@@ -283,7 +284,7 @@ router.use('/invoices', authenticateToken, (req: AuthenticatedRequest, res, next
   
     try {
       // Fetch all requests regardless of status
-      const result = await query(`SELECT id, name, address, date, status FROM requests`);
+      const result = await query(`SELECT id, first_name, last_name, address, date, status FROM requests`);
       res.json(result.rows);
     } catch (error) {
       console.error(error);
