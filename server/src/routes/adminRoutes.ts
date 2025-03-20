@@ -36,7 +36,14 @@ router.get('/requests/:id', authenticateToken, async (req: AuthenticatedRequest,
       return;
     }
 
-    res.json(result.rows[0]);
+    const requestData = result.rows[0];
+
+    // Convert binary image data (if exists) to base64
+    if (requestData.images) {
+      requestData.images = Buffer.from(requestData.images).toString('base64');
+    }
+
+    res.json(requestData);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

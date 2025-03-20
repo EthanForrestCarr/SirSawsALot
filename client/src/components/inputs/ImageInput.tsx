@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ImageInputProps {
   formData: {
-    images: string;
+    imageFile: File | null;
   };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -10,14 +10,14 @@ interface ImageInputProps {
 const ImageInput: React.FC<ImageInputProps> = ({ formData, handleChange }) => {
   return (
     <div>
-      <label>Image URLs (comma-separated):</label>
+      <label>Upload an image of the tree:</label>
       <input
-        type="text"
-        name="images"
-        value={formData.images}
+        type="file"
+        name="imageFile"
         onChange={handleChange}
-        placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
+        accept="image/*"
       />
+      {formData.imageFile && <p>{formData.imageFile.name}</p>}
     </div>
   );
 };

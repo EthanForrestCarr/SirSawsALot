@@ -20,7 +20,7 @@ const GuestWorkRequestForm: React.FC = () => {
     phone: '',
     description: '',
     address: '',
-    images: '',
+    imageFile: null as File | null, // Updated to handle file
     wood_keep: false,
     wood_arrangement: '',
     stump_grinding: false,
@@ -30,17 +30,21 @@ const GuestWorkRequestForm: React.FC = () => {
   const [message, setMessage] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-
-    if (e.target instanceof HTMLInputElement && e.target.type === 'checkbox') {
+    const { name } = e.target;
+    if (e.target instanceof HTMLInputElement && e.target.type === 'file') {
       setFormData({
         ...formData,
-        [name]: e.target.checked, // Use checked for checkboxes
+        imageFile: e.target.files ? e.target.files[0] : null,
+      });
+    } else if (e.target instanceof HTMLInputElement && e.target.type === 'checkbox') {
+      setFormData({
+        ...formData,
+        [name]: e.target.checked,
       });
     } else {
       setFormData({
         ...formData,
-        [name]: value, // Use value for text inputs and textareas
+        [name]: e.target.value,
       });
     }
   };
@@ -48,14 +52,19 @@ const GuestWorkRequestForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const data = {
-        ...formData,
-        branch_height: parseInt(formData.branch_height, 10) || null,
-        images: formData.images.split(',').map((url) => url.trim()), // Convert images to array
-        date: selectedDate, // Use the selected date from DateInput
-      };
+      const payload = new FormData();
+      for (const key in formData) {
+        if (key === 'imageFile' && formData.imageFile) {
+          payload.append('imageFile', formData.imageFile);
+        } else {
+          payload.append(key, (formData as any)[key]);
+        }
+      }
+      payload.append('date', selectedDate);
 
-      const response = await axios.post('http://localhost:3000/requests/guest', data);
+      const response = await axios.post('http://localhost:3000/requests/guest', payload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       setMessage(response.data.message || 'Work request submitted successfully!');
       setFormData({
         firstName: '',
@@ -64,13 +73,13 @@ const GuestWorkRequestForm: React.FC = () => {
         phone: '',
         description: '',
         address: '',
-        images: '',
+        imageFile: null,
         wood_keep: false,
         wood_arrangement: '',
         stump_grinding: false,
         branch_height: '',
       });
-      setSelectedDate(''); // Reset selected date
+      setSelectedDate('');
     } catch (error: any) {
       setMessage(error.response?.data?.message || 'Error submitting work request.');
     }

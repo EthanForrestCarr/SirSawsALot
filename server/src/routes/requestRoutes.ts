@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { authenticateToken } from '../middleware/authMiddleware';
 import { AuthenticatedRequest } from '../middleware/authMiddleware';
 import { query } from '../db';
+import upload from '../middleware/multerConfig'; // Import Multer configuration
 
 const router = express.Router();
 
@@ -49,7 +50,7 @@ router.get('/', authenticateToken, async (req: Request, res: Response): Promise<
   }
 });
 
-router.post('/guest', async (req: Request, res: Response): Promise<void> => {
+router.post('/guest', upload.single('imageFile'), async (req: Request, res: Response): Promise<void> => {
   const {
     firstName,
     lastName,
@@ -57,7 +58,6 @@ router.post('/guest', async (req: Request, res: Response): Promise<void> => {
     phone,
     description,
     address,
-    images,
     wood_keep,
     wood_arrangement,
     stump_grinding,
@@ -69,6 +69,8 @@ router.post('/guest', async (req: Request, res: Response): Promise<void> => {
     res.status(400).json({ message: 'All required fields must be filled out.' });
     return;
   }
+
+  const imageBuffer = req.file ? req.file.buffer : null; // Retrieve file buffer
 
   try {
     const result = await query(
@@ -83,7 +85,7 @@ router.post('/guest', async (req: Request, res: Response): Promise<void> => {
         phone,
         description,
         address,
-        images,
+        imageBuffer, // Store binary data
         wood_keep,
         wood_arrangement,
         stump_grinding,

@@ -98,6 +98,16 @@ const RequestDetailsPage: React.FC = () => {
           {request.wood_keep && <p><strong>Wood Arrangement:</strong> {request.wood_arrangement}</p>}
           <p><strong>Grind the Stump:</strong> {request.stump_grinding ? 'Yes' : 'No'}</p>
           <p><strong>Branch Height:</strong> {request.branch_height} ft</p>
+          {request.images && (
+            <div>
+              <h3>Attached Image:</h3>
+              <img
+                src={`data:image/jpeg;base64,${request.images}`}
+                alt="Work Request"
+                style={{ maxWidth: '100%', height: 'auto' }}
+              />
+            </div>
+          )}
           <button onClick={() => setIsEditing(true)} style={{ marginTop: '1rem', padding: '0.5rem 1rem' }}>
             Edit
           </button>

@@ -23,6 +23,7 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
     phone: '',
     email: '',
     date: '',
+    imageFile: null as File | null, // Add imageFile property
   });
 
   const [message, setMessage] = useState('');
@@ -55,9 +56,14 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
 
-    if (e.target instanceof HTMLInputElement && e.target.type === 'checkbox') {
+    if (e.target instanceof HTMLInputElement && e.target.type === 'file') {
+      setFormData({
+        ...formData,
+        imageFile: e.target.files ? e.target.files[0] : null, // Handle file input
+      });
+    } else if (e.target instanceof HTMLInputElement && e.target.type === 'checkbox') {
       setFormData({
         ...formData,
         [name]: e.target.checked,
@@ -65,7 +71,7 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
     } else {
       setFormData({
         ...formData,
-        [name]: value,
+        [name]: e.target.value,
       });
     }
   };
@@ -74,14 +80,21 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
-      const data = {
-        ...formData,
-        branch_height: parseInt(formData.branch_height, 10),
-        images: formData.images.split(',').map((url) => url.trim()),
-        date: selectedDate, // Add the selected date to the data
-      };
-      const response = await axios.post('http://localhost:3000/requests', data, {
-        headers: { Authorization: `Bearer ${token}` },
+      const payload = new FormData();
+      for (const key in formData) {
+        if (key === 'imageFile' && formData.imageFile) {
+          payload.append('imageFile', formData.imageFile); // Append file to FormData
+        } else {
+          payload.append(key, (formData as any)[key]);
+        }
+      }
+      payload.append('date', selectedDate);
+
+      const response = await axios.post('http://localhost:3000/requests', payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
       });
       setMessage(response.data.message || 'Work request submitted successfully!');
     } catch (error: any) {

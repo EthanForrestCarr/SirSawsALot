@@ -28,7 +28,7 @@ CREATE TABLE requests (
     phone TEXT,
     description TEXT NOT NULL,
     address TEXT NOT NULL,
-    images TEXT[],
+    images BYTEA, -- Changed from TEXT[] to BYTEA for binary storage
     wood_keep BOOLEAN DEFAULT false,
     wood_arrangement TEXT,
     stump_grinding BOOLEAN DEFAULT false,
