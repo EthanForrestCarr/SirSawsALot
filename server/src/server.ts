@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import { query } from './db';
+import cron from 'node-cron';
 
 // Import route handlers
 import adminRoutes from './routes/adminRoutes';
@@ -47,6 +48,35 @@ app.get('/api/test-db', async (_req: Request, res: Response) => {
   } catch (error) {
     console.error('Database connection error:', error);
     res.status(500).json({ message: 'Database connection failed' });
+  }
+});
+
+// Schedule the job to run at the top of every hour
+cron.schedule('0 * * * *', async () => {
+  try {
+    const result = await query(
+      "DELETE FROM requests WHERE status = 'denied' AND status_updated_at <= NOW() - INTERVAL '24 hours'"
+    );
+    console.log(`Deleted ${result.rowCount} denied work requests older than 24 hours.`);
+  } catch (error) {
+    console.error('Error deleting denied work requests:', error);
+  }
+});
+
+// Schedule job to delete work requests where the corresponding invoice was marked as paid over 24 hours ago
+cron.schedule('0 * * * *', async () => {
+  try {
+    // Delete from requests table if there exists a paid invoice older than 24 hours
+    const result = await query(
+      `DELETE FROM requests 
+       WHERE id IN (
+         SELECT request_id FROM invoices 
+         WHERE status = 'paid' AND created_at <= NOW() - INTERVAL '24 hours'
+       )`
+    );
+    console.log(`Deleted ${result.rowCount} work requests linked to paid invoices older than 24 hours.`);
+  } catch (error) {
+    console.error('Error deleting work requests for paid invoices:', error);
   }
 });
 

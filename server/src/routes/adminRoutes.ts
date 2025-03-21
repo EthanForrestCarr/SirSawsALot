@@ -75,6 +75,8 @@ router.patch('/requests/:id', authenticateToken, async (req: AuthenticatedReques
     if (status) {
       updateFields.push(' status = $' + (queryParams.length + 1));
       queryParams.push(status);
+      // Update the timestamp when the status changes
+      updateFields.push(' status_updated_at = NOW()');
     }
     if (date) {
       updateFields.push(' date = $' + (queryParams.length + 1));

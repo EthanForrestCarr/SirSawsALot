@@ -35,7 +35,8 @@ CREATE TABLE requests (
     branch_height INTEGER,
     status TEXT DEFAULT 'pending',
     date DATE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 DROP TABLE IF EXISTS unavailable_dates CASCADE;  -- Drop table to reset schema
@@ -71,6 +72,7 @@ CREATE TABLE invoices (
   work_description TEXT NOT NULL,
   total_amount NUMERIC NOT NULL,
   due_date DATE NOT NULL,
+  status TEXT DEFAULT 'pending',  -- New column for invoice status
   notes TEXT,
   created_at TIMESTAMP DEFAULT NOW()
 );

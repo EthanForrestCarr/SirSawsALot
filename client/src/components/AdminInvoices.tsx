@@ -32,12 +32,6 @@ const AdminInvoices: React.FC = () => {
     }
   };
 
-  const openModal = (data: InvoiceFormData) => {
-    console.log("Opening Invoice Modal with prefillData:", data);
-    setPrefillData(data);
-    setModalOpen(true);
-  };
-
   const closeModal = () => {
     console.log("Closing Invoice Modal");
     setModalOpen(false);
