@@ -7,8 +7,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import withDragAndDrop, { EventInteractionArgs } from 'react-big-calendar/lib/addons/dragAndDrop';
-import RequestDetailsModal from './modals/RequestDetailsModal';
 import { WorkRequestEvent } from '../interfaces/WorkRequestEvent';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const locales = { 'en-US': enUS };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
@@ -17,9 +17,8 @@ const DnDCalendar = withDragAndDrop<WorkRequestEvent>(Calendar);
 
 const CalendarPicker: React.FC = () => {
   const [events, setEvents] = useState<WorkRequestEvent[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<WorkRequestEvent | null>(null);
-  const [showModal, setShowModal] = useState(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false); // Store admin status
+  const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -90,27 +89,25 @@ const CalendarPicker: React.FC = () => {
 
   const handleSelectEvent = async (event: WorkRequestEvent) => {
     console.log("✅ Event Clicked:", event);
-  
+
     if (event.type === 'blocked' && isAdmin) {
       const confirmUnblock = window.confirm(`Do you want to unblock ${format(event.start, 'yyyy-MM-dd')}?`);
       if (!confirmUnblock) return;
-  
+
       try {
         await axios.delete(`http://localhost:3000/calendar/unblock-date/${format(event.start, 'yyyy-MM-dd')}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
-  
+
         setEvents((prevEvents) => prevEvents.filter((e) => e.id !== event.id));
         console.log(`✅ Successfully unblocked date: ${format(event.start, 'yyyy-MM-dd')}`);
       } catch (error) {
         console.error("❌ Error unblocking date:", error);
       }
-    } else {
-      setSelectedEvent(event);
-      setShowModal(true);
+    } else if (event.type === 'work-request') {
+      navigate(`/admin/requests/${event.id}`); // Navigate to request details page
     }
   };
-  
 
   const handleEventDrop = async ({ event, start }: EventInteractionArgs<WorkRequestEvent>) => {
     console.log(`🟡 handleEventDrop triggered for Request ID: ${event.id}, Moving to: ${format(start, 'yyyy-MM-dd')}`);
@@ -136,11 +133,6 @@ const CalendarPicker: React.FC = () => {
     }
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedEvent(null);
-  };
-
   return (
     <DndProvider backend={HTML5Backend}>
       <div>
@@ -155,10 +147,6 @@ const CalendarPicker: React.FC = () => {
           onSelectEvent={handleSelectEvent}
           onEventDrop={handleEventDrop}
         />
-
-        {showModal && selectedEvent && (
-          <RequestDetailsModal event={selectedEvent} onClose={handleCloseModal} />
-        )}
       </div>
     </DndProvider>
   );
