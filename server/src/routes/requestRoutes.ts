@@ -6,12 +6,23 @@ import upload from '../middleware/multerConfig'; // Import Multer configuration
 
 const router = express.Router();
 
-router.post('/', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.post('/', authenticateToken, upload.single('imageFile'), async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   console.log("Received Request Payload:", req.body);
+  
+  let { description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, firstName, lastName, email, phone } = req.body;
+  if (req.file) {
+    images = req.file.buffer;
+  }
+  
+  // Convert branch_height to integer or null
+  const branchHeightValue = branch_height === '' ? null : parseInt(branch_height, 10);
+  // Extract the non-empty date if provided as an array
+  const properDate = Array.isArray(date) ? date.find((d: string) => d !== '') : date;
+  // Convert boolean-like strings to actual booleans
+  const woodKeepBool = wood_keep === 'true';
+  const stumpGrindingBool = stump_grinding === 'true';
 
-  const { description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, firstName, lastName, email, phone } = req.body;
-
-  if (!description || !date || !address) {
+  if (!description || !properDate || !address) {
     res.status(400).json({ message: 'All required fields must be filled out.' });
     return;
   }
@@ -20,7 +31,7 @@ router.post('/', authenticateToken, async (req: AuthenticatedRequest, res: Respo
     const result = await query(
       `INSERT INTO requests (user_id, description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, first_name, last_name, email, phone) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id`,
-      [req.user, description, images, wood_keep, wood_arrangement, stump_grinding, branch_height, date, address, firstName, lastName, email, phone]
+      [req.user, description, images, woodKeepBool, wood_arrangement, stumpGrindingBool, branchHeightValue, properDate, address, firstName, lastName, email, phone]
     );
 
     await query('INSERT INTO notifications (user_id, message) VALUES ($1, $2)', [1, 'New work request submitted!']);

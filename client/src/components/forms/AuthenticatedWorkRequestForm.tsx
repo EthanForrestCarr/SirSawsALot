@@ -108,20 +108,20 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>First Name:</label>
-          <input type="text" value={formData.firstName} readOnly />
+          <input name="firstName" type="text" value={formData.firstName} readOnly />
         </div>
         <div>
           <label>Last Name:</label>
-          <input type="text" value={formData.lastName} readOnly />
+          <input name="lastName" type="text" value={formData.lastName} readOnly />
         </div>
         <div>
           <label>Email:</label>
-          <input type="email" value={formData.email} readOnly />
+          <input name="email" type="email" value={formData.email} readOnly />
         </div>
         <PhoneInput formData={formData} handleChange={handleChange} />
         <div>
           <label>Address:</label>
-          <input type="text" value={formData.address} readOnly />
+          <input name="address" type="text" value={formData.address} readOnly />
         </div>
         <DateInput selectedDate={selectedDate} onDateChange={setSelectedDate} required />
         <DescriptionInput formData={formData} handleChange={handleChange} />
