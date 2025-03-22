@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import NameInput from '../components/inputs/NameInput';
 import EmailInput from '../components/inputs/EmailInput';
 import PhoneInput from '../components/inputs/PhoneInput';
@@ -8,14 +9,15 @@ import NewPasswordInput from '../components/inputs/NewPasswordInput';
 
 const SignupPage: React.FC = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '', // updated from name
+    lastName: '',  // added for NameInput
     email: '',
     password: '',
     address: '',
     phone: '',
   });
-
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -28,6 +30,12 @@ const SignupPage: React.FC = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:3000/auth/signup', formData);
+      const { token } = response.data;
+      if (token) {
+        localStorage.setItem('token', token);
+        navigate('/dashboard');
+        window.location.reload();
+      }
       setMessage(response.data.message || 'Signup successful!');
     } catch (error: any) {
       setMessage(error.response?.data?.message || 'Error occurred during signup.');

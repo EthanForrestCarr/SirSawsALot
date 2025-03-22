@@ -34,7 +34,10 @@ router.post('/signup', async (req: Request, res: Response): Promise<void> => {
     );
 
     const userId = result.rows[0].id;
-    res.status(201).json({ message: 'User registered successfully', userId });
+    // Generate a token automatically upon signup
+    const token = generateToken(userId);
+
+    res.status(201).json({ message: 'User registered successfully', token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
