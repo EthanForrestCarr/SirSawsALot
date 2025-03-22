@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Notifications from './Notifications';
+import logo from '../assets/sirsawsalotPictures/SirSawsalotLogo.png';
 
 // Define props type
 interface NavbarProps {
@@ -31,7 +31,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
       <div>
         <h1 style={{ display: 'inline-block', marginRight: '1rem' }}>
           <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>
-            Sir Saws A Lot
+            <img src={logo} alt="Sir Sawsalot" style={{ height: '100px' }} />
           </Link>
         </h1>
         {isAdmin ? (
