@@ -20,7 +20,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ open, initialData, onClose,
         left: 0,
         width: "100%",
         height: "100%",
-        backgroundColor: "rgba(0,0,0,0.5)",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -29,7 +29,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ open, initialData, onClose,
     >
       <div
         style={{
-          background: "white",
+          background: "grey",
           padding: "1rem",
           borderRadius: "8px",
           width: "80%",

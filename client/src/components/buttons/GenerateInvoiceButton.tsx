@@ -5,6 +5,8 @@ interface GenerateInvoiceButtonProps {
     id: number;
     first_name: string;
     last_name: string;
+    email: string;
+    phone: string;
     address: string;
     description: string;
     wood_keep?: boolean;
@@ -23,8 +25,8 @@ const GenerateInvoiceButton: React.FC<GenerateInvoiceButtonProps> = ({
       request_id: request.id.toString(),
       customer_first_name: request.first_name,
       customer_last_name: request.last_name,
-      customer_email: '', // Populate if available
-      customer_phone: '', // Populate if available
+      customer_email: request.email || '', // Populate if available
+      customer_phone: request.phone || '', // Populate if available
       address: request.address,
       work_description:
         request.description +
