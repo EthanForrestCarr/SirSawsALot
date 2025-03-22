@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+import MarkAllAsReadButton from './buttons/MarkAllAsReadButton';
+import DeleteNotificationsButton from './buttons/DeleteNotificationsButton';
 
 const Notifications: React.FC = () => {
   interface Notification {
     id: number;
     message: string;
     created_at: string;
-    is_read: boolean; // Standardized to match expected field
+    is_read: boolean;
   }
 
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -31,19 +33,6 @@ const Notifications: React.FC = () => {
       setUnreadCount(response.data.filter((n: Notification) => !n.is_read).length);
     } catch (error) {
       console.error('Error fetching notifications:', error);
-    }
-  };
-
-  const markAsRead = async () => {
-    const token = localStorage.getItem('token');
-    try {
-      await axios.patch('http://localhost:3000/notifications/mark-read', {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      fetchNotifications(); // Refresh the notifications list after marking as read
-    } catch (error) {
-      console.error('Error marking notifications as read:', error);
     }
   };
 
@@ -72,21 +61,25 @@ const Notifications: React.FC = () => {
           {notifications.length === 0 ? (
             <p>No new notifications</p>
           ) : (
-            notifications.map((notif) => (
-              <div key={notif.id} style={{
-                marginBottom: '5px',
-                opacity: notif.is_read ? 0.5 : 1,
-                padding: '8px',
-                borderBottom: '1px solid #ddd',
-              }}>
-                <p>{notif.message}</p>
-                <small>{new Date(notif.created_at).toLocaleString()}</small>
-              </div>
-            ))
+            <>
+              {notifications.map((notif) => (
+                <div key={notif.id} style={{
+                  marginBottom: '5px',
+                  opacity: notif.is_read ? 0.5 : 1,
+                  padding: '8px',
+                  borderBottom: '1px solid #ddd',
+                }}>
+                  <p>{notif.message}</p>
+                  <small>{new Date(notif.created_at).toLocaleString()}</small>
+                </div>
+              ))}
+              {unreadCount > 0 ? (
+                <MarkAllAsReadButton onMarkAsRead={fetchNotifications} />
+              ) : (
+                <DeleteNotificationsButton onDelete={fetchNotifications} />
+              )}
+            </>
           )}
-          <button onClick={markAsRead} style={{ marginTop: '10px', display: 'block', width: '100%' }}>
-            Mark All as Read
-          </button>
         </div>
       )}
     </div>

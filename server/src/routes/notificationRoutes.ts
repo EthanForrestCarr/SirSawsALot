@@ -53,4 +53,15 @@ router.patch('/mark-read', authenticateToken, async (req: AuthenticatedRequest, 
     }
   });
 
+// ✅ Delete all notifications for the logged-in user
+router.delete('/', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    await query('DELETE FROM notifications WHERE user_id = $1', [req.user]);
+    res.json({ message: 'All notifications deleted' });
+  } catch (error) {
+    console.error('Error deleting notifications:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 export default router;
