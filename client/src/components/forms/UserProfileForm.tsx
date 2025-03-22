@@ -11,7 +11,8 @@ interface UserProfileFormProps {
 
 const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSuccess }) => {
   const [userInfo, setUserInfo] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     address: '',
@@ -26,7 +27,13 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSuccess }) => {
         const response = await axios.get('http://localhost:3000/user', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUserInfo(response.data);
+        setUserInfo({
+          firstName: response.data.first_name || '',
+          lastName: response.data.last_name || '',
+          email: response.data.email,
+          phone: response.data.phone,
+          address: response.data.address,
+        });
       } catch (error: any) {
         setMessage(error.response?.data?.message || 'Failed to fetch user information.');
       }
@@ -43,10 +50,24 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSuccess }) => {
   const saveUserInfo = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.put('http://localhost:3000/user', userInfo, {
+      // Convert camelCase to snake_case when sending data
+      const payload = {
+        first_name: userInfo.firstName,
+        last_name: userInfo.lastName,
+        email: userInfo.email,
+        phone: userInfo.phone,
+        address: userInfo.address,
+      };
+      const response = await axios.put('http://localhost:3000/user', payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setUserInfo(response.data);
+      setUserInfo({
+        firstName: response.data.first_name || '',
+        lastName: response.data.last_name || '',
+        email: response.data.email,
+        phone: response.data.phone,
+        address: response.data.address,
+      });
       setEditMode(false);
       setMessage('User information updated successfully.');
       if (onSuccess) onSuccess();
@@ -71,7 +92,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSuccess }) => {
         </>
       ) : (
         <>
-          <p><strong>Name:</strong> {userInfo.name}</p>
+          <p><strong>Name:</strong> {userInfo.firstName} {userInfo.lastName}</p>
           <p><strong>Email:</strong> {userInfo.email}</p>
           <p><strong>Phone:</strong> {userInfo.phone}</p>
           <p><strong>Address:</strong> {userInfo.address}</p>

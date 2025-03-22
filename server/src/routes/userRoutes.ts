@@ -22,11 +22,12 @@ router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Respon
 
 router.put('/', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user;
-  const { firstName, lastName, email, phone, address } = req.body;
+  // Destructure snake_case keys as sent from the client
+  const { first_name, last_name, email, phone, address } = req.body;
   try {
     const result = await query(
       'UPDATE users SET first_name = $1, last_name = $2, email = $3, phone = $4, address = $5 WHERE id = $6 RETURNING first_name, last_name, email, phone, address',
-      [firstName, lastName, email, phone, address, userId]
+      [first_name, last_name, email, phone, address, userId]
     );
     res.json(result.rows[0]);
   } catch (error) {
