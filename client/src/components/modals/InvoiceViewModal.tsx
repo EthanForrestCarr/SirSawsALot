@@ -55,8 +55,11 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
           <p><strong>Email:</strong> {invoice.customer_email}</p>
           <p><strong>Phone:</strong> {invoice.customer_phone}</p>
           <p><strong>Address:</strong> {invoice.address}</p>
-          <p><strong>Customer Description:</strong><br /> {invoice.customer_description}</p> {/* updated label */}
-          <p><strong>Services:</strong><br /> {invoice.services}</p> {/* new field */}
+          <p><strong>Customer Description:</strong><br /> {invoice.customer_description}</p>
+          <p><strong>Services:</strong><br />
+            Wood Keep: {invoice.wood_keep ? 'Yes' : 'No'}<br />
+            Stump Grinding: {invoice.stump_grinding ? 'Yes' : 'No'}
+          </p>
           <p><strong>Total Amount:</strong> ${invoice.total_amount}</p>
           <p><strong>Due Date:</strong> {invoice.due_date}</p>
           <p><strong>Notes:</strong> {invoice.notes}</p>

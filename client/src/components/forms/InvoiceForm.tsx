@@ -9,7 +9,8 @@ export interface InvoiceFormData {
   customer_phone: string;
   address: string;
   customer_description: string; // renamed field
-  services: string;            // new field for services
+  wood_keep: boolean;           // new field for wood keep
+  stump_grinding: boolean;      // new field for stump grinding
   total_amount: string;
   due_date: string;
   notes: string;
@@ -28,8 +29,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
     customer_email: '',
     customer_phone: '',
     address: '',
-    customer_description: '', // updated field
-    services: '',             // new field
+    customer_description: '',
+    wood_keep: false,       // default value
+    stump_grinding: false,  // default value
     total_amount: '',
     due_date: '',
     notes: '',
@@ -41,8 +43,13 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
     }
   }, [initialData]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    if (name === "wood_keep" || name === "stump_grinding") {
+      setFormData({ ...formData, [name]: value === "true" });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -61,8 +68,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
         customer_email: '',
         customer_phone: '',
         address: '',
-        customer_description: '', // updated field
-        services: '',             // new field
+        customer_description: '',
+        wood_keep: false,
+        stump_grinding: false,
         total_amount: '',
         due_date: '',
         notes: '',
@@ -122,20 +130,32 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
         value={formData.address}
         required
       />
-      <textarea
-        name="customer_description"
-        placeholder="Customer Description" // updated label
-        onChange={handleChange}
-        value={formData.customer_description}
-        required
-      />
-      <textarea
-        name="services"
-        placeholder="Services (e.g., Wood Keep: Yes, Stump Grinding: No)" // new field
-        onChange={handleChange}
-        value={formData.services}
-        required
-      />
+      {/* Replace editable customer_description textarea */}
+      <div>
+        <label>Customer Description:</label>
+        <p>{formData.customer_description}</p>
+        <input
+          type="hidden"
+          name="customer_description"
+          value={formData.customer_description}
+        />
+      </div>
+      <div>
+        <label>
+          Wood Keep:
+          <select name="wood_keep" value={formData.wood_keep ? "true" : "false"} onChange={handleChange} required>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </label>
+        <label>
+          Stump Grinding:
+          <select name="stump_grinding" value={formData.stump_grinding ? "true" : "false"} onChange={handleChange} required>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </label>
+      </div>
       <input
         name="total_amount"
         type="number"

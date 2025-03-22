@@ -181,7 +181,8 @@ router.use('/invoices', authenticateToken, (req: AuthenticatedRequest, res, next
       customer_phone,
       address,
       customer_description, // renamed field
-      services,            // new field
+      wood_keep,            // new field
+      stump_grinding,       // new field
       total_amount,
       due_date,
       notes
@@ -193,7 +194,8 @@ router.use('/invoices', authenticateToken, (req: AuthenticatedRequest, res, next
       !customer_last_name ||
       !address ||
       !customer_description ||
-      !services ||
+      (wood_keep === undefined) ||
+      (stump_grinding === undefined) ||
       !total_amount ||
       !due_date
     ) {
@@ -204,10 +206,10 @@ router.use('/invoices', authenticateToken, (req: AuthenticatedRequest, res, next
     try {
       const result = await query(
         `INSERT INTO invoices
-          (request_id, customer_first_name, customer_last_name, customer_email, customer_phone, address, customer_description, services, total_amount, due_date, notes)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+          (request_id, customer_first_name, customer_last_name, customer_email, customer_phone, address, customer_description, wood_keep, stump_grinding, total_amount, due_date, notes)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
          RETURNING *`,
-        [request_id, customer_first_name, customer_last_name, customer_email, customer_phone, address, customer_description, services, total_amount, due_date, notes]
+        [request_id, customer_first_name, customer_last_name, customer_email, customer_phone, address, customer_description, wood_keep, stump_grinding, total_amount, due_date, notes]
       );
       res.status(201).json({ message: 'Invoice created', invoice: result.rows[0] });
     } catch (error) {

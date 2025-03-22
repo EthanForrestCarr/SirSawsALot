@@ -70,7 +70,8 @@ CREATE TABLE invoices (
   customer_phone TEXT,
   address TEXT NOT NULL,
   customer_description TEXT NOT NULL,  -- renamed field
-  services TEXT NOT NULL,              -- new field for services
+  wood_keep BOOLEAN NOT NULL,            -- new field for wood keep
+  stump_grinding BOOLEAN NOT NULL,       -- new field for stump grinding
   total_amount NUMERIC NOT NULL,
   due_date DATE NOT NULL,
   status TEXT DEFAULT 'pending',

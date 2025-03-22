@@ -29,7 +29,8 @@ const GenerateInvoiceButton: React.FC<GenerateInvoiceButtonProps> = ({
       customer_phone: request.phone || '', // Populate if available
       address: request.address,
       customer_description: request.description, // renamed from work_description
-      services: `Wood Keep: ${request.wood_keep ? 'Yes' : 'No'}\nStump Grinding: ${request.stump_grinding ? 'Yes' : 'No'}`, // new field
+      wood_keep: !!request.wood_keep,            // new field as boolean
+      stump_grinding: !!request.stump_grinding,   // new field as boolean
       total_amount: '100', // Default pricing value; update or calculate as needed
       due_date: new Date().toISOString().split('T')[0],
       notes: '',
