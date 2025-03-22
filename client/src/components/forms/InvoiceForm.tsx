@@ -8,7 +8,8 @@ export interface InvoiceFormData {
   customer_email: string;
   customer_phone: string;
   address: string;
-  work_description: string;
+  customer_description: string; // renamed field
+  services: string;            // new field for services
   total_amount: string;
   due_date: string;
   notes: string;
@@ -27,7 +28,8 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
     customer_email: '',
     customer_phone: '',
     address: '',
-    work_description: '',
+    customer_description: '', // updated field
+    services: '',             // new field
     total_amount: '',
     due_date: '',
     notes: '',
@@ -59,7 +61,8 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
         customer_email: '',
         customer_phone: '',
         address: '',
-        work_description: '',
+        customer_description: '', // updated field
+        services: '',             // new field
         total_amount: '',
         due_date: '',
         notes: '',
@@ -120,10 +123,17 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
         required
       />
       <textarea
-        name="work_description"
-        placeholder="Work Description"
+        name="customer_description"
+        placeholder="Customer Description" // updated label
         onChange={handleChange}
-        value={formData.work_description}
+        value={formData.customer_description}
+        required
+      />
+      <textarea
+        name="services"
+        placeholder="Services (e.g., Wood Keep: Yes, Stump Grinding: No)" // new field
+        onChange={handleChange}
+        value={formData.services}
         required
       />
       <input

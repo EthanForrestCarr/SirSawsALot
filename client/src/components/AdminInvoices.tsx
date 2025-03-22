@@ -3,6 +3,7 @@ import axios from 'axios';
 import InvoiceTable from './tables/InvoiceTable';
 import InvoiceModal from './modals/InvoiceModal';
 import { InvoiceFormData } from './forms/InvoiceForm';
+import InvoiceViewModal from './modals/InvoiceViewModal';
 
 const AdminInvoices: React.FC = () => {
   const [invoices, setInvoices] = useState<any[]>([]);
@@ -10,6 +11,8 @@ const AdminInvoices: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [prefillData, setPrefillData] = useState<InvoiceFormData | null>(null);
+  const [viewModalOpen, setViewModalOpen] = useState<boolean>(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
 
   useEffect(() => {
     console.log("AdminInvoices mounted, fetching invoices...");
@@ -38,6 +41,16 @@ const AdminInvoices: React.FC = () => {
     setPrefillData(null);
   };
 
+  const openViewInvoice = (invoice: any) => {
+    setSelectedInvoice(invoice);
+    setViewModalOpen(true);
+  };
+
+  const closeViewInvoice = () => {
+    setViewModalOpen(false);
+    setSelectedInvoice(null);
+  };
+
   return (
     <div>
       <h2>Invoices</h2>
@@ -46,7 +59,11 @@ const AdminInvoices: React.FC = () => {
       ) : error ? (
         <p>{error}</p>
       ) : (
-        <InvoiceTable invoices={invoices} onUpdate={fetchInvoices} />
+        <InvoiceTable 
+          invoices={invoices} 
+          onUpdate={fetchInvoices} 
+          onView={openViewInvoice} // Pass the view callback
+        />
       )}
       <InvoiceModal
         open={modalOpen}
@@ -54,6 +71,12 @@ const AdminInvoices: React.FC = () => {
         onClose={closeModal}
         onUpdate={fetchInvoices}
       />
+      {viewModalOpen && (
+        <InvoiceViewModal
+          invoice={selectedInvoice}
+          onClose={closeViewInvoice}
+        />
+      )}
     </div>
   );
 };

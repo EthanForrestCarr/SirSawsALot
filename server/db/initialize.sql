@@ -69,10 +69,11 @@ CREATE TABLE invoices (
   customer_email TEXT,
   customer_phone TEXT,
   address TEXT NOT NULL,
-  work_description TEXT NOT NULL,
+  customer_description TEXT NOT NULL,  -- renamed field
+  services TEXT NOT NULL,              -- new field for services
   total_amount NUMERIC NOT NULL,
   due_date DATE NOT NULL,
-  status TEXT DEFAULT 'pending',  -- New column for invoice status
+  status TEXT DEFAULT 'pending',
   notes TEXT,
   created_at TIMESTAMP DEFAULT NOW()
 );

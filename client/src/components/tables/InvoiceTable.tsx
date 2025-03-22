@@ -4,9 +4,10 @@ import axios from 'axios';
 interface InvoiceTableProps {
   invoices: any[];
   onUpdate: () => void;
+  onView: (invoice: any) => void; // New prop for viewing invoice details
 }
 
-const InvoiceTable: React.FC<InvoiceTableProps> = ({ invoices, onUpdate }) => {
+const InvoiceTable: React.FC<InvoiceTableProps> = ({ invoices, onUpdate, onView }) => {
   const handleStatusUpdate = async (id: number, status: string) => {
     const token = localStorage.getItem('token');
     try {
@@ -55,6 +56,7 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ invoices, onUpdate }) => {
               <button onClick={() => handleStatusUpdate(invoice.id, 'paid')}>Mark as Paid</button>
               <button onClick={() => handleStatusUpdate(invoice.id, 'canceled')}>Cancel</button>
               <button onClick={() => handleDelete(invoice.id)}>Delete</button>
+              <button onClick={() => onView(invoice)}>View Invoice</button> {/* New button */}
             </td>
           </tr>
         ))}
