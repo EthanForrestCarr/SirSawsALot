@@ -21,8 +21,9 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
 
   const handleSignOut = () => {
     localStorage.removeItem('token');
-    navigate('/');
     setIsLoggedIn(false);
+    navigate('/'); // Navigate to home page
+    window.location.reload(); // Refresh the page
   };
 
   return (

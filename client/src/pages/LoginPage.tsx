@@ -22,7 +22,8 @@ const LoginPage: React.FC = () => {
       const response = await axios.post('http://localhost:3000/auth/login', formData);
       setMessage(response.data.message || 'Login successful!');
       localStorage.setItem('token', response.data.token);
-      navigate('/dashboard'); // Redirect after successful login
+      navigate('/dashboard'); // Navigate to the dashboard
+      window.location.reload(); // Refresh the page after navigating
     } catch (error: any) {
       setMessage(error.response?.data?.message || 'Error occurred during login.');
     }
