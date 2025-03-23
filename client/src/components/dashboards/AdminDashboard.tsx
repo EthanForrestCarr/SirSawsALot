@@ -7,6 +7,7 @@ import AdminViewToggle from '../buttons/AdminViewToggle';
 import AdminInvoices from '../AdminInvoices';
 import InvoiceModal from '../modals/InvoiceModal';
 import { InvoiceFormData } from '../forms/InvoiceForm';
+import BlockDateForm from '../forms/BlockDateForm';
 
 const AdminDashboard: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
@@ -91,7 +92,10 @@ const AdminDashboard: React.FC = () => {
           />
         </>
       ) : view === 'calendar' ? (
+        <>
         <CalendarPicker />
+        <BlockDateForm />
+        </>
       ) : (
         <AdminInvoices />
       )}

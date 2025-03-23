@@ -8,7 +8,6 @@ import WorkRequestForm from './pages/WorkRequest';
 import Dashboard from './pages/Dashboard'; // ✅ New Dashboard
 import RequestDetailsPage from './pages/RequestDetails';
 import UserProfile from './pages/UserProfile';
-import CalendarPage from './pages/Calendar';
 import axios from 'axios';
 
 const App: React.FC = () => {
@@ -42,7 +41,6 @@ const App: React.FC = () => {
         <Route path="/work-request" element={<WorkRequestForm />} />
         <Route path="/admin/requests/:id" element={<RequestDetailsPage />} />
         <Route path="/profile" element={<UserProfile />} />
-        <Route path="/calendar" element={<CalendarPage />} /> {/* Calendar Page for Admins */}
       </Routes>
     </Router>
   );

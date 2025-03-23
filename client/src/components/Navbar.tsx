@@ -34,15 +34,9 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
             <img src={logo} alt="Sir Sawsalot" style={{ height: '100px' }} />
           </Link>
         </h1>
-        {isAdmin ? (
-          <Link to="/calendar" style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
-            Calendar
-          </Link>
-        ) : (
-          <Link to="/work-request" style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
-            Work Request
-          </Link>
-        )}
+        <Link to="/work-request" style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
+          Work Request
+        </Link>
         {isLoggedIn && (
           <>
             <Link to='/dashboard' style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
