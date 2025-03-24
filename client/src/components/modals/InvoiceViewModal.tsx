@@ -106,10 +106,37 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
           {/* Step 5: Service and Product Charges */}
           <div style={{ marginBottom: '1rem' }}>
             <h3>Services:</h3>
-            <ul>
-              <li>Wood Keep: {invoice.wood_keep ? 'Yes' : 'No'}</li>
-              <li>Stump Grinding: {invoice.stump_grinding ? 'Yes' : 'No'}</li>
-            </ul>
+            <table
+              style={{
+                width: '100%',
+                borderCollapse: 'collapse',
+                marginBottom: '1rem',
+              }}
+            >
+              <thead>
+                <tr>
+                  <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Service</th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Description</th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>Wood Keep</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    {invoice.wood_keep ? 'Customer keeps the wood' : 'Wood removal included'}
+                  </td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>$50</td>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>Stump Grinding</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    {invoice.stump_grinding ? 'Stump grinding included' : 'No stump grinding'}
+                  </td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>$100</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           {/* Step 6: Total Amount */}
