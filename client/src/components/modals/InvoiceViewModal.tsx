@@ -1,4 +1,6 @@
 import React from 'react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface InvoiceViewModalProps {
   invoice: any;
@@ -7,6 +9,28 @@ interface InvoiceViewModalProps {
 
 const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose }) => {
   if (!invoice) return null;
+
+  const handleDownloadPDF = async () => {
+    const element = document.getElementById('invoice-content');
+    if (!element) return;
+
+    // Add a custom class for PDF styling
+    element.classList.add('pdf-style');
+
+    try {
+      const canvas = await html2canvas(element);
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Invoice_${invoice.id}.pdf`);
+    } finally {
+      // Remove the custom class after generating the PDF
+      element.classList.remove('pdf-style');
+    }
+  };
 
   return (
     <div
@@ -48,7 +72,7 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
           &times;
         </button>
         <h3 style={{ textAlign: 'center' }}>Invoice Details</h3>
-        <div>
+        <div id="invoice-content">
           <p><strong>Invoice ID:</strong> {invoice.id}</p>
           <p><strong>Customer First Name:</strong> {invoice.customer_first_name}</p>
           <p><strong>Customer Last Name:</strong> {invoice.customer_last_name}</p>
@@ -64,6 +88,20 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
           <p><strong>Due Date:</strong> {invoice.due_date}</p>
           <p><strong>Notes:</strong> {invoice.notes}</p>
         </div>
+        <button
+          onClick={handleDownloadPDF}
+          style={{
+            marginTop: '1rem',
+            padding: '0.5rem 1rem',
+            backgroundColor: '#007bff',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          Download PDF
+        </button>
       </div>
     </div>
   );
