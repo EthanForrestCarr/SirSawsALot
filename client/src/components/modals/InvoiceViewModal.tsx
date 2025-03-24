@@ -36,6 +36,12 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
   }
   const servicePrice = baseServicePrice + scopeAdjustment;
 
+  const subtotal = woodKeepPrice + stumpPrice + servicePrice;
+  const discountValue = subtotal * ((invoice.discount || 0) / 100);
+  const taxableAmount = subtotal - discountValue;
+  const tax = taxableAmount * 0.08;
+  const finalTotal = taxableAmount + tax;
+
   const handleDownloadPDF = async () => {
     const element = document.getElementById('invoice-content');
     if (!element) return;
@@ -43,7 +49,7 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
     element.classList.add('pdf-style');
 
     try {
-      const canvas = await html2canvas(element);
+      const canvas = await html2canvas(element, { scale: 5 }); // increased scale for higher resolution
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -98,35 +104,36 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
         </button>
 
         {/* Add id="invoice-content" to the container */}
-        <div id="invoice-content">
-          {/* Step 1: Business Info */}
-          <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-            {/* Add the logo */}
+        <div id="invoice-content" style={{ marginTop: '3rem' }}>
+          {/* Updated Business Info Section */}
+          <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <h2>Sir Sawsalot</h2>
+              <p>123 Business Street, Fergus Falls, MN, 12345</p>
+              <p>Phone: (123) 456-7890 | Email: sirsawsalot@yahoo.com</p>
+            </div>
             <img
-              src="/SirSawsalotLogo.png" // Update the path if necessary
+              src="/SirSawsalotLogo.png"
               alt="Sir Sawsalot Logo"
-              style={{ maxWidth: '150px', marginBottom: '1rem' }}
+              style={{ maxWidth: '150px' }}
             />
-            <h2>Sir Sawsalot</h2>
-            <p>123 Business Street, Fergus Falls, MN, 12345</p>
-            <p>Phone: (123) 456-7890 | Email: sirsawsalot@yahoo.com</p>
           </div>
 
-          {/* Step 2: Client Info */}
-          <div style={{ marginBottom: '1rem' }}>
-            <h3>Bill To:</h3>
-            <p>{invoice.customer_first_name} {invoice.customer_last_name}</p>
-            <p>{invoice.address}</p>
-            <p>Email: {invoice.customer_email}</p>
-            <p>Phone: {invoice.customer_phone}</p>
-          </div>
-
-          {/* Step 3: Invoice Number */}
-          <div style={{ marginBottom: '1rem' }}>
-            <h3>Invoice Details:</h3>
-            <p><strong>Invoice Number:</strong> {invoice.id}</p>
-            <p><strong>Invoice Date:</strong> {new Date().toLocaleDateString()}</p>
-            <p><strong>Due Date:</strong> {invoice.due_date}</p>
+          {/* Replace the separate Client Info and Invoice Details blocks with the following */}
+          <div style={{ display: 'flex', gap: '2rem', marginBottom: '1rem' }}>
+            <div style={{ flex: 1 }}>
+              <h3>Bill To:</h3>
+              <p>{invoice.customer_first_name} {invoice.customer_last_name}</p>
+              <p>{invoice.address}</p>
+              <p>Email: {invoice.customer_email}</p>
+              <p>Phone: {invoice.customer_phone}</p>
+            </div>
+            <div style={{ flex: 1 }}>
+              <h3>Invoice Details:</h3>
+              <p><strong>Invoice Number:</strong> {invoice.id}</p>
+              <p><strong>Invoice Date:</strong> {new Date().toLocaleDateString("en-US")}</p>
+              <p><strong>Due Date:</strong> {new Date(invoice.due_date).toLocaleDateString("en-US")}</p>
+            </div>
           </div>
 
           {/* Step 5: Service and Product Charges */}
@@ -148,40 +155,56 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>Wood Keep</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>Service Type</td>
                   <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                    {invoice.wood_keep ? 'Customer keeps the wood' : 'Wood removal included'}
+                    {invoice.service_type} ({invoice.job_scope})
                   </td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>${woodKeepPrice}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>${servicePrice.toFixed(2)}</td>
                 </tr>
                 <tr>
                   <td style={{ border: '1px solid #ddd', padding: '8px' }}>Stump Grinding</td>
                   <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                     {invoice.stump_grinding ? 'Stump grinding included' : 'No stump grinding'}
                   </td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>${stumpPrice}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>${stumpPrice.toFixed(2)}</td>
                 </tr>
                 <tr>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>Service Type</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>Wood Keep</td>
                   <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                    {invoice.service_type} ({invoice.job_scope})
+                    {invoice.wood_keep ? 'Customer keeps the wood' : 'Wood removal included'}
                   </td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>${servicePrice}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>${woodKeepPrice.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={2}><strong>Discount ({invoice.discount || 0}%)</strong></td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>- ${discountValue.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={2}><strong>Subtotal</strong></td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}><strong>${taxableAmount.toFixed(2)}</strong></td>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={2}><strong>Tax (8%)</strong></td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>+ ${tax.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={2}><strong>Total</strong></td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}><strong>${finalTotal.toFixed(2)}</strong></td>
                 </tr>
               </tbody>
             </table>
-          </div>
-
-          {/* Step 6: Total Amount */}
-          <div style={{ marginBottom: '1rem' }}>
-            <h3>Total Amount:</h3>
-            <p><strong>${invoice.total_amount}</strong></p>
           </div>
 
           {/* Step 7: Notes Section */}
           <div style={{ marginBottom: '1rem' }}>
             <h3>Notes:</h3>
             <p>{invoice.notes || 'No additional notes provided.'}</p>
+          </div>
+
+          {/* Step 6: Amount Due */}
+          <div style={{ marginBottom: '1rem' }}>
+            <h3>Amount Due:</h3>
+            <p><strong>${finalTotal.toFixed(2)}</strong></p>
           </div>
 
           {/* Step 8: Personal Touch */}

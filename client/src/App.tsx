@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard'; // ✅ New Dashboard
 import RequestDetailsPage from './pages/RequestDetails';
 import UserProfile from './pages/UserProfile';
 import axios from 'axios';
+import './styles/pdfStyles.css';
 
 const App: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);

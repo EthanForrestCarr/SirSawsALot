@@ -51,7 +51,7 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ invoices, onUpdate, onView 
             <td>{invoice.customer_name}</td>
             <td>${invoice.total_amount}</td>
             <td>{invoice.status}</td>
-            <td>{invoice.due_date}</td>
+            <td>{new Date(invoice.due_date).toLocaleDateString("en-US")}</td>
             <td>
               <button onClick={() => handleStatusUpdate(invoice.id, 'paid')}>Mark as Paid</button>
               <button onClick={() => handleStatusUpdate(invoice.id, 'canceled')}>Cancel</button>

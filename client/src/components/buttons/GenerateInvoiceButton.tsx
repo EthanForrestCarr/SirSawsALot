@@ -21,6 +21,9 @@ const GenerateInvoiceButton: React.FC<GenerateInvoiceButtonProps> = ({
   onOpenModal = () => {},
 }) => {
   const handleGenerateInvoice = () => {
+    const twoWeeksFromNow = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split('T')[0];
     const prefillData = {
       request_id: request.id.toString(),
       customer_first_name: request.first_name,
@@ -32,7 +35,7 @@ const GenerateInvoiceButton: React.FC<GenerateInvoiceButtonProps> = ({
       wood_keep: !!request.wood_keep,            // new field as boolean
       stump_grinding: !!request.stump_grinding,   // new field as boolean
       total_amount: '100', // Default pricing value; update or calculate as needed
-      due_date: new Date().toISOString().split('T')[0],
+      due_date: twoWeeksFromNow,
       notes: '',
     };
 
