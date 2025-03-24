@@ -133,6 +133,7 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
               <p><strong>Invoice Number:</strong> {invoice.id}</p>
               <p><strong>Invoice Date:</strong> {new Date().toLocaleDateString("en-US")}</p>
               <p><strong>Due Date:</strong> {new Date(invoice.due_date).toLocaleDateString("en-US")}</p>
+              <p><strong>Payments Made To:</strong> Sir Sawsalot</p>
             </div>
           </div>
 

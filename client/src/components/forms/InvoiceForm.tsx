@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import TextareaAutosize from 'react-textarea-autosize';
 
 export interface InvoiceFormData {
   request_id: string;
@@ -8,7 +9,6 @@ export interface InvoiceFormData {
   customer_email: string;
   customer_phone: string;
   address: string;
-  customer_description: string; // renamed field
   wood_keep: boolean;           // true means free, false costs $50.00
   stump_grinding: boolean;      // true costs $100.00, false is free
   service_type: string;         // "Just a trim"|"Branch Removal"|"Full Tree Service"
@@ -32,11 +32,10 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
     customer_email: '',
     customer_phone: '',
     address: '',
-    customer_description: '',
     wood_keep: false,
     stump_grinding: false,
-    service_type: 'Just a trim',
-    job_scope: 'medium',
+    service_type: '', // changed default to empty
+    job_scope: '',    // changed default to empty
     discount: 0,
     total_amount: '',
     due_date: '',
@@ -70,7 +69,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
         baseServicePrice = 400;
         break;
       default:
-        baseServicePrice = 0;
+        baseServicePrice = 0; // if placeholder/not selected
     }
     // Job scope adjustment (medium is baseline)
     let scopeAdjustment = 0;
@@ -126,11 +125,10 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
         customer_email: '',
         customer_phone: '',
         address: '',
-        customer_description: '',
         wood_keep: false,
         stump_grinding: false,
-        service_type: 'Just a trim',
-        job_scope: 'medium',
+        service_type: '', // reset to empty
+        job_scope: '',    // reset to empty
         discount: 0,
         total_amount: '',
         due_date: '',
@@ -142,100 +140,77 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        name="request_id"
-        type="number"
-        placeholder="Work Request ID"
-        onChange={handleChange}
-        value={formData.request_id}
-        required
-      />
-      <input
-        name="customer_first_name"
-        type="text"
-        placeholder="Customer First Name"
-        onChange={handleChange}
-        value={formData.customer_first_name}
-        required
-      />
-      <input
-        name="customer_last_name"
-        type="text"
-        placeholder="Customer Last Name"
-        onChange={handleChange}
-        value={formData.customer_last_name}
-        required
-      />
-      <input
-        name="customer_email"
-        type="email"
-        placeholder="Customer Email"
-        onChange={handleChange}
-        value={formData.customer_email}
-        required
-      />
-      <input
-        name="customer_phone"
-        type="text"
-        placeholder="Customer Phone"
-        onChange={handleChange}
-        value={formData.customer_phone}
-        required
-      />
-      <input
-        name="address"
-        type="text"
-        placeholder="Address"
-        onChange={handleChange}
-        value={formData.address}
-        required
-      />
-      {/* Non-editable customer description */}
-      <div>
-        <label>Customer Description:</label>
-        <p>{formData.customer_description}</p>
-        <input type="hidden" name="customer_description" value={formData.customer_description} />
+    <form onSubmit={handleSubmit} style={{ padding: '1rem' }}>
+      {/* Display-only customer information with improved spacing and alignment */}
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <label style={{ width: '40%' }}>Work Request ID:</label>
+        <span style={{ width: '60%', textAlign: 'right' }}>{formData.request_id}</span>
       </div>
-      <div>
-        <label>
-          Wood Keep:
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <label style={{ width: '40%' }}>First Name:</label>
+        <span style={{ width: '60%', textAlign: 'right' }}>{formData.customer_first_name}</span>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <label style={{ width: '40%' }}>Last Name:</label>
+        <span style={{ width: '60%', textAlign: 'right' }}>{formData.customer_last_name}</span>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <label style={{ width: '40%' }}>Email:</label>
+        <span style={{ width: '60%', textAlign: 'right' }}>{formData.customer_email}</span>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <label style={{ width: '40%' }}>Phone:</label>
+        <span style={{ width: '60%', textAlign: 'right' }}>{formData.customer_phone}</span>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <label style={{ width: '40%' }}>Address:</label>
+        <span style={{ width: '60%', textAlign: 'right' }}>{formData.address}</span>
+      </div>
+      <br />
+      {/* Editable fields with alignment */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+        <label style={{ width: '40%' }}>Wood Keep:</label>
+        <div style={{ width: '60%', textAlign: 'right' }}>
           <select name="wood_keep" value={formData.wood_keep ? "true" : "false"} onChange={handleChange} required>
             <option value="true">Yes (Free)</option>
             <option value="false">No ($50.00)</option>
           </select>
-        </label>
-        <label>
-          Stump Grinding:
+        </div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+        <label style={{ width: '40%' }}>Stump Grinding:</label>
+        <div style={{ width: '60%', textAlign: 'right' }}>
           <select name="stump_grinding" value={formData.stump_grinding ? "true" : "false"} onChange={handleChange} required>
             <option value="true">Yes ($100.00)</option>
             <option value="false">No (Free)</option>
           </select>
-        </label>
+        </div>
       </div>
-      <div>
-        <label>
-          Service Type:
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+        <label style={{ width: '40%' }}>Service Type:</label>
+        <div style={{ width: '60%', textAlign: 'right' }}>
           <select name="service_type" value={formData.service_type} onChange={handleChange} required>
+            <option value="" disabled>Select Service Type</option>
             <option value="Just a trim">Just a trim ($100.00 baseline)</option>
             <option value="Branch Removal">Branch Removal ($200.00 baseline)</option>
             <option value="Full Tree Service">Full Tree Service ($400.00 baseline)</option>
           </select>
-        </label>
+        </div>
       </div>
-      <div>
-        <label>
-          Job Scope:
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+        <label style={{ width: '40%' }}>Job Scope:</label>
+        <div style={{ width: '60%', textAlign: 'right' }}>
           <select name="job_scope" value={formData.job_scope} onChange={handleChange} required>
+            <option value="" disabled>Select Job Scope</option>
             <option value="small">Small (Subtract $50)</option>
             <option value="medium">Medium (No change)</option>
             <option value="large">Large (Add $50)</option>
           </select>
-        </label>
+        </div>
       </div>
-      <div>
-        <label>
-          Discount (%):
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+        <label style={{ width: '40%' }}>Discount (%):</label>
+        <div style={{ width: '60%', textAlign: 'right' }}>
           <input
             type="number"
             name="discount"
@@ -245,25 +220,38 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
             min="0"
             max="100"
           />
-        </label>
+        </div>
       </div>
-      <input
-        name="due_date"
-        type="date"
-        onChange={handleChange}
-        value={formData.due_date}
-        required
-      />
-      <textarea
-        name="notes"
-        placeholder="Notes"
-        onChange={handleChange}
-        value={formData.notes}
-      />
-      <div>
-        <strong>Total: ${formData.total_amount}</strong>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+        <label style={{ width: '40%' }}>Due Date:</label>
+        <div style={{ width: '60%', textAlign: 'right' }}>
+          <input
+            name="due_date"
+            type="date"
+            onChange={handleChange}
+            value={formData.due_date}
+            required
+          />
+        </div>
       </div>
-      <button type="submit">Create Invoice</button>
+      <div style={{ marginBottom: '1rem' }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Notes:</label>
+        <TextareaAutosize
+          name="notes"
+          placeholder="Notes"
+          onChange={handleChange}
+          value={formData.notes}
+          minRows={3}
+          style={{ width: '100%', resize: 'none' }} // deactivated resizing altogether
+        />
+      </div>
+      <div style={{ textAlign: 'right', marginTop: '1rem' }}>
+        <div>
+          <strong>Total: ${formData.total_amount}</strong>
+        </div>
+        <br />
+        <button type="submit">Create Invoice</button>
+      </div>
     </form>
   );
 };
