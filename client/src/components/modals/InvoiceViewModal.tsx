@@ -10,6 +10,32 @@ interface InvoiceViewModalProps {
 const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose }) => {
   if (!invoice) return null;
 
+  // Calculate individual service prices based on invoice data.
+  const woodKeepPrice = invoice.wood_keep ? 0 : 50;
+  const stumpPrice = invoice.stump_grinding ? 100 : 0;
+
+  let baseServicePrice = 0;
+  switch (invoice.service_type) {
+    case "Just a trim":
+      baseServicePrice = 100;
+      break;
+    case "Branch Removal":
+      baseServicePrice = 200;
+      break;
+    case "Full Tree Service":
+      baseServicePrice = 400;
+      break;
+    default:
+      baseServicePrice = 0;
+  }
+  let scopeAdjustment = 0;
+  if (invoice.job_scope === "small") {
+    scopeAdjustment = -50;
+  } else if (invoice.job_scope === "large") {
+    scopeAdjustment = 50;
+  }
+  const servicePrice = baseServicePrice + scopeAdjustment;
+
   const handleDownloadPDF = async () => {
     const element = document.getElementById('invoice-content');
     if (!element) return;
@@ -126,14 +152,21 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
                   <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                     {invoice.wood_keep ? 'Customer keeps the wood' : 'Wood removal included'}
                   </td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>$50</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>${woodKeepPrice}</td>
                 </tr>
                 <tr>
                   <td style={{ border: '1px solid #ddd', padding: '8px' }}>Stump Grinding</td>
                   <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                     {invoice.stump_grinding ? 'Stump grinding included' : 'No stump grinding'}
                   </td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>$100</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>${stumpPrice}</td>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>Service Type</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    {invoice.service_type} ({invoice.job_scope})
+                  </td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>${servicePrice}</td>
                 </tr>
               </tbody>
             </table>

@@ -76,7 +76,10 @@ CREATE TABLE invoices (
   due_date DATE NOT NULL,
   status TEXT DEFAULT 'pending',
   notes TEXT,
-  created_at TIMESTAMP DEFAULT NOW()
+  created_at TIMESTAMP DEFAULT NOW(),
+  service_type TEXT,
+  job_scope TEXT,
+  discount NUMERIC DEFAULT 0
 );
 
 -- (Optional) Create indexes for faster lookups
