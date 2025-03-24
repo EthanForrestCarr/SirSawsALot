@@ -14,7 +14,6 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
     const element = document.getElementById('invoice-content');
     if (!element) return;
 
-    // Add a custom class for PDF styling
     element.classList.add('pdf-style');
 
     try {
@@ -27,7 +26,6 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`Invoice_${invoice.id}.pdf`);
     } finally {
-      // Remove the custom class after generating the PDF
       element.classList.remove('pdf-style');
     }
   };
@@ -55,6 +53,7 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
           width: '80%',
           maxWidth: '600px',
           position: 'relative',
+          fontFamily: 'Arial, sans-serif',
         }}
       >
         <button
@@ -71,23 +70,66 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
         >
           &times;
         </button>
-        <h3 style={{ textAlign: 'center' }}>Invoice Details</h3>
+
+        {/* Add id="invoice-content" to the container */}
         <div id="invoice-content">
-          <p><strong>Invoice ID:</strong> {invoice.id}</p>
-          <p><strong>Customer First Name:</strong> {invoice.customer_first_name}</p>
-          <p><strong>Customer Last Name:</strong> {invoice.customer_last_name}</p>
-          <p><strong>Email:</strong> {invoice.customer_email}</p>
-          <p><strong>Phone:</strong> {invoice.customer_phone}</p>
-          <p><strong>Address:</strong> {invoice.address}</p>
-          <p><strong>Customer Description:</strong><br /> {invoice.customer_description}</p>
-          <p><strong>Services:</strong><br />
-            Wood Keep: {invoice.wood_keep ? 'Yes' : 'No'}<br />
-            Stump Grinding: {invoice.stump_grinding ? 'Yes' : 'No'}
-          </p>
-          <p><strong>Total Amount:</strong> ${invoice.total_amount}</p>
-          <p><strong>Due Date:</strong> {invoice.due_date}</p>
-          <p><strong>Notes:</strong> {invoice.notes}</p>
+          {/* Step 1: Business Info */}
+          <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+            {/* Add the logo */}
+            <img
+              src="/SirSawsalotLogo.png" // Update the path if necessary
+              alt="Sir Sawsalot Logo"
+              style={{ maxWidth: '150px', marginBottom: '1rem' }}
+            />
+            <h2>Sir Sawsalot</h2>
+            <p>123 Business Street, Fergus Falls, MN, 12345</p>
+            <p>Phone: (123) 456-7890 | Email: sirsawsalot@yahoo.com</p>
+          </div>
+
+          {/* Step 2: Client Info */}
+          <div style={{ marginBottom: '1rem' }}>
+            <h3>Bill To:</h3>
+            <p>{invoice.customer_first_name} {invoice.customer_last_name}</p>
+            <p>{invoice.address}</p>
+            <p>Email: {invoice.customer_email}</p>
+            <p>Phone: {invoice.customer_phone}</p>
+          </div>
+
+          {/* Step 3: Invoice Number */}
+          <div style={{ marginBottom: '1rem' }}>
+            <h3>Invoice Details:</h3>
+            <p><strong>Invoice Number:</strong> {invoice.id}</p>
+            <p><strong>Invoice Date:</strong> {new Date().toLocaleDateString()}</p>
+            <p><strong>Due Date:</strong> {invoice.due_date}</p>
+          </div>
+
+          {/* Step 5: Service and Product Charges */}
+          <div style={{ marginBottom: '1rem' }}>
+            <h3>Services:</h3>
+            <ul>
+              <li>Wood Keep: {invoice.wood_keep ? 'Yes' : 'No'}</li>
+              <li>Stump Grinding: {invoice.stump_grinding ? 'Yes' : 'No'}</li>
+            </ul>
+          </div>
+
+          {/* Step 6: Total Amount */}
+          <div style={{ marginBottom: '1rem' }}>
+            <h3>Total Amount:</h3>
+            <p><strong>${invoice.total_amount}</strong></p>
+          </div>
+
+          {/* Step 7: Notes Section */}
+          <div style={{ marginBottom: '1rem' }}>
+            <h3>Notes:</h3>
+            <p>{invoice.notes || 'No additional notes provided.'}</p>
+          </div>
+
+          {/* Step 8: Personal Touch */}
+          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <p>Thank you for your business!</p>
+          </div>
         </div>
+
         <button
           onClick={handleDownloadPDF}
           style={{
