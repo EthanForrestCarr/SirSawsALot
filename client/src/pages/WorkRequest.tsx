@@ -1,17 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import AuthenticatedWorkRequestForm from '../components/forms/AuthenticatedWorkRequestForm';
 import GuestWorkRequestForm from '../components/forms/GuestWorkRequestForm';
 
 const WorkRequest: React.FC = () => {
-  const isLoggedIn = !!localStorage.getItem('token'); // Check if token exists
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (token) {
+        try {
+          const response = await axios.get('http://localhost:3000/user', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (response.data && response.data.is_admin) {
+            setIsAdmin(true);
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      }
+      setIsLoading(false);
+    };
+    fetchUserData();
+  }, [token]);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  const showGuestForm = !token || isAdmin;
 
   return (
     <div style={{ padding: '2rem' }}>
       <h1>Work Request</h1>
-      {isLoggedIn ? (
-        <AuthenticatedWorkRequestForm />
-      ) : (
+      {showGuestForm ? (
         <GuestWorkRequestForm />
+      ) : (
+        <AuthenticatedWorkRequestForm />
       )}
     </div>
   );

@@ -8,7 +8,7 @@ interface NavbarProps {
   isAdmin: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
+const Navbar: React.FC<NavbarProps> = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
