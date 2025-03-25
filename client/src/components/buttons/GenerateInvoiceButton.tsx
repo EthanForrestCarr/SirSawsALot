@@ -11,7 +11,6 @@ interface GenerateInvoiceButtonProps {
     description: string;
     wood_keep?: boolean;
     stump_grinding?: boolean;
-    // Add any extra fields if needed
   };
   onOpenModal?: (prefillData: any) => void;
 }
@@ -29,12 +28,12 @@ const GenerateInvoiceButton: React.FC<GenerateInvoiceButtonProps> = ({
       customer_first_name: request.first_name,
       customer_last_name: request.last_name,
       customer_email: request.email || '', // Populate if available
-      customer_phone: request.phone || '', // Populate if available
+      customer_phone: request.phone || '',   // Populate if available
       address: request.address,
       customer_description: request.description, // renamed from work_description
       wood_keep: !!request.wood_keep,            // new field as boolean
       stump_grinding: !!request.stump_grinding,   // new field as boolean
-      total_amount: '100', // Default pricing value; update or calculate as needed
+      total_amount: '', // Removed default pricing value; InvoiceForm will calculate total.
       due_date: twoWeeksFromNow,
       notes: '',
     };

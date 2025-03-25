@@ -12,19 +12,19 @@ const AdminViewToggle: React.FC<AdminViewToggleProps> = ({ view, setView }) => {
         onClick={() => setView('table')} 
         style={{ marginRight: '1rem', fontWeight: view === 'table' ? 'bold' : 'normal' }}
       >
-        Table View
+        Requests
       </button>
       <button 
         onClick={() => setView('calendar')} 
         style={{ marginRight: '1rem', fontWeight: view === 'calendar' ? 'bold' : 'normal' }}
       >
-        Calendar View
+        Calendar
       </button>
       <button 
         onClick={() => setView('invoices')} 
         style={{ fontWeight: view === 'invoices' ? 'bold' : 'normal' }}
       >
-        Invoices View
+        Invoices
       </button>
     </div>
   );

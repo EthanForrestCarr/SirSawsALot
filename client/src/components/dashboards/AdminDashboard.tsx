@@ -5,7 +5,7 @@ import Pagination from '../buttons/Pagination';
 import AdminRequestsTable from '../tables/AdminRequestsTable';
 import AdminViewToggle from '../buttons/AdminViewToggle';
 import AdminInvoices from '../AdminInvoices';
-import InvoiceModal from '../modals/InvoiceModal';
+import InvoiceModal from '../modals/InvoiceFormModal';
 import { InvoiceFormData } from '../forms/InvoiceForm';
 import BlockDateForm from '../forms/BlockDateForm';
 

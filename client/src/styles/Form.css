@@ -1,0 +1,33 @@
+.form {
+    padding: 1rem;
+}
+
+.form__display-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form__row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.form__label {
+    width: 40%;
+}
+
+.form__field {
+    width: 60%;
+    text-align: right;
+}
+
+.form__textarea {
+    width: 100%;
+    resize: none;
+}
+
+.form__submit-section {
+    text-align: right;
+    margin-top: 1rem;
+}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TextareaAutosize from 'react-textarea-autosize';
+import '../../styles/Form.css'; // import the CSS
 
 export interface InvoiceFormData {
   request_id: string;
@@ -140,55 +141,55 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: '1rem' }}>
-      {/* Display-only customer information with improved spacing and alignment */}
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <label style={{ width: '40%' }}>Work Request ID:</label>
-        <span style={{ width: '60%', textAlign: 'right' }}>{formData.request_id}</span>
+    <form onSubmit={handleSubmit} className="form">
+      {/* Display-only customer information */}
+      <div className="form__display-row">
+        <label className="form__label">Work Request ID:</label>
+        <span className="form__field">{formData.request_id}</span>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <label style={{ width: '40%' }}>First Name:</label>
-        <span style={{ width: '60%', textAlign: 'right' }}>{formData.customer_first_name}</span>
+      <div className="form__display-row">
+        <label className="form__label">First Name:</label>
+        <span className="form__field">{formData.customer_first_name}</span>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <label style={{ width: '40%' }}>Last Name:</label>
-        <span style={{ width: '60%', textAlign: 'right' }}>{formData.customer_last_name}</span>
+      <div className="form__display-row">
+        <label className="form__label">Last Name:</label>
+        <span className="form__field">{formData.customer_last_name}</span>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <label style={{ width: '40%' }}>Email:</label>
-        <span style={{ width: '60%', textAlign: 'right' }}>{formData.customer_email}</span>
+      <div className="form__display-row">
+        <label className="form__label">Email:</label>
+        <span className="form__field">{formData.customer_email}</span>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <label style={{ width: '40%' }}>Phone:</label>
-        <span style={{ width: '60%', textAlign: 'right' }}>{formData.customer_phone}</span>
+      <div className="form__display-row">
+        <label className="form__label">Phone:</label>
+        <span className="form__field">{formData.customer_phone}</span>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <label style={{ width: '40%' }}>Address:</label>
-        <span style={{ width: '60%', textAlign: 'right' }}>{formData.address}</span>
+      <div className="form__display-row">
+        <label className="form__label">Address:</label>
+        <span className="form__field">{formData.address}</span>
       </div>
       <br />
-      {/* Editable fields with alignment */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-        <label style={{ width: '40%' }}>Wood Keep:</label>
-        <div style={{ width: '60%', textAlign: 'right' }}>
+      {/* Editable fields */}
+      <div className="form__row">
+        <label className="form__label">Wood Keep:</label>
+        <div className="form__field">
           <select name="wood_keep" value={formData.wood_keep ? "true" : "false"} onChange={handleChange} required>
             <option value="true">Yes (Free)</option>
             <option value="false">No ($50.00)</option>
           </select>
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-        <label style={{ width: '40%' }}>Stump Grinding:</label>
-        <div style={{ width: '60%', textAlign: 'right' }}>
+      <div className="form__row">
+        <label className="form__label">Stump Grinding:</label>
+        <div className="form__field">
           <select name="stump_grinding" value={formData.stump_grinding ? "true" : "false"} onChange={handleChange} required>
             <option value="true">Yes ($100.00)</option>
             <option value="false">No (Free)</option>
           </select>
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-        <label style={{ width: '40%' }}>Service Type:</label>
-        <div style={{ width: '60%', textAlign: 'right' }}>
+      <div className="form__row">
+        <label className="form__label">Service Type:</label>
+        <div className="form__field">
           <select name="service_type" value={formData.service_type} onChange={handleChange} required>
             <option value="" disabled>Select Service Type</option>
             <option value="Just a trim">Just a trim ($100.00 baseline)</option>
@@ -197,9 +198,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
           </select>
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-        <label style={{ width: '40%' }}>Job Scope:</label>
-        <div style={{ width: '60%', textAlign: 'right' }}>
+      <div className="form__row">
+        <label className="form__label">Job Scope:</label>
+        <div className="form__field">
           <select name="job_scope" value={formData.job_scope} onChange={handleChange} required>
             <option value="" disabled>Select Job Scope</option>
             <option value="small">Small (Subtract $50)</option>
@@ -208,9 +209,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
           </select>
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-        <label style={{ width: '40%' }}>Discount (%):</label>
-        <div style={{ width: '60%', textAlign: 'right' }}>
+      <div className="form__row">
+        <label className="form__label">Discount (%):</label>
+        <div className="form__field">
           <input
             type="number"
             name="discount"
@@ -222,9 +223,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
           />
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-        <label style={{ width: '40%' }}>Due Date:</label>
-        <div style={{ width: '60%', textAlign: 'right' }}>
+      <div className="form__row">
+        <label className="form__label">Due Date:</label>
+        <div className="form__field">
           <input
             name="due_date"
             type="date"
@@ -234,18 +235,17 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
           />
         </div>
       </div>
-      <div style={{ marginBottom: '1rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Notes:</label>
+      <div className="form__row">
         <TextareaAutosize
           name="notes"
           placeholder="Notes"
           onChange={handleChange}
           value={formData.notes}
           minRows={3}
-          style={{ width: '100%', resize: 'none' }} // deactivated resizing altogether
+          className="form__textarea"
         />
       </div>
-      <div style={{ textAlign: 'right', marginTop: '1rem' }}>
+      <div className="form__submit-section">
         <div>
           <strong>Total: ${formData.total_amount}</strong>
         </div>

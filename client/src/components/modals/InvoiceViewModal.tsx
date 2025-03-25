@@ -1,6 +1,8 @@
 import React from 'react';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import ServiceChargesTable from '../tables/ServiceChargesTable';
+import DownloadPDFButton from '../buttons/DownloadPDFButton';
+import CloseButton from '../buttons/CloseButton';
+import '../../styles/Modal.css';
 
 interface InvoiceViewModalProps {
   invoice: any;
@@ -42,69 +44,13 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
   const tax = taxableAmount * 0.08;
   const finalTotal = taxableAmount + tax;
 
-  const handleDownloadPDF = async () => {
-    const element = document.getElementById('invoice-content');
-    if (!element) return;
-
-    element.classList.add('pdf-style');
-
-    try {
-      const canvas = await html2canvas(element, { scale: 5 }); // increased scale for higher resolution
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`Invoice_${invoice.id}.pdf`);
-    } finally {
-      element.classList.remove('pdf-style');
-    }
-  };
-
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 1000,
-      }}
-    >
-      <div
-        style={{
-          background: 'grey',
-          padding: '1rem',
-          borderRadius: '8px',
-          width: '80%',
-          maxWidth: '600px',
-          position: 'relative',
-          fontFamily: 'Arial, sans-serif',
-        }}
-      >
-        <button
-          onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: '0.5rem',
-            right: '0.5rem',
-            background: 'transparent',
-            border: 'none',
-            fontSize: '1.2rem',
-            cursor: 'pointer',
-          }}
-        >
-          &times;
-        </button>
+    <div className="modal-overlay">
+      <div className="modal-container">
+        <CloseButton onClick={onClose} />
 
         {/* Add id="invoice-content" to the container */}
-        <div id="invoice-content" style={{ marginTop: '3rem' }}>
+        <div id="invoice-content" className="invoice-content">
           {/* Updated Business Info Section */}
           <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
@@ -140,66 +86,15 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
           {/* Step 5: Service and Product Charges */}
           <div style={{ marginBottom: '1rem' }}>
             <h3>Services:</h3>
-            <table
-              style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                marginBottom: '1rem',
-              }}
-            >
-              <thead>
-                <tr>
-                  <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Service</th>
-                  <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Description</th>
-                  <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>Service Type</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                    {invoice.service_type} ({invoice.job_scope})
-                  </td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>${servicePrice.toFixed(2)}</td>
-                </tr>
-                <tr>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>Stump Grinding</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                    {invoice.stump_grinding ? 'Stump grinding included' : 'No stump grinding'}
-                  </td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>${stumpPrice.toFixed(2)}</td>
-                </tr>
-                <tr>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>Wood Keep</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                    {invoice.wood_keep ? 'Customer keeps the wood' : 'Wood removal included'}
-                  </td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>${woodKeepPrice.toFixed(2)}</td>
-                </tr>
-                <tr>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={2}><strong>Discount ({invoice.discount || 0}%)</strong></td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>- ${discountValue.toFixed(2)}</td>
-                </tr>
-                <tr>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={2}><strong>Subtotal</strong></td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}><strong>${taxableAmount.toFixed(2)}</strong></td>
-                </tr>
-                <tr>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={2}><strong>Tax (8%)</strong></td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>+ ${tax.toFixed(2)}</td>
-                </tr>
-                <tr>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={2}><strong>Total</strong></td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}><strong>${finalTotal.toFixed(2)}</strong></td>
-                </tr>
-              </tbody>
-            </table>
+            <ServiceChargesTable invoice={invoice} />
           </div>
 
           {/* Step 7: Notes Section */}
           <div style={{ marginBottom: '1rem' }}>
             <h3>Notes:</h3>
-            <p>{invoice.notes || 'No additional notes provided.'}</p>
+            <p style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+              {invoice.notes || 'No additional notes provided.'}
+            </p>
           </div>
 
           {/* Step 6: Amount Due */}
@@ -214,20 +109,7 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
           </div>
         </div>
 
-        <button
-          onClick={handleDownloadPDF}
-          style={{
-            marginTop: '1rem',
-            padding: '0.5rem 1rem',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
-        >
-          Download PDF
-        </button>
+        <DownloadPDFButton invoice={invoice} />
       </div>
     </div>
   );

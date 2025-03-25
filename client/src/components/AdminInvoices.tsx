@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import InvoiceTable from './tables/InvoiceTable';
-import InvoiceModal from './modals/InvoiceModal';
+import InvoiceModal from './modals/InvoiceFormModal';
 import { InvoiceFormData } from './forms/InvoiceForm';
 import InvoiceViewModal from './modals/InvoiceViewModal';
 

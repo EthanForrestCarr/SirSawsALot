@@ -1,11 +1,11 @@
 .pdf-style {
   font-size: 10px !important;
-  line-height: 0.5 !important; /* decreased from 1.2 */
+  line-height: 0.5 !important;
   padding: 96px !important;
   color: black !important;
 }
 
-/* Optionally override heading styles */
+/* override heading styles */
 .pdf-style h2 {
   font-size: 16px !important;
 }
@@ -17,5 +17,5 @@
 
 /* Limit the logo's size in the PDF */
 .pdf-style img {
-  max-width: 100px !important; /* Adjust the value as needed */
+  max-width: 100px !important;
 }
