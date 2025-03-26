@@ -49,7 +49,7 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ invoices, onUpdate, onView 
         {invoices.map((invoice) => (
           <tr key={invoice.id}>
             <td>{invoice.id}</td>
-            <td>{invoice.customer_name}</td>
+            <td>{invoice.customer_first_name} {invoice.customer_last_name}</td>
             <td>${invoice.total_amount}</td>
             <td>{invoice.status}</td>
             <td>{new Date(invoice.due_date).toLocaleDateString("en-US")}</td>

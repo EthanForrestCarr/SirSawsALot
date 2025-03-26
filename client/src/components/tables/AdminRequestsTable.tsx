@@ -9,6 +9,8 @@ interface Request {
   date: string;
   first_name: string;
   last_name: string;
+  email: string;
+  phone: string;
   description: string;
   address: string;
   status: string;

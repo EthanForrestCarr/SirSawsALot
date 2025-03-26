@@ -47,7 +47,7 @@ router.get('/', authenticateToken, async (req: Request, res: Response): Promise<
   const userId = (req as any).user;
 
   try {
-    // Select additional fields from requests and join with invoices
+    // Select additional fields from requests and join invoices with extra fields.
     const result = await query(
       `SELECT 
           r.id,
@@ -63,7 +63,19 @@ router.get('/', authenticateToken, async (req: Request, res: Response): Promise<
           i.status as invoice_status,
           i.total_amount,
           i.due_date,
-          i.created_at as invoice_created_at
+          i.created_at as invoice_created_at,
+          i.customer_first_name,
+          i.customer_last_name,
+          i.customer_email,
+          i.customer_phone,
+          i.address as invoice_address,
+          i.customer_description,
+          i.wood_keep,
+          i.stump_grinding,
+          i.service_type,
+          i.job_scope,
+          i.discount,
+          i.notes
        FROM requests r
        LEFT JOIN invoices i ON r.id = i.request_id
        WHERE r.user_id = $1
@@ -71,7 +83,7 @@ router.get('/', authenticateToken, async (req: Request, res: Response): Promise<
       [userId]
     );
 
-    // Transform each row to include an invoice object if available
+    // Transform each row to include an invoice object if available.
     const requests = result.rows.map(row => {
       if (row.invoice_id) {
         row.invoice = {
@@ -79,7 +91,19 @@ router.get('/', authenticateToken, async (req: Request, res: Response): Promise<
           status: row.invoice_status,
           total_amount: row.total_amount,
           due_date: row.due_date,
-          created_at: row.invoice_created_at
+          created_at: row.invoice_created_at,
+          customer_first_name: row.customer_first_name,
+          customer_last_name: row.customer_last_name,
+          customer_email: row.customer_email,
+          customer_phone: row.customer_phone,
+          address: row.invoice_address, // Use invoice_address so Bill To: is correct
+          customer_description: row.customer_description,
+          wood_keep: row.wood_keep,
+          stump_grinding: row.stump_grinding,
+          service_type: row.service_type,
+          job_scope: row.job_scope,
+          discount: row.discount,
+          notes: row.notes,
         };
       }
       return row;
@@ -127,7 +151,7 @@ router.post('/guest', upload.single('imageFile'), async (req: Request, res: Resp
         phone,
         description,
         address,
-        imageBuffer, // Store binary data
+        imageBuffer,
         wood_keep,
         wood_arrangement,
         stump_grinding,

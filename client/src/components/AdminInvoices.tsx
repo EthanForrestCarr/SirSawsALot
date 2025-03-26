@@ -75,6 +75,7 @@ const AdminInvoices: React.FC = () => {
         <InvoiceViewModal
           invoice={selectedInvoice}
           onClose={closeViewInvoice}
+          isAdmin={true} // pass admin flag
         />
       )}
     </div>

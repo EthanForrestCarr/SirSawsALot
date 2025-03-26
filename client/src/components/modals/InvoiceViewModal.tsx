@@ -1,16 +1,17 @@
 import React from 'react';
-import axios from 'axios';
 import ServiceChargesTable from '../tables/ServiceChargesTable';
 import DownloadPDFButton from '../buttons/DownloadPDFButton';
 import CloseButton from '../buttons/CloseButton';
+import SubmitInvoice from '../buttons/SubmitInvoice';
 import '../../styles/Modal.css';
 
 interface InvoiceViewModalProps {
   invoice: any;
   onClose: () => void;
+  isAdmin?: boolean; // new prop to flag admin users
 }
 
-const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose }) => {
+const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose, isAdmin }) => {
   if (!invoice) return null;
 
   // Calculate individual service prices based on invoice data.
@@ -44,20 +45,6 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
   const taxableAmount = subtotal - discountValue;
   const tax = taxableAmount * 0.08;
   const finalTotal = taxableAmount + tax;
-
-  const handleSubmitInvoice = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.patch(`http://localhost:3000/admin/invoices/${invoice.id}`, { status: 'submitted' }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      alert(response.data.message);
-      onClose();
-    } catch (error: any) {
-      console.error('Error submitting invoice:', error);
-      alert(error.response?.data?.message || 'Error submitting invoice.');
-    }
-  };
 
   return (
     <div className="modal-overlay">
@@ -125,10 +112,7 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({ invoice, onClose })
         </div>
 
         <DownloadPDFButton invoice={invoice} />
-        {/* New button for submitting the invoice */}
-        <button onClick={handleSubmitInvoice} className="btn-block" style={{ marginTop: '1rem' }}>
-          Submit Invoice to User
-        </button>
+        {isAdmin && <SubmitInvoice invoice={invoice} onSuccess={onClose} />}
       </div>
     </div>
   );
