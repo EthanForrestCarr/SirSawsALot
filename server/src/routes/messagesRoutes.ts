@@ -110,10 +110,16 @@ router.get('/conversations', authenticateToken, async (req: AuthenticatedRequest
   }
   try {
     const result = await query(`
-      SELECT DISTINCT m.user_id, u.first_name, u.last_name
+      SELECT 
+        m.user_id, 
+        u.first_name, 
+        u.last_name,
+        (SELECT message FROM messages WHERE user_id = m.user_id ORDER BY created_at DESC LIMIT 1) AS latest_message_preview,
+        (SELECT created_at FROM messages WHERE user_id = m.user_id ORDER BY created_at DESC LIMIT 1) AS latest_message_created_at
       FROM messages m
       JOIN users u ON m.user_id = u.id
-      ORDER BY u.first_name, u.last_name
+      GROUP BY m.user_id, u.first_name, u.last_name
+      ORDER BY latest_message_created_at DESC
     `);
     res.json(result.rows);
   } catch (error) {

@@ -10,11 +10,14 @@ interface Message {
 
 interface AdminMessagesProps {
   userId: number;
+  userName?: string; // new optional prop
 }
 
-const AdminMessages: React.FC<AdminMessagesProps> = ({ userId }) => {
+const AdminMessages: React.FC<AdminMessagesProps> = ({ userId, userName: initialUserName }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  // Use the passed userName or default to "User {userId}"
+  const [userName] = useState(initialUserName || `User ${userId}`);
 
   const fetchMessages = async () => {
     try {
@@ -30,6 +33,7 @@ const AdminMessages: React.FC<AdminMessagesProps> = ({ userId }) => {
 
   useEffect(() => {
     fetchMessages();
+    // Removed fetchUserName to avoid calling GET /users/:id
   }, [userId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,7 +55,7 @@ const AdminMessages: React.FC<AdminMessagesProps> = ({ userId }) => {
 
   return (
     <div>
-      <h3>Conversation with User {userId}</h3>
+      <h3>Conversation with {userName}</h3> {/* updated header */}
       <div style={{ border: '1px solid #ccc', padding: '1rem', maxHeight: '300px', overflowY: 'auto' }}>
         {messages.map(msg => (
           <div key={msg.id} style={{ textAlign: msg.is_admin ? 'left' : 'right', margin: '0.5rem 0' }}>

@@ -61,4 +61,21 @@ router.post('/password', authenticateToken, async (req: AuthenticatedRequest, re
   }
 });
 
+// Add new route to get a user's name by id
+router.get('/:id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await query('SELECT first_name, last_name FROM users WHERE id = $1', [id]);
+    if (result.rows.length === 0) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+    const { first_name, last_name } = result.rows[0];
+    res.json({ name: `${first_name} ${last_name}` });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 export default router;
