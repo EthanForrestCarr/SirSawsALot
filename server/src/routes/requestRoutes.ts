@@ -47,14 +47,45 @@ router.get('/', authenticateToken, async (req: Request, res: Response): Promise<
   const userId = (req as any).user;
 
   try {
+    // Select additional fields from requests and join with invoices
     const result = await query(
-      `SELECT id, description, images, status, created_at 
-       FROM requests 
-       WHERE user_id = $1 ORDER BY created_at DESC`,
+      `SELECT 
+          r.id,
+          r.date,
+          r.first_name,
+          r.last_name,
+          r.address,
+          r.status,
+          r.description,
+          r.created_at,
+          -- Invoice fields (may be null if no invoice exists)
+          i.id as invoice_id,
+          i.status as invoice_status,
+          i.total_amount,
+          i.due_date,
+          i.created_at as invoice_created_at
+       FROM requests r
+       LEFT JOIN invoices i ON r.id = i.request_id
+       WHERE r.user_id = $1
+       ORDER BY r.created_at DESC`,
       [userId]
     );
 
-    res.status(200).json({ requests: result.rows });
+    // Transform each row to include an invoice object if available
+    const requests = result.rows.map(row => {
+      if (row.invoice_id) {
+        row.invoice = {
+          id: row.invoice_id,
+          status: row.invoice_status,
+          total_amount: row.total_amount,
+          due_date: row.due_date,
+          created_at: row.invoice_created_at
+        };
+      }
+      return row;
+    });
+
+    res.status(200).json({ requests });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

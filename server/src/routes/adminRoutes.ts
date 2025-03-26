@@ -251,12 +251,13 @@ router.use('/invoices', authenticateToken, (req: AuthenticatedRequest, res, next
     }
   });
   
-  // 📌 UPDATE invoice status (mark as paid/canceled)
+  // 📌 UPDATE invoice status (mark as paid/canceled/submitted)
   router.patch('/invoices/:id', authenticateToken, async (req: AuthenticatedRequest, res): Promise<void> => {
     const { id } = req.params;
     const { status } = req.body;
   
-    if (!['paid', 'canceled'].includes(status)) {
+    // Include "submitted" as a valid status
+    if (!['paid', 'canceled', 'submitted'].includes(status)) {
       res.status(400).json({ message: 'Invalid status' });
       return;
     }
@@ -268,12 +269,27 @@ router.use('/invoices', authenticateToken, (req: AuthenticatedRequest, res, next
         res.status(404).json({ message: 'Invoice not found' });
         return;
       }
+      
+      const updatedInvoice = result.rows[0];
   
-      res.status(200).json({ message: 'Invoice status updated', invoice: result.rows[0] });
+      // If submitted, lookup the associated request's user and send a notification.
+      if (status === 'submitted' && updatedInvoice.request_id) {
+        const requestResult = await query('SELECT user_id FROM requests WHERE id = $1', [updatedInvoice.request_id]);
+        if (requestResult.rows.length > 0) {
+          const userId = requestResult.rows[0].user_id;
+          if (userId) {
+            await query('INSERT INTO notifications (user_id, message) VALUES ($1, $2)', [
+              userId,
+              'You have a new invoice.'
+            ]);
+          }
+        }
+      }
+  
+      res.status(200).json({ message: 'Invoice status updated', invoice: updatedInvoice });
     } catch (error) {
       console.error('Error updating invoice status:', error);
       res.status(500).json({ message: 'Server error' });
-      return;
     }
   });
   
