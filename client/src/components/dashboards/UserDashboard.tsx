@@ -5,14 +5,15 @@ import UserRequestsTable from '../tables/UserRequestsTable';
 import InvoiceViewModal from '../modals/InvoiceViewModal';
 import UserViewToggle from '../buttons/UserViewToggle';
 import UserInvoices from '../UserInvoices';
+import MessagesView from '../messages/MessagesView';
 
 const UserDashboard: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [error, setError] = useState('');
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
-  // New state for switching views: 'requests' or 'invoices'
-  const [view, setView] = useState<'requests' | 'invoices'>('requests');
+  // New state for switching views: 'requests', 'invoices' or 'messages'
+  const [view, setView] = useState<'requests' | 'invoices' | 'messages'>('requests');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,8 +63,10 @@ const UserDashboard: React.FC = () => {
             <p>No work requests found.</p>
           )}
         </>
+      ) : view === 'messages' ? (
+          <MessagesView />
       ) : (
-        <UserInvoices onViewInvoice={handleViewInvoice} />
+          <UserInvoices onViewInvoice={handleViewInvoice} />
       )}
       
       {showInvoiceModal && selectedInvoice && (

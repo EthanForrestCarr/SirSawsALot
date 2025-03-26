@@ -8,11 +8,12 @@ import AdminInvoices from '../AdminInvoices';
 import InvoiceModal from '../modals/InvoiceFormModal';
 import { InvoiceFormData } from '../forms/InvoiceForm';
 import BlockDateForm from '../forms/BlockDateForm';
+import AdminConversations from '../messages/AdminConversations';
 
 const AdminDashboard: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [message, setMessage] = useState('');
-  const [view, setView] = useState<'table' | 'calendar' | 'invoices'>('table');
+  const [view, setView] = useState<'table' | 'calendar' | 'invoices' | 'messages'>('table');
   const [currentPage, setCurrentPage] = useState(1);
   const requestsPerPage = 10;
 
@@ -96,6 +97,8 @@ const AdminDashboard: React.FC = () => {
         <CalendarPicker />
         <BlockDateForm />
         </>
+      ) : view === 'messages' ? (
+          <AdminConversations />
       ) : (
         <AdminInvoices />
       )}

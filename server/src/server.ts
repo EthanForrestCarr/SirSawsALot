@@ -10,6 +10,7 @@ import calendarRoutes from './routes/calendarRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import requestRoutes from './routes/requestRoutes';
 import userRoutes from './routes/userRoutes';
+import messagesRoutes from './routes/messagesRoutes';
 
 // Initialize Express app
 const app: Application = express();
@@ -34,6 +35,7 @@ app.use('/calendar', calendarRoutes);
 app.use('/notifications', notificationRoutes);
 app.use('/requests', requestRoutes);
 app.use('/user', userRoutes);
+app.use('/messages', messagesRoutes);
 
 // Health Check Route
 app.get('/', (_req: Request, res: Response) => {

@@ -82,6 +82,17 @@ CREATE TABLE invoices (
   discount NUMERIC DEFAULT 0
 );
 
+-- Create messages table
+DROP TABLE IF EXISTS messages;
+
+CREATE TABLE messages (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    is_admin BOOLEAN NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
 -- (Optional) Create indexes for faster lookups
 CREATE INDEX idx_invoices_request_id ON invoices(request_id);
 CREATE INDEX idx_invoices_status ON invoices((CASE WHEN notes IS NULL THEN 'pending' ELSE notes END));  -- Adjust accordingly if you add a status column
