@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Notifications from './Notifications';
+import Notifications from './buttons/Notifications';
 import logo from '../assets/sirsawsalotPictures/SirSawsalotLogo.png';
+import '../styles/Navbar.css';
 
 // Define props type
 interface NavbarProps {
@@ -22,48 +23,45 @@ const Navbar: React.FC<NavbarProps> = () => {
   const handleSignOut = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
-    navigate('/'); // Navigate to home page
-    window.location.reload(); // Refresh the page
+    navigate('/');
+    window.location.reload();
   };
 
   return (
-    <nav style={{ padding: '1rem', background: '#333', color: '#fff', display: 'flex', justifyContent: 'space-between' }}>
+    <nav className="navbar">
       <div>
-        <h1 style={{ display: 'inline-block', marginRight: '1rem' }}>
-          <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>
-            <img src={logo} alt="Sir Sawsalot" style={{ height: '100px' }} />
+        <h1 className="navbar-brand">
+          <Link to="/" className="navbar-link">
+            <img src={logo} alt="Sir Sawsalot" className="navbar-logo" />
           </Link>
         </h1>
-        <Link to="/work-request" style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
+        <Link to="/work-request" className="navbar-link">
           Work Request
         </Link>
         {isLoggedIn && (
           <>
-            <Link to='/dashboard' style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
+            <Link to="/dashboard" className="navbar-link">
               Dashboard
             </Link>
-            <Link to="/profile" style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
+            <Link to="/profile" className="navbar-link">
               Profile
             </Link>
           </>
         )}
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div className="navbar-actions">
         {isLoggedIn && <Notifications />}
         {isLoggedIn ? (
-          <button
-            onClick={handleSignOut}
-            style={{ background: 'none', color: '#fff', border: 'none', cursor: 'pointer', textDecoration: 'none', marginLeft: '1rem' }}
-          >
+          <button onClick={handleSignOut} className="navbar-button">
             Sign Out
           </button>
         ) : (
           <>
-            <Link to="/login" style={{ color: '#fff', marginRight: '1rem', textDecoration: 'none' }}>
+            <Link to="/login" className="navbar-link">
               Login
             </Link>
-            <Link to="/signup" style={{ color: '#fff', textDecoration: 'none' }}>
+            <Link to="/signup" className="navbar-link">
               Sign Up
             </Link>
           </>

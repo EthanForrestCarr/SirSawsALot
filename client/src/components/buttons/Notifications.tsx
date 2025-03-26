@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import MarkAllAsReadButton from './buttons/MarkAllAsReadButton';
-import DeleteNotificationsButton from './buttons/DeleteNotificationsButton';
+import MarkAllAsReadButton from './MarkAllAsReadButton';
+import DeleteNotificationsButton from './DeleteNotificationsButton';
 
 const Notifications: React.FC = () => {
   interface Notification {
