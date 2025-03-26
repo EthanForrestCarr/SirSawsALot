@@ -7,6 +7,7 @@ import WoodPreferenceInput from '../inputs/WoodPreferenceInput';
 import StumpGrindingInput from '../inputs/StumpGrindingInput';
 import BranchHeightInput from '../inputs/BranchHeightInput';
 import PhoneInput from '../inputs/PhoneInput';
+import '../../styles/Form.css';
 
 const AuthenticatedWorkRequestForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -105,7 +106,7 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
   return (
     <div>
       <h2>Authenticated Work Request Form</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="form" onSubmit={handleSubmit}>
         <div>
           <label>First Name:</label>
           <input name="firstName" type="text" value={formData.firstName} readOnly />

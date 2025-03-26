@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import CurrentPasswordInput from '../inputs/CurrentPasswordInput';
 import NewPasswordInput from '../inputs/NewPasswordInput';
+import '../../styles/Form.css';
 
 interface UpdatePasswordFormProps {
   onSuccess?: () => void; // Optional callback for post-update actions
@@ -35,13 +36,20 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({ onSuccess }) =>
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updatePassword();
+  };
+
   return (
     <div>
       <h3>Change Password</h3>
       {message && <p>{message}</p>}
-      <CurrentPasswordInput value={passwordData.currentPassword} handleChange={handlePasswordChange} />
-      <NewPasswordInput value={passwordData.newPassword} handleChange={handlePasswordChange} />
-      <button onClick={updatePassword}>Update Password</button>
+      <form className="form" onSubmit={handleSubmit}>
+        <CurrentPasswordInput value={passwordData.currentPassword} handleChange={handlePasswordChange} />
+        <NewPasswordInput value={passwordData.newPassword} handleChange={handlePasswordChange} />
+        <button type="submit">Update Password</button>
+      </form>
     </div>
   );
 };

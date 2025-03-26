@@ -9,7 +9,8 @@ import ImageInput from '../inputs/ImageInput';
 import WoodPreferenceInput from '../inputs/WoodPreferenceInput';
 import StumpGrindingInput from '../inputs/StumpGrindingInput';
 import BranchHeightInput from '../inputs/BranchHeightInput';
-import DateInput from '../inputs/DateInput'; // Import DateInput component
+import DateInput from '../inputs/DateInput';
+import '../../styles/Form.css';
 
 const GuestWorkRequestForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -88,7 +89,7 @@ const GuestWorkRequestForm: React.FC = () => {
   return (
     <div>
       <h2>Guest Work Request Form</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="form" onSubmit={handleSubmit}>
         <NameInput formData={formData} handleChange={handleChange} />
         <EmailInput formData={formData} handleChange={handleChange} />
         <PhoneInput formData={formData} handleChange={handleChange} />

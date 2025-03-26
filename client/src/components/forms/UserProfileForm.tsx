@@ -4,6 +4,7 @@ import NameInput from '../inputs/NameInput';
 import EmailInput from '../inputs/EmailInput';
 import PhoneInput from '../inputs/PhoneInput';
 import AddressInput from '../inputs/AddressInput';
+import '../../styles/Form.css';
 
 interface UserProfileFormProps {
   onSuccess?: () => void; // Optional callback for after successful update
@@ -76,20 +77,25 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSuccess }) => {
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    saveUserInfo();
+  };
+
   return (
     <div>
       <h2>User Profile</h2>
       {message && <p>{message}</p>}
 
       {editMode ? (
-        <>
+        <form className="form" onSubmit={handleSubmit}>
           <NameInput formData={userInfo} handleChange={handleInputChange} />
           <EmailInput formData={userInfo} handleChange={handleInputChange} />
           <PhoneInput formData={userInfo} handleChange={handleInputChange} />
           <AddressInput formData={userInfo} handleChange={handleInputChange} />
-          <button onClick={saveUserInfo}>Save</button>
-          <button onClick={() => setEditMode(false)}>Cancel</button>
-        </>
+          <button type="submit">Save</button>
+          <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
+        </form>
       ) : (
         <>
           <p><strong>Name:</strong> {userInfo.firstName} {userInfo.lastName}</p>
