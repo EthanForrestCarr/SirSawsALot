@@ -1,4 +1,5 @@
 import React from 'react';
+import "../../styles/Button.css";
 
 interface PaginationProps {
   currentPage: number;
@@ -14,23 +15,15 @@ const Pagination: React.FC<PaginationProps> = ({
   paginate,
 }) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-
   if (totalPages <= 1) return null; // Hide pagination if there's only one page
 
   return (
-    <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+    <div className="pagination-container">
       {Array.from({ length: totalPages }, (_, i) => (
         <button
           key={i}
           onClick={() => paginate(i + 1)}
-          style={{
-            margin: '0 5px',
-            padding: '5px 10px',
-            backgroundColor: currentPage === i + 1 ? '#007BFF' : '#f0f0f0',
-            color: currentPage === i + 1 ? '#fff' : '#000',
-            border: 'none',
-            cursor: 'pointer',
-          }}
+          className={`btn-pagination ${currentPage === i + 1 ? 'active' : ''}`}
         >
           {i + 1}
         </button>

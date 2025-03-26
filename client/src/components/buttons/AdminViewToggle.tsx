@@ -1,4 +1,5 @@
 import React from 'react';
+import "../../styles/Button.css";
 
 interface AdminViewToggleProps {
   view: 'table' | 'calendar' | 'invoices';
@@ -7,22 +8,22 @@ interface AdminViewToggleProps {
 
 const AdminViewToggle: React.FC<AdminViewToggleProps> = ({ view, setView }) => {
   return (
-    <div style={{ marginBottom: '1rem' }}>
+    <div className="btn-toggle-container">
       <button 
-        onClick={() => setView('table')} 
-        style={{ marginRight: '1rem', fontWeight: view === 'table' ? 'bold' : 'normal' }}
+        onClick={() => setView('table')}
+        className={`btn-toggle ${view === 'table' ? 'active' : ''}`}
       >
         Requests
       </button>
       <button 
-        onClick={() => setView('calendar')} 
-        style={{ marginRight: '1rem', fontWeight: view === 'calendar' ? 'bold' : 'normal' }}
+        onClick={() => setView('calendar')}
+        className={`btn-toggle ${view === 'calendar' ? 'active' : ''}`}
       >
         Calendar
       </button>
       <button 
-        onClick={() => setView('invoices')} 
-        style={{ fontWeight: view === 'invoices' ? 'bold' : 'normal' }}
+        onClick={() => setView('invoices')}
+        className={`btn-toggle no-margin ${view === 'invoices' ? 'active' : ''}`}
       >
         Invoices
       </button>

@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import "../../styles/Button.css";
 
 interface DeleteNotificationsButtonProps {
     onDelete: () => void;
@@ -19,7 +20,7 @@ const DeleteNotificationsButton: React.FC<DeleteNotificationsButtonProps> = ({ o
     };
 
     return (
-        <button onClick={deleteNotifications} style={{ marginTop: '10px', display: 'block', width: '100%' }}>
+        <button onClick={deleteNotifications} className="btn-block">
             Delete Notifications
         </button>
     );

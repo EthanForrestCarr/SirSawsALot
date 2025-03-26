@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DateInput from '../inputs/DateInput'; // Adjust the import path based on your file structure
+import BlockDateButton from '../buttons/BlockDateButton'; // New import
 
 const BlockDateForm: React.FC = () => {
     const [date, setDate] = useState('');
@@ -55,7 +56,7 @@ const BlockDateForm: React.FC = () => {
             <form onSubmit={handleBlockDate}>
             <DateInput selectedDate={date} onDateChange={setDate} required />
 
-                <button type="submit">Block Date</button>
+                <BlockDateButton type="submit" />
             </form>
             {message && <p>{message}</p>}
 

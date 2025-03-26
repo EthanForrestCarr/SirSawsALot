@@ -1,4 +1,5 @@
 import React from 'react';
+import "../../styles/Button.css";
 
 interface GenerateInvoiceButtonProps {
   request: {
@@ -43,10 +44,7 @@ const GenerateInvoiceButton: React.FC<GenerateInvoiceButtonProps> = ({
   };
 
   return (
-    <button
-      onClick={handleGenerateInvoice}
-      style={{ padding: '5px 10px', margin: '0.2rem' }}
-    >
+    <button onClick={handleGenerateInvoice} className="btn-small">
       Generate Invoice
     </button>
   );

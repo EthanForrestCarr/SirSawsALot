@@ -1,6 +1,7 @@
 import React from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import "../../styles/Button.css";
 
 interface DownloadPDFButtonProps {
   invoice: any;
@@ -28,18 +29,7 @@ const DownloadPDFButton: React.FC<DownloadPDFButtonProps> = ({ invoice }) => {
   };
 
   return (
-    <button
-      onClick={handleDownloadPDF}
-      style={{
-        marginTop: '1rem',
-        padding: '0.5rem 1rem',
-        backgroundColor: '#007bff',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-      }}
-    >
+    <button onClick={handleDownloadPDF} className="btn btn-download">
       Download PDF
     </button>
   );

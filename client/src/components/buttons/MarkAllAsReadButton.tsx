@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import "../../styles/Button.css";
 
 interface MarkAllAsReadButtonProps {
     onMarkAsRead: () => void;
@@ -19,7 +20,7 @@ const MarkAllAsReadButton: React.FC<MarkAllAsReadButtonProps> = ({ onMarkAsRead 
     };
 
     return (
-        <button onClick={markAllAsRead} style={{ marginTop: '10px', display: 'block', width: '100%' }}>
+        <button onClick={markAllAsRead} className="btn-block">
             Mark All as Read
         </button>
     );

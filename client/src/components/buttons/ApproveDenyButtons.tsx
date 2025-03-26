@@ -1,4 +1,5 @@
 import React from 'react';
+import "../../styles/Button.css";
 
 interface ApproveDenyButtonsProps {
   requestId: number;
@@ -8,10 +9,16 @@ interface ApproveDenyButtonsProps {
 const ApproveDenyButtons: React.FC<ApproveDenyButtonsProps> = ({ requestId, updateRequestStatus }) => {
   return (
     <div style={{ display: 'flex', gap: '0.5rem' }}>
-      <button onClick={() => updateRequestStatus(requestId, 'approved')} style={{ backgroundColor: 'green', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}>
+      <button 
+        onClick={() => updateRequestStatus(requestId, 'approved')}
+        className="btn-approve"
+      >
         Approve
       </button>
-      <button onClick={() => updateRequestStatus(requestId, 'denied')} style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', border: 'none', borderRadius: '5px' }}>
+      <button 
+        onClick={() => updateRequestStatus(requestId, 'denied')}
+        className="btn-deny"
+      >
         Deny
       </button>
     </div>
