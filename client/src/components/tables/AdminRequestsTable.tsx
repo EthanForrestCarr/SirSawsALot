@@ -2,6 +2,7 @@ import React from 'react';
 import DetailsButton from '../buttons/DetailsButton';
 import ApproveDenyButtons from '../buttons/ApproveDenyButtons';
 import GenerateInvoiceButton from '../buttons/GenerateInvoiceButton';
+import '../../styles/Table.css'; // added import
 
 interface Request {
   id: number;
@@ -30,7 +31,6 @@ const AdminRequestsTable: React.FC<AdminRequestsTableProps> = ({
   currentPage,
   requestsPerPage,
   updateRequestStatus,
-  onPrefill,
   onOpenModal,
 }) => {
   const indexOfLastRequest = currentPage * requestsPerPage;
@@ -40,7 +40,7 @@ const AdminRequestsTable: React.FC<AdminRequestsTableProps> = ({
   console.log("AdminRequestsTable rendering; currentRequests:", currentRequests);
 
   return (
-    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+    <table className="universal-table">
       <thead>
         <tr>
           <th>ID</th>

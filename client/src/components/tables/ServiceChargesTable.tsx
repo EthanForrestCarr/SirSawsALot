@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../styles/Table.css';
 
 interface ServiceChargesTableProps {
   invoice: any;
@@ -38,71 +39,55 @@ const ServiceChargesTable: React.FC<ServiceChargesTableProps> = ({ invoice }) =>
 
   return (
     <div>
-      <table
-        style={{
-          width: '100%',
-          borderCollapse: 'collapse',
-          marginBottom: '1rem',
-        }}
-      >
+      <table className="universal-table">
         <thead>
           <tr>
-            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Service</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Description</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Price</th>
+            <th>Service</th>
+            <th>Description</th>
+            <th>Price</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>Service Type</td>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-              {invoice.service_type} ({invoice.job_scope})
-            </td>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>${servicePrice.toFixed(2)}</td>
+            <td>Service Type</td>
+            <td>{invoice.service_type} ({invoice.job_scope})</td>
+            <td>${servicePrice.toFixed(2)}</td>
           </tr>
           <tr>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>Stump Grinding</td>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-              {invoice.stump_grinding ? 'Stump grinding included' : 'No stump grinding'}
-            </td>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>${stumpPrice.toFixed(2)}</td>
+            <td>Stump Grinding</td>
+            <td>{invoice.stump_grinding ? 'Stump grinding included' : 'No stump grinding'}</td>
+            <td>${stumpPrice.toFixed(2)}</td>
           </tr>
           <tr>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>Wood Keep</td>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-              {invoice.wood_keep ? 'Customer keeps the wood' : 'Wood removal included'}
-            </td>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>${woodKeepPrice.toFixed(2)}</td>
+            <td>Wood Keep</td>
+            <td>{invoice.wood_keep ? 'Customer keeps the wood' : 'Wood removal included'}</td>
+            <td>${woodKeepPrice.toFixed(2)}</td>
           </tr>
           <tr>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={2}>
+            <td colSpan={2}>
               <strong>Discount ({invoice.discount || 0}%)</strong>
             </td>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-              - ${discountValue.toFixed(2)}
-            </td>
+            <td>- ${discountValue.toFixed(2)}</td>
           </tr>
           <tr>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={2}>
+            <td colSpan={2}>
               <strong>Subtotal</strong>
             </td>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+            <td>
               <strong>${taxableAmount.toFixed(2)}</strong>
             </td>
           </tr>
           <tr>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={2}>
+            <td colSpan={2}>
               <strong>Tax (8%)</strong>
             </td>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-              + ${tax.toFixed(2)}
-            </td>
+            <td>+ ${tax.toFixed(2)}</td>
           </tr>
           <tr>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={2}>
+            <td colSpan={2}>
               <strong>Total</strong>
             </td>
-            <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+            <td>
               <strong>${finalTotal.toFixed(2)}</strong>
             </td>
           </tr>

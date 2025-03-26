@@ -1,0 +1,11 @@
+.universal-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+.universal-table th,
+.universal-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import '../../styles/Table.css';
 
 interface InvoiceTableProps {
   invoices: any[];
@@ -33,7 +34,7 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ invoices, onUpdate, onView 
   };
 
   return (
-    <table>
+    <table className="universal-table">
       <thead>
         <tr>
           <th>ID</th>
