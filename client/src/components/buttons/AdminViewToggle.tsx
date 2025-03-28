@@ -2,8 +2,8 @@ import React from 'react';
 import "../../styles/Button.css";
 
 interface AdminViewToggleProps {
-  view: 'table' | 'calendar' | 'invoices' | 'messages';
-  setView: (view: 'table' | 'calendar' | 'invoices' | 'messages') => void;
+  view: 'table' | 'calendar' | 'invoices' | 'messages' | 'profile';
+  setView: (view: 'table' | 'calendar' | 'invoices' | 'messages' | 'profile') => void;
 }
 
 const AdminViewToggle: React.FC<AdminViewToggleProps> = ({ view, setView }) => {
@@ -32,6 +32,12 @@ const AdminViewToggle: React.FC<AdminViewToggleProps> = ({ view, setView }) => {
         className={`btn-toggle ${view === 'messages' ? 'active' : ''}`}
       >
         Messages
+      </button>
+      <button 
+        onClick={() => setView('profile')}
+        className={`btn-toggle ${view === 'profile' ? 'active' : ''}`}
+      >
+        Profile
       </button>
     </div>
   );

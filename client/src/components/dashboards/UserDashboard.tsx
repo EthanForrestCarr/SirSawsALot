@@ -6,14 +6,17 @@ import InvoiceViewModal from '../modals/InvoiceViewModal';
 import UserViewToggle from '../buttons/UserViewToggle';
 import UserInvoices from '../UserInvoices';
 import MessagesView from '../messages/MessagesView';
+// Import profile forms
+import UserProfileForm from '../forms/UserProfileForm';
+import UpdatePasswordForm from '../forms/UpdatePassowrdForm';
 
 const UserDashboard: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [error, setError] = useState('');
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
-  // New state for switching views: 'requests', 'invoices' or 'messages'
-  const [view, setView] = useState<'requests' | 'invoices' | 'messages'>('requests');
+  // New state for switching views
+  const [view, setView] = useState<'requests' | 'invoices' | 'messages' | 'profile'>('requests');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,7 +37,6 @@ const UserDashboard: React.FC = () => {
         navigate('/login');
       }
     };
-
     fetchRequests();
   }, [navigate]);
 
@@ -53,7 +55,6 @@ const UserDashboard: React.FC = () => {
       <h2>User Dashboard</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <UserViewToggle view={view} setView={setView} />
-      
       {view === 'requests' ? (
         <>
           <h3>Your Work Requests:</h3>
@@ -64,11 +65,15 @@ const UserDashboard: React.FC = () => {
           )}
         </>
       ) : view === 'messages' ? (
-          <MessagesView />
-      ) : (
-          <UserInvoices onViewInvoice={handleViewInvoice} />
-      )}
-      
+        <MessagesView />
+      ) : view === 'invoices' ? (
+        <UserInvoices onViewInvoice={handleViewInvoice} />
+      ) : view === 'profile' ? (
+        <>
+          <UserProfileForm />
+          <UpdatePasswordForm />
+        </>
+      ) : null}
       {showInvoiceModal && selectedInvoice && (
         <InvoiceViewModal invoice={selectedInvoice} onClose={closeInvoiceModal} />
       )}

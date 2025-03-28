@@ -9,11 +9,14 @@ import InvoiceModal from '../modals/InvoiceFormModal';
 import { InvoiceFormData } from '../forms/InvoiceForm';
 import BlockDateForm from '../forms/BlockDateForm';
 import AdminConversations from '../messages/AdminConversations';
+// Import profile forms
+import UserProfileForm from '../forms/UserProfileForm';
+import UpdatePasswordForm from '../forms/UpdatePassowrdForm';
 
 const AdminDashboard: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [message, setMessage] = useState('');
-  const [view, setView] = useState<'table' | 'calendar' | 'invoices' | 'messages'>('table');
+  const [view, setView] = useState<'table' | 'calendar' | 'invoices' | 'messages' | 'profile'>('table');
   const [currentPage, setCurrentPage] = useState(1);
   const requestsPerPage = 10;
 
@@ -99,9 +102,14 @@ const AdminDashboard: React.FC = () => {
         </>
       ) : view === 'messages' ? (
           <AdminConversations />
-      ) : (
+      ) : view === 'invoices' ? (
         <AdminInvoices />
-      )}
+      ) : view === 'profile' ? (
+        <>
+          <UserProfileForm />
+          <UpdatePasswordForm />
+        </>
+      ) : null}
 
       {/* Render Invoice Modal if modalOpen is true */}
       <InvoiceModal

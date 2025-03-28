@@ -43,9 +43,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             <Link to="/dashboard" className="navbar-link">
               Dashboard
             </Link>
-            <Link to="/profile" className="navbar-link">
-              Profile
-            </Link>
+            {/* Removed Profile link */}
           </>
         )}
       </div>

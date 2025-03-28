@@ -2,8 +2,8 @@ import React from 'react';
 import "../../styles/Button.css";
 
 interface UserViewToggleProps {
-  view: 'requests' | 'invoices' | 'messages';
-  setView: (view: 'requests' | 'invoices' | 'messages') => void;
+  view: 'requests' | 'invoices' | 'messages' | 'profile';
+  setView: (view: 'requests' | 'invoices' | 'messages' | 'profile') => void;
 }
 
 const UserViewToggle: React.FC<UserViewToggleProps> = ({ view, setView }) => {
@@ -26,6 +26,12 @@ const UserViewToggle: React.FC<UserViewToggleProps> = ({ view, setView }) => {
         className={`btn-toggle ${view === 'messages' ? 'active' : ''}`}
       >
         Messages
+      </button>
+      <button 
+        onClick={() => setView('profile')}
+        className={`btn-toggle ${view === 'profile' ? 'active' : ''}`}
+      >
+        Profile
       </button>
     </div>
   );
