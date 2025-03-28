@@ -1,4 +1,5 @@
 .navbar {
+  width: 100%; /* added to extend navbar across the entire page horizontally */
   padding: 1rem;
   background: #333;
   color: #fff;
@@ -25,6 +26,7 @@
 .navbar-actions {
   display: flex;
   align-items: center;
+  position: relative; /* added so the panel positions relative to navbar-actions */
 }
 
 .navbar-button {
@@ -34,4 +36,87 @@
   cursor: pointer;
   text-decoration: none;
   margin-left: 1rem;
+}
+
+/* Animated menu icon container */
+.menu-icon {
+  display: inline-block;
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+/* Bars for the animated icon */
+.bar1, .bar2, .bar3 {
+  width: 25px;
+  height: 4px;
+  background-color: #333;
+  margin: 3px 0;
+  transition: 0.4s;
+}
+
+/* Change styles when toggled */
+.change .bar1 {
+  transform: translate(0, 7px) rotate(-45deg);
+}
+.change .bar2 {
+  opacity: 0;
+}
+.change .bar3 {
+  transform: translate(0, -7px) rotate(45deg);
+}
+
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%; /* forces the menu button to match the panel’s width */
+  border: none;
+  text-align: center;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+  border-radius: 0 !important; /* squared corners */
+  min-width: 150px; /* ensures the accordion is at least as wide as the longest dropdown button */
+}
+
+.accordion.active, .accordion:hover {
+  background-color: #ccc;
+}
+
+/* The panel class defines the accordion content */
+.panel {
+  padding: 0 !important; /* removed horizontal padding */
+  background-color: white;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  width: 100%; /* make panel take full width from its wrapper */
+  z-index: 1000;
+  border-radius: 0 !important; /* squared corners */
+}
+
+/* Stack menu options vertically */
+.dropdown-item {
+  display: block;
+  width: 100%;  /* updated to fill panel */
+  text-align: left;
+  margin: 0;
+  padding: 10px; /* optional spacing */
+  border-radius: 0 !important; /* squared corners */
+}
+
+/* Override padding for dropdown items to reduce extra white space */
+.dropdown-item {
+  padding: 5px 10px !important;
+  margin: 0 !important;
+  border-radius: 0 !important; /* squared corners */
+}
+
+.dropdown-wrapper {
+  position: relative; /* added so the panel is positioned relative to the wrapper */
+  width: fit-content !important;  /* use fit-content so wrapper matches the accordion’s width */
+  display: inline-block;  /* ensures the wrapper width fits its children */
 }

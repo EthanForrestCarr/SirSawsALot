@@ -3,7 +3,6 @@ import axios from 'axios';
 import CalendarPicker from '../CalendarPicker';
 import Pagination from '../buttons/Pagination';
 import AdminRequestsTable from '../tables/AdminRequestsTable';
-import AdminViewToggle from '../buttons/AdminViewToggle';
 import AdminInvoices from '../AdminInvoices';
 import InvoiceModal from '../modals/InvoiceFormModal';
 import { InvoiceFormData } from '../forms/InvoiceForm';
@@ -13,10 +12,15 @@ import AdminConversations from '../messages/AdminConversations';
 import UserProfileForm from '../forms/UserProfileForm';
 import UpdatePasswordForm from '../forms/UpdatePassowrdForm';
 
-const AdminDashboard: React.FC = () => {
+interface AdminDashboardProps {
+	// initialView defaults to 'table' if not provided
+	initialView?: 'table' | 'calendar' | 'invoices' | 'messages' | 'profile';
+}
+
+const AdminDashboard: React.FC<AdminDashboardProps> = ({ initialView }) => {
   const [requests, setRequests] = useState<any[]>([]);
   const [message, setMessage] = useState('');
-  const [view, setView] = useState<'table' | 'calendar' | 'invoices' | 'messages' | 'profile'>('table');
+  const [view, setView] = useState<'table' | 'calendar' | 'invoices' | 'messages' | 'profile'>(initialView || 'table');
   const [currentPage, setCurrentPage] = useState(1);
   const requestsPerPage = 10;
 
@@ -39,6 +43,10 @@ const AdminDashboard: React.FC = () => {
 
     fetchRequests();
   }, []);
+
+  useEffect(() => {
+    setView(initialView || 'table');
+  }, [initialView]);
 
   const updateRequestStatus = async (id: number, status: string) => {
     const token = localStorage.getItem('token');
@@ -73,9 +81,6 @@ const AdminDashboard: React.FC = () => {
     <div style={{ padding: '2rem' }}>
       <h2>Dashboard</h2>
       {message && <p>{message}</p>}
-
-      {/* View Toggle Component */}
-      <AdminViewToggle view={view} setView={setView} />
 
       {view === 'table' ? (
         <>

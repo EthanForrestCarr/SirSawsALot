@@ -3,20 +3,24 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import UserRequestsTable from '../tables/UserRequestsTable';
 import InvoiceViewModal from '../modals/InvoiceViewModal';
-import UserViewToggle from '../buttons/UserViewToggle';
 import UserInvoices from '../UserInvoices';
 import MessagesView from '../messages/MessagesView';
 // Import profile forms
 import UserProfileForm from '../forms/UserProfileForm';
 import UpdatePasswordForm from '../forms/UpdatePassowrdForm';
 
-const UserDashboard: React.FC = () => {
+interface UserDashboardProps {
+  // initialView defaults to 'requests' if not provided
+  initialView?: 'requests' | 'invoices' | 'messages' | 'profile';
+}
+
+const UserDashboard: React.FC<UserDashboardProps> = ({ initialView }) => {
   const [requests, setRequests] = useState<any[]>([]);
   const [error, setError] = useState('');
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
-  // New state for switching views
-  const [view, setView] = useState<'requests' | 'invoices' | 'messages' | 'profile'>('requests');
+  // Updated view state initialization:
+  const [view, setView] = useState<'requests' | 'invoices' | 'messages' | 'profile'>(initialView || 'requests');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,6 +44,10 @@ const UserDashboard: React.FC = () => {
     fetchRequests();
   }, [navigate]);
 
+  useEffect(() => {
+    setView(initialView || 'requests');
+  }, [initialView]);
+
   const handleViewInvoice = (invoice: any) => {
     setSelectedInvoice(invoice);
     setShowInvoiceModal(true);
@@ -54,7 +62,6 @@ const UserDashboard: React.FC = () => {
     <div style={{ padding: '2rem' }}>
       <h2>User Dashboard</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <UserViewToggle view={view} setView={setView} />
       {view === 'requests' ? (
         <>
           <h3>Your Work Requests:</h3>

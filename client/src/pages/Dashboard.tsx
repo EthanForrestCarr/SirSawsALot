@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import UserDashboard from '../components/dashboards/UserDashboard';
 import AdminDashboard from '../components/dashboards/AdminDashboard';
@@ -7,6 +7,8 @@ import AdminDashboard from '../components/dashboards/AdminDashboard';
 const Dashboard: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const viewParam = new URLSearchParams(location.search).get('view');
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -34,7 +36,18 @@ const Dashboard: React.FC = () => {
     return <p>Loading...</p>; // Prevent UI from flashing before data loads
   }
 
-  return isAdmin ? <AdminDashboard /> : <UserDashboard />;
+  // Determine valid initial view based on isAdmin:
+  const initialView = isAdmin
+    ? (viewParam === 'table' || viewParam === 'calendar' || viewParam === 'invoices' || viewParam === 'messages' || viewParam === 'profile'
+        ? viewParam
+        : 'table')
+    : (viewParam === 'requests' || viewParam === 'invoices' || viewParam === 'messages' || viewParam === 'profile'
+        ? viewParam
+        : 'requests');
+
+  return isAdmin 
+    ? <AdminDashboard initialView={initialView as any} /> 
+    : <UserDashboard initialView={initialView as any} />;
 };
 
 export default Dashboard;
