@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminMessages from './AdminMessages';
+import NameAddressInput from '../inputs/NameAddressInput';
 
 interface Conversation {
   user_id: number;
@@ -41,7 +42,7 @@ const AdminConversations: React.FC = () => {
     }
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:3000/users/search?q=${encodeURIComponent(query)}`, {
+      const response = await axios.get(`http://localhost:3000/user/search?q=${encodeURIComponent(query)}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSearchResults(response.data);
@@ -85,46 +86,27 @@ const AdminConversations: React.FC = () => {
     <div>
       <h3>Conversations</h3>
       {newMode && (
-        <div style={{ marginBottom: '1rem' }}>
-          <input
-            type="text"
-            placeholder="Search by name or address..."
-            value={searchQuery}
-            onChange={(e) => {
-              const q = e.target.value;
-              setSearchQuery(q);
-              handleSearch(q);
-            }}
-            style={{ width: '80%', padding: '0.5rem' }}
-          />
-          <button onClick={() => setNewMode(false)} style={{ marginLeft: '0.5rem' }}>Cancel</button>
-          <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-            {searchResults.map(user => (
-              <li
-                key={user.id}
-                style={{
-                  cursor: 'pointer',
-                  padding: '0.5rem',
-                  borderBottom: '1px solid #ccc'
-                }}
-                onClick={() => {
-                  setSelectedConversation({
-                    user_id: user.id,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    latest_message_preview: '',
-                    latest_message_created_at: new Date().toISOString()
-                  });
-                  setNewMode(false);
-                  setSearchQuery('');
-                  setSearchResults([]);
-                }}
-              >
-                <strong>{user.first_name} {user.last_name}</strong> – {user.address}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <NameAddressInput
+          searchQuery={searchQuery}
+          onSearchChange={(q) => {
+            setSearchQuery(q);
+            handleSearch(q);
+          }}
+          onCancel={() => setNewMode(false)}
+          searchResults={searchResults}
+          onSelectUser={(user) => {
+            setSelectedConversation({
+              user_id: user.id,
+              first_name: user.first_name,
+              last_name: user.last_name,
+              latest_message_preview: '',
+              latest_message_created_at: new Date().toISOString()
+            });
+            setNewMode(false);
+            setSearchQuery('');
+            setSearchResults([]);
+          }}
+        />
       )}
       <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
         {conversations.map(conv => {
