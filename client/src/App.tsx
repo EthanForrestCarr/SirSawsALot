@@ -35,15 +35,17 @@ const App: React.FC = () => {
   return (
     <Router>
       <Navbar isAdmin={isAdmin} />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/dashboard" element={<Dashboard />} /> {/* ✅ Unified Dashboard */}
-        <Route path="/work-request" element={<WorkRequestForm />} />
-        <Route path="/admin/requests/:id" element={<RequestDetailsPage />} />
-        <Route path="/profile" element={<UserProfile />} />
-      </Routes>
+      <div style={{ marginTop: '120px' }}> {/* Added wrapper to avoid navbar overlap */}
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/dashboard" element={<Dashboard />} /> {/* ✅ Unified Dashboard */}
+          <Route path="/work-request" element={<WorkRequestForm />} />
+          <Route path="/admin/requests/:id" element={<RequestDetailsPage />} />
+          <Route path="/profile" element={<UserProfile />} />
+        </Routes>
+      </div>
     </Router>
   );
 };

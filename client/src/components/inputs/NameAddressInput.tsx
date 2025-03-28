@@ -21,7 +21,7 @@ const NameAddressInput: React.FC<NameAddressInputProps> = ({
     onSelectUser,
 }) => {
     return (
-        <div className="input-container" /* also acts as search container */>
+        <div className="input-container">
             <label className="input-label">Search:</label>
             <input
                 className="input-field"

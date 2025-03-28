@@ -3,7 +3,7 @@ const LandingPage = () => {
     <div>
       {/* Hero Section */}
       <section>
-        <h1>Sir Sawsalot Tree Services – Professional & Friendly Tree Care in Ottertail County</h1>
+        <h1>Sir Sawsalot - Professional & Friendly Tree Care in Ottertail County</h1>
         <h2>Professional Tree Trimming & Removal by a Firefighter You Can Trust</h2>
         <p>
           Serving Ottertail County, Minnesota with safe, reliable tree care. We’re a local firefighter-owned business balancing professional quality with friendly community service. Your trees’ health, beauty, and value are our priority.
@@ -43,7 +43,7 @@ const LandingPage = () => {
             <strong>Real-Time Work Tracking:</strong> Stay updated on scheduling, crew arrival, and job progress online.
           </li>
           <li>
-            <strong>Optional Client Portal:</strong> Create a free account for a personalized experience with invoice access and direct communication.
+            <strong>Optional Client Portal:</strong> Create a free account for a personalized experience with direct communication.
           </li>
           <li>
             <strong>Priority Scheduling:</strong> Repeat customers may enjoy priority during busy seasons.
@@ -86,15 +86,10 @@ const LandingPage = () => {
           Ready to tackle troublesome branches or remove an old stump? Contact Sir Sawsalot today for your free, no-obligation quote.
         </p>
         <p>Phone: 218-XXX-XXXX</p>
-        <p>Email: info@sirsawsalot.com</p>
+        <p>Email: sirsawsalot@yahoo.com</p>
         <p>
           Service Area: Ottertail County, MN – from Fergus Falls to Perham and everywhere in between.
         </p>
-        <div>
-          <a href="https://getjobber.com">
-            Get Your Free Quote Now 🎉
-          </a>
-        </div>
       </section>
     </div>
   );
