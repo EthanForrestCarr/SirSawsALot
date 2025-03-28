@@ -9,9 +9,10 @@ interface BranchHeightInputProps {
 
 const BranchHeightInput: React.FC<BranchHeightInputProps> = ({ formData, handleChange }) => {
   return (
-    <div>
-      <label>Branch height (feet):</label>
+    <div className="input-container">
+      <label className="input-label">Branch height (feet):</label>
       <input
+        className="input-field"
         type="number"
         name="branch_height"
         value={formData.branch_height}

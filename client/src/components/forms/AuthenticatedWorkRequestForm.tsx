@@ -7,6 +7,9 @@ import WoodPreferenceInput from '../inputs/WoodPreferenceInput';
 import StumpGrindingInput from '../inputs/StumpGrindingInput';
 import BranchHeightInput from '../inputs/BranchHeightInput';
 import PhoneInput from '../inputs/PhoneInput';
+import NameInput from '../inputs/NameInput';
+import EmailInput from '../inputs/EmailInput';
+import AddressInput from '../inputs/AddressInput';
 import '../../styles/Form.css';
 
 const AuthenticatedWorkRequestForm: React.FC = () => {
@@ -107,23 +110,10 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
     <div>
       <h2>Authenticated Work Request Form</h2>
       <form className="form" onSubmit={handleSubmit}>
-        <div>
-          <label>First Name:</label>
-          <input name="firstName" type="text" value={formData.firstName} readOnly />
-        </div>
-        <div>
-          <label>Last Name:</label>
-          <input name="lastName" type="text" value={formData.lastName} readOnly />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input name="email" type="email" value={formData.email} readOnly />
-        </div>
+        <NameInput formData={formData} handleChange={handleChange} />
+        <EmailInput formData={formData} handleChange={handleChange} />
+        <AddressInput formData={formData} handleChange={handleChange} />
         <PhoneInput formData={formData} handleChange={handleChange} />
-        <div>
-          <label>Address:</label>
-          <input name="address" type="text" value={formData.address} readOnly />
-        </div>
         <DateInput selectedDate={selectedDate} onDateChange={setSelectedDate} required />
         <DescriptionInput formData={formData} handleChange={handleChange} />
         <ImageInput formData={formData} handleChange={handleChange} />

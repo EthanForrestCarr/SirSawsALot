@@ -9,9 +9,10 @@ interface DescriptionInputProps {
 
 const DescriptionInput: React.FC<DescriptionInputProps> = ({ formData, handleChange }) => {
   return (
-    <div>
-      <label>Description:</label>
+    <div className="input-container">
+      <label className="input-label">Description:</label>
       <textarea
+        className="textarea-field"
         name="description"
         value={formData.description}
         onChange={handleChange}

@@ -21,44 +21,22 @@ const NameAddressInput: React.FC<NameAddressInputProps> = ({
     onSelectUser,
 }) => {
     return (
-        <div style={{ marginBottom: '1rem', position: 'relative' }}>
+        <div className="input-container" /* also acts as search container */>
+            <label className="input-label">Search:</label>
             <input
+                className="input-field"
                 type="text"
                 placeholder="Search by name or address..."
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                style={{
-                    width: '100%',
-                    padding: '0.5rem',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px'
-                }}
                 autoComplete="off"
             />
             {searchResults.length > 0 && (
-                <ul style={{ 
-                    listStyleType: 'none', 
-                    padding: 0,
-                    margin: 0,
-                    position: 'absolute',
-                    top: 'calc(100% + 4px)',
-                    left: 0,
-                    width: '100%',
-                    border: '1px solid #ccc',
-                    borderTop: 'none',
-                    background: 'grey',
-                    zIndex: 1000,
-                    maxHeight: '200px',
-                    overflowY: 'auto'
-                }}>
+                <ul className="search-results">
                     {searchResults.map(user => (
                         <li
                             key={user.id}
-                            style={{
-                                cursor: 'pointer',
-                                padding: '0.5rem',
-                                borderBottom: '1px solid #eee'
-                            }}
+                            className="search-item"
                             onClick={() => onSelectUser(user)}
                         >
                             <strong>{user.first_name} {user.last_name}</strong> – {user.address}

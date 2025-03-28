@@ -7,9 +7,10 @@ interface CurrentPasswordInputProps {
 
 const CurrentPasswordInput: React.FC<CurrentPasswordInputProps> = ({ value, handleChange }) => {
   return (
-    <div>
-      <label>Current Password:</label>
+    <div className="input-container">
+      <label className="input-label">Current Password:</label>
       <input
+        className="input-field"
         type="password"
         name="password"
         value={value}

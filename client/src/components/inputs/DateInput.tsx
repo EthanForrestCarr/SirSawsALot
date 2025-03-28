@@ -36,16 +36,17 @@ const DateInput: React.FC<DateInputProps> = ({ selectedDate, onDateChange }) => 
   };
 
   return (
-    <div>
-      <label htmlFor="date">Select Date:</label>
+    <div className="input-container">
+      <label htmlFor="date" className="input-label">Select Date:</label>
       <input
+        className="input-field"
         type="date"
         id="date"
         value={selectedDate}
         onChange={handleDateChange}
-        min={new Date().toISOString().split('T')[0]} // Prevent selecting past dates
+        min={new Date().toISOString().split('T')[0]}
       />
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+      {errorMessage && <p className="input-error">{errorMessage}</p>}
     </div>
   );
 };

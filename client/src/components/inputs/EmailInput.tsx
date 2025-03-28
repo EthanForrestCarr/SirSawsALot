@@ -9,19 +9,18 @@ interface EmailInputProps {
 
 const EmailInput: React.FC<EmailInputProps> = ({ formData, handleChange }) => {
   return (
-   
-      <div>
-        <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          placeholder="Your email address"
-        />
-      </div>
-
+    <div className="input-container">
+      <label className="input-label">Email:</label>
+      <input
+        className="input-field"
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        required
+        placeholder="Your email address"
+      />
+    </div>
   );
 };
 

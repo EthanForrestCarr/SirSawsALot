@@ -9,9 +9,10 @@ interface AddressInputProps {
 
 const AddressInput: React.FC<AddressInputProps> = ({ formData, handleChange }) => {
   return (
-    <div>
-      <label>Address:</label>
+    <div className="input-container">
+      <label className="input-label">Address:</label>
       <input
+        className="input-field"
         type="text"
         name="address"
         value={formData.address}

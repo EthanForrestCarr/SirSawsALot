@@ -9,17 +9,18 @@ interface PhoneInputProps {
 
 const PhoneInput: React.FC<PhoneInputProps> = ({ formData, handleChange }) => {
   return (
-      <>
-        <label>Phone:</label>
-        <input
-          type="tel"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          required
-          placeholder="Your phone number"
-        />
-      </>
+    <div className="input-container">
+      <label className="input-label">Phone:</label>
+      <input
+        className="input-field"
+        type="tel"
+        name="phone"
+        value={formData.phone}
+        onChange={handleChange}
+        required
+        placeholder="Your phone number"
+      />
+    </div>
   );
 };
 

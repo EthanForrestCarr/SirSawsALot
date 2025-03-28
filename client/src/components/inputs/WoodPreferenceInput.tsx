@@ -10,18 +10,20 @@ interface WoodPreferenceInputProps {
 
 const WoodPreferenceInput: React.FC<WoodPreferenceInputProps> = ({ formData, handleChange }) => {
   return (
-    <div>
-      <label>Keep the wood?</label>
+    <div className="input-container">
+      <label className="input-label">Keep the wood?</label>
       <input
+        className="checkbox-field"
         type="checkbox"
         name="wood_keep"
         checked={formData.wood_keep}
         onChange={handleChange}
       />
       {formData.wood_keep && (
-        <div>
-          <label>Wood arrangement:</label>
+        <div className="input-container">
+          <label className="input-label">Wood arrangement:</label>
           <input
+            className="input-field"
             type="text"
             name="wood_arrangement"
             value={formData.wood_arrangement}

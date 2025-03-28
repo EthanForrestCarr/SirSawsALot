@@ -9,9 +9,10 @@ interface StumpGrindingInputProps {
 
 const StumpGrindingInput: React.FC<StumpGrindingInputProps> = ({ formData, handleChange }) => {
   return (
-    <div>
-      <label>Grind the stump?</label>
+    <div className="input-container">
+      <label className="input-label">Grind the stump?</label>
       <input
+        className="checkbox-field"
         type="checkbox"
         name="stump_grinding"
         checked={formData.stump_grinding}

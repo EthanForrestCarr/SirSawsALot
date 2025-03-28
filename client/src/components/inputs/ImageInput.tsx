@@ -9,9 +9,10 @@ interface ImageInputProps {
 
 const ImageInput: React.FC<ImageInputProps> = ({ formData, handleChange }) => {
   return (
-    <div>
-      <label>Upload an image of the tree:</label>
+    <div className="input-container">
+      <label className="input-label">Upload an image of the tree:</label>
       <input
+        className="input-field"
         type="file"
         name="imageFile"
         onChange={handleChange}
