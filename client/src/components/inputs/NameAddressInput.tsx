@@ -10,7 +10,6 @@ interface User {
 interface NameAddressInputProps {
     searchQuery: string;
     onSearchChange: (query: string) => void;
-    onCancel: () => void;
     searchResults: User[];
     onSelectUser: (user: User) => void;
 }
@@ -18,39 +17,55 @@ interface NameAddressInputProps {
 const NameAddressInput: React.FC<NameAddressInputProps> = ({
     searchQuery,
     onSearchChange,
-    onCancel,
     searchResults,
     onSelectUser,
 }) => {
     return (
-        <div style={{ marginBottom: '1rem' }}>
+        <div style={{ marginBottom: '1rem', position: 'relative' }}>
             <input
                 type="text"
                 placeholder="Search by name or address..."
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                style={{ width: '80%', padding: '0.5rem' }}
+                style={{
+                    width: '100%',
+                    padding: '0.5rem',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px'
+                }}
+                autoComplete="off"
             />
-            <button onClick={onCancel} style={{ marginLeft: '0.5rem' }}>
-                Cancel
-            </button>
-            <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-                {searchResults.map(user => (
-                    <li
-                        key={user.id}
-                        style={{
-                            cursor: 'pointer',
-                            padding: '0.5rem',
-                            borderBottom: '1px solid #ccc'
-                        }}
-                        onClick={() => onSelectUser(user)}
-                    >
-                        <strong>
-                            {user.first_name} {user.last_name}
-                        </strong> – {user.address}
-                    </li>
-                ))}
-            </ul>
+            {searchResults.length > 0 && (
+                <ul style={{ 
+                    listStyleType: 'none', 
+                    padding: 0,
+                    margin: 0,
+                    position: 'absolute',
+                    top: 'calc(100% + 4px)',
+                    left: 0,
+                    width: '100%',
+                    border: '1px solid #ccc',
+                    borderTop: 'none',
+                    background: 'grey',
+                    zIndex: 1000,
+                    maxHeight: '200px',
+                    overflowY: 'auto'
+                }}>
+                    {searchResults.map(user => (
+                        <li
+                            key={user.id}
+                            style={{
+                                cursor: 'pointer',
+                                padding: '0.5rem',
+                                borderBottom: '1px solid #eee'
+                            }}
+                            onClick={() => onSelectUser(user)}
+                        >
+                            <strong>{user.first_name} {user.last_name}</strong> – {user.address}
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };

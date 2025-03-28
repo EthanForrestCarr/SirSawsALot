@@ -16,7 +16,6 @@ const AdminConversations: React.FC = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [deleteMode, setDeleteMode] = useState(false);
   const [conversationsToDelete, setConversationsToDelete] = useState<Conversation[]>([]);
-  const [newMode, setNewMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
 
@@ -85,14 +84,12 @@ const AdminConversations: React.FC = () => {
   return (
     <div>
       <h3>Conversations</h3>
-      {newMode && (
-        <NameAddressInput
+      <NameAddressInput
           searchQuery={searchQuery}
           onSearchChange={(q) => {
             setSearchQuery(q);
             handleSearch(q);
           }}
-          onCancel={() => setNewMode(false)}
           searchResults={searchResults}
           onSelectUser={(user) => {
             setSelectedConversation({
@@ -102,12 +99,10 @@ const AdminConversations: React.FC = () => {
               latest_message_preview: '',
               latest_message_created_at: new Date().toISOString()
             });
-            setNewMode(false);
             setSearchQuery('');
             setSearchResults([]);
           }}
-        />
-      )}
+      />
       <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
         {conversations.map(conv => {
           const isSelected = conversationsToDelete.some(d => d.user_id === conv.user_id);
@@ -160,14 +155,9 @@ const AdminConversations: React.FC = () => {
             )}
           </>
         ) : (
-          <>
-            <button onClick={() => setDeleteMode(true)}>
+          <button onClick={() => setDeleteMode(true)}>
               Delete Conversation
-            </button>
-            <button onClick={() => setNewMode(true)} style={{ marginLeft: '0.5rem' }}>
-              New Conversation
-            </button>
-          </>
+          </button>
         )}
       </div>
     </div>
