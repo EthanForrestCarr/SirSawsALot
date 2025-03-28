@@ -49,13 +49,17 @@ const Notifications: React.FC = () => {
 
   return (
     <div style={{ position: 'relative' }} ref={dropdownRef}>
-      <button onClick={() => setShowDropdown(!showDropdown)}>
-        Notifications {unreadCount > 0 && `(${unreadCount})`}
+      <button 
+        onClick={() => setShowDropdown(!showDropdown)} 
+        className="notification"
+      >
+        {"🔔"}
+        {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
       </button>
 
       {showDropdown && (
         <div style={{
-          position: 'absolute', top: '40px', right: '0',
+          position: 'absolute', top: '55px', left: '0', // changed from right: '0'
           background: 'grey', border: '1px solid #ccc', padding: '10px', width: '300px'
         }}>
           {notifications.length === 0 ? (

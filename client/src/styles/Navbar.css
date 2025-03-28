@@ -1,6 +1,11 @@
 .navbar {
-  width: 100%; /* added to extend navbar across the entire page horizontally */
-  padding: 1rem;
+  position: fixed; /* Added fixed positioning to always sit at the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  height: fit-content;
+  padding: 1rem;          /* Remove vertical padding while preserving horizontal spacing */
   background: #333;
   color: #fff;
   display: flex;
