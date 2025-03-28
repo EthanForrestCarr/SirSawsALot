@@ -15,6 +15,9 @@ const AdminConversations: React.FC = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [deleteMode, setDeleteMode] = useState(false);
   const [conversationsToDelete, setConversationsToDelete] = useState<Conversation[]>([]);
+  const [newMode, setNewMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -30,6 +33,23 @@ const AdminConversations: React.FC = () => {
     };
     fetchConversations();
   }, []);
+
+  const handleSearch = async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`http://localhost:3000/users/search?q=${encodeURIComponent(query)}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error('Error searching users:', error);
+      setSearchResults([]);
+    }
+  };
 
   const handleDeleteConversations = async (convs: Conversation[]) => {
     try {
@@ -52,7 +72,7 @@ const AdminConversations: React.FC = () => {
   if (selectedConversation) {
     return (
       <div>
-        <button onClick={() => setSelectedConversation(null)}>← Back to Conversations</button>
+        <button onClick={() => setSelectedConversation(null)}>←</button>
         <AdminMessages 
           userId={selectedConversation.user_id} 
           userName={`${selectedConversation.first_name} ${selectedConversation.last_name}`} 
@@ -64,6 +84,48 @@ const AdminConversations: React.FC = () => {
   return (
     <div>
       <h3>Conversations</h3>
+      {newMode && (
+        <div style={{ marginBottom: '1rem' }}>
+          <input
+            type="text"
+            placeholder="Search by name or address..."
+            value={searchQuery}
+            onChange={(e) => {
+              const q = e.target.value;
+              setSearchQuery(q);
+              handleSearch(q);
+            }}
+            style={{ width: '80%', padding: '0.5rem' }}
+          />
+          <button onClick={() => setNewMode(false)} style={{ marginLeft: '0.5rem' }}>Cancel</button>
+          <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+            {searchResults.map(user => (
+              <li
+                key={user.id}
+                style={{
+                  cursor: 'pointer',
+                  padding: '0.5rem',
+                  borderBottom: '1px solid #ccc'
+                }}
+                onClick={() => {
+                  setSelectedConversation({
+                    user_id: user.id,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    latest_message_preview: '',
+                    latest_message_created_at: new Date().toISOString()
+                  });
+                  setNewMode(false);
+                  setSearchQuery('');
+                  setSearchResults([]);
+                }}
+              >
+                <strong>{user.first_name} {user.last_name}</strong> – {user.address}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
         {conversations.map(conv => {
           const isSelected = conversationsToDelete.some(d => d.user_id === conv.user_id);
@@ -116,9 +178,14 @@ const AdminConversations: React.FC = () => {
             )}
           </>
         ) : (
-          <button onClick={() => setDeleteMode(true)}>
-            Delete Conversation
-          </button>
+          <>
+            <button onClick={() => setDeleteMode(true)}>
+              Delete Conversation
+            </button>
+            <button onClick={() => setNewMode(true)} style={{ marginLeft: '0.5rem' }}>
+              New Conversation
+            </button>
+          </>
         )}
       </div>
     </div>

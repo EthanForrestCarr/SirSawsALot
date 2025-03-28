@@ -6,6 +6,30 @@ import { query } from '../db';
 
 const router = express.Router();
 
+// New route to search users (Admin-only)
+router.get('/search', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  if (!req.isAdmin) {
+    res.status(403).json({ message: 'Forbidden: Admin access only' });
+    return;
+  }
+  const queryParam = req.query.q;
+  if (!queryParam) {
+    res.json([]);
+    return;
+  }
+  try {
+    const result = await query(
+      `SELECT id, first_name, last_name, address FROM users 
+       WHERE first_name ILIKE $1 OR last_name ILIKE $1 OR address ILIKE $1`,
+      [`%${queryParam}%`]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const user = await query('SELECT first_name, last_name, email, address, phone, is_admin FROM users WHERE id = $1', [req.user]);

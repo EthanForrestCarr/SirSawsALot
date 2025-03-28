@@ -36,6 +36,11 @@ router.post('/', authenticateToken, async (req: AuthenticatedRequest, res: Respo
       'INSERT INTO messages (user_id, is_admin, message) VALUES ($1, $2, $3) RETURNING *',
       [req.user, false, message]
     );
+    // Notify all admins about the new user message
+    await query(
+      'INSERT INTO notifications (user_id, message) SELECT id, $1 FROM users WHERE is_admin = true',
+      ['New message received from a user.']
+    );
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error('Error sending message:', error);
@@ -78,6 +83,11 @@ router.post('/user/:userId', authenticateToken, async (req: AuthenticatedRequest
     const result = await query(
       'INSERT INTO messages (user_id, is_admin, message) VALUES ($1, $2, $3) RETURNING *',
       [userId, true, message]
+    );
+    // Notify the user about the new admin message
+    await query(
+      'INSERT INTO notifications (user_id, message) VALUES ($1, $2)',
+      [userId, 'New message received from admin.']
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
