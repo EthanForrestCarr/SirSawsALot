@@ -1,95 +1,126 @@
+import heroImage from '../assets/sirsawsalotPictures/HeroTrees.png';
+
 const LandingPage = () => {
+  const styles = {
+    container: {
+      fontFamily: 'Arial, sans-serif',
+      color: '#333',
+      lineHeight: '1.6',
+    },
+    section: {
+      padding: '60px 20px',
+      maxWidth: '960px',
+      margin: '0 auto',
+    },
+    hero: {
+      backgroundColor: '#7a0404',
+      color: '#fff',
+      textAlign: 'center' as const,
+      padding: '80px 20px',
+      backgroundImage: `url(${heroImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    },
+    heading: {
+      fontSize: '2.5rem',
+      marginBottom: '0.5rem',
+    },
+    subheading: {
+      fontSize: '1.5rem',
+      marginBottom: '1rem',
+      fontWeight: 'normal' as const,
+    },
+    paragraph: {
+      fontSize: '1.1rem',
+    },
+    serviceList: {
+      paddingLeft: '1.2rem',
+    },
+    callToAction: {
+      backgroundColor: '#f5f5f5',
+      textAlign: 'center' as const,
+    },
+    testimonials: {
+      backgroundColor: '#fff8f6',
+      borderTop: '2px solid #7a0404',
+      borderBottom: '2px solid #7a0404',
+    },
+    blockquote: {
+      fontStyle: 'italic',
+      backgroundColor: '#fff',
+      padding: '20px',
+      margin: '20px 0',
+      borderLeft: '4px solid #7a0404',
+    },
+    footer: {
+      fontSize: '0.9rem',
+      color: '#666',
+      marginTop: '10px',
+    },
+  };
+
   return (
-    <div>
+    <div style={styles.container}>
       {/* Hero Section */}
-      <section>
-        <h1>Sir Sawsalot - Professional & Friendly Tree Care in Ottertail County</h1>
-        <h2>Professional Tree Trimming & Removal by a Firefighter You Can Trust</h2>
-        <p>
-          Serving Ottertail County, Minnesota with safe, reliable tree care. We’re a local firefighter-owned business balancing professional quality with friendly community service. Your trees’ health, beauty, and value are our priority.
+      <section style={styles.hero}>
+        <h1 style={styles.heading}>Sir Sawsalot - Tree Trimming with Integrity</h1>
+        <h2 style={styles.subheading}>Professional Tree Care by a Local Firefighter</h2>
+        <p style={styles.paragraph}>
+          Serving Ottertail County with safety, beauty, and care. Fully dedicated to keeping your trees in shape—whether it’s trimming, removal, or full clean-up.
         </p>
       </section>
 
       {/* Services Section */}
-      <section>
+      <section style={styles.section}>
         <h2>Services</h2>
-        <p>
-          We offer a full range of tree care services to keep your property safe and looking great:
-        </p>
-        <ul>
-          <li>
-            <strong>Structural Hazard Mitigation:</strong> Removing weak or damaged limbs before they become a danger.
-          </li>
-          <li>
-            <strong>Aesthetic Pruning:</strong> Artful pruning to shape and beautify your trees.
-          </li>
-          <li>
-            <strong>Complete Tree Removal:</strong> Safe, careful removal of dead or unwanted trees.
-          </li>
-          <li>
-            <strong>Stump Grinding:</strong> Grinding down or removing leftover stumps.
-          </li>
+        <p>Our most popular tree care offerings:</p>
+        <ul style={styles.serviceList}>
+          <li><strong>Hazard Mitigation:</strong> Remove dangerous limbs.</li>
+          <li><strong>Aesthetic Trimming:</strong> Shape trees beautifully.</li>
+          <li><strong>Tree Removal:</strong> Full-service removal for dead/dying trees.</li>
+          <li><strong>Stump Grinding:</strong> Finish the job completely with clean results.</li>
         </ul>
       </section>
 
       {/* How It Works Section */}
-      <section>
+      <section style={styles.section}>
         <h2>How It Works</h2>
         <ol>
-          <li>
-            <strong>Easy Online Booking:</strong> Use our online request form to schedule your service (or call us if you prefer).
-          </li>
-          <li>
-            <strong>Real-Time Work Tracking:</strong> Stay updated on scheduling, crew arrival, and job progress online.
-          </li>
-          <li>
-            <strong>Optional Client Portal:</strong> Create a free account for a personalized experience with direct communication.
-          </li>
-          <li>
-            <strong>Priority Scheduling:</strong> Repeat customers may enjoy priority during busy seasons.
-          </li>
-          <li>
-            <strong>Secure Completion:</strong> Access your invoice via our secure portal and pay online.
-          </li>
+          <li><strong>Book Online or Call:</strong> Easy scheduling your way.</li>
+          <li><strong>Upload Photos:</strong> Help us understand your job.</li>
+          <li><strong>Real-Time Status:</strong> Track request approval & updates.</li>
+          <li><strong>Create an Account:</strong> Secure access, faster scheduling.</li>
         </ol>
       </section>
 
-      {/* About Us Section */}
-      <section>
-        <h2>About Us</h2>
+      {/* About Section */}
+      <section style={styles.section}>
+        <h2>About the Owner</h2>
         <p>
-          Firefighter-Owned, Community-Focused: Sir Sawsalot is owned and operated by a local firefighter with a passion for helping others. With extensive hands-on tree care experience and firefighter training, our focus is always on safety and quality.
-        </p>
-        <p>
-          We live in Ottertail County and understand local needs. We take pride in protecting your property's natural assets—your trees—as if they were our own.
+          Sir Sawsalot is owned by a dedicated firefighter with a lifelong passion for trees and safety. While not a certified arborist, he brings hands-on experience, precision, and local knowledge to every job.
         </p>
       </section>
 
-      {/* Testimonials Section */}
-      <section>
-        <h2>Testimonials (What Your Neighbors Are Saying)</h2>
-        <p>Coming soon – we’ll feature feedback from our happy customers!</p>
-        <blockquote>
-          "Sir Sawsalot took down a huge maple tree next to our house, and the whole process was smooth and safe. They cleaned up so well you’d never know a tree was there. We trust them completely!"
-          <footer>– Jane D., Fergus Falls</footer>
+      {/* Testimonials */}
+      <section style={{ ...styles.section, ...styles.testimonials }}>
+        <h2>Testimonials</h2>
+        <blockquote style={styles.blockquote}>
+          "Sir Sawsalot took down a huge maple near our home with absolute care and professionalism."
+          <footer style={styles.footer}>– Jane D., Fergus Falls</footer>
         </blockquote>
-        <blockquote>
-          "I booked a trimming service online, and it was so convenient. The team was friendly and did an amazing job shaping our trees. Highly recommend this service to anyone in Ottertail County!"
-          <footer>– John S., Pelican Rapids</footer>
+        <blockquote style={styles.blockquote}>
+          "Booking online was easy, and I got updates along the way. Highly recommend!"
+          <footer style={styles.footer}>– John S., Pelican Rapids</footer>
         </blockquote>
       </section>
 
-      {/* Contact & Call to Action Section */}
-      <section>
-        <h2>Contact & Call to Action</h2>
-        <p>
-          Ready to tackle troublesome branches or remove an old stump? Contact Sir Sawsalot today for your free, no-obligation quote.
-        </p>
-        <p>Phone: 218-XXX-XXXX</p>
-        <p>Email: sirsawsalot@yahoo.com</p>
-        <p>
-          Service Area: Ottertail County, MN – from Fergus Falls to Perham and everywhere in between.
-        </p>
+      {/* Call to Action */}
+      <section style={{ ...styles.section, ...styles.callToAction }}>
+        <h2>Request a Quote Today</h2>
+        <p>Ready to clear a tree or trim things back? Let's talk.</p>
+        <p><strong>Phone:</strong> 218-XXX-XXXX</p>
+        <p><strong>Email:</strong> sirsawsalot@yahoo.com</p>
+        <p><strong>Service Area:</strong> Fergus Falls, Perham, and all of Ottertail County.</p>
       </section>
     </div>
   );
