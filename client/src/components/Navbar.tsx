@@ -4,6 +4,7 @@ import Notifications from './buttons/Notifications';
 import AccordionButton from './buttons/AccordionButton';
 import logo from '../assets/sirsawsalotPictures/SirSawsalotLogo.png';
 import '../styles/Navbar.css';
+import LoginButton from './buttons/LoginButton';
 
 // Define props type
 interface NavbarProps {
@@ -41,9 +42,6 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
           </Link>
         </h1>
         {isLoggedIn && <Notifications />}
-        <Link to="/work-request" className="navbar-link">
-          Work Request
-        </Link>
       </div>
 
       <div className="navbar-actions">
@@ -58,12 +56,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
         </div>
         {!isLoggedIn && (
           <>
-            <Link to="/login" className="navbar-link">
-              Login
-            </Link>
-            <Link to="/signup" className="navbar-link">
-              Sign Up
-            </Link>
+            <LoginButton />
           </>
         )}
       </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import DetailsButton from '../buttons/DetailsButton';
 import ApproveDenyButtons from '../buttons/ApproveDenyButtons';
 import GenerateInvoiceButton from '../buttons/GenerateInvoiceButton';
+import WorkRequestButton from '../buttons/WorkRequestButton';
 import '../../styles/Table.css'; // added import
 
 interface Request {
@@ -42,39 +43,44 @@ const AdminRequestsTable: React.FC<AdminRequestsTableProps> = ({
   console.log("AdminRequestsTable rendering; currentRequests:", currentRequests);
 
   return (
-    <table className="universal-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Date</th>
-          <th>Name</th>
-          <th>Address</th>
-          <th>Status</th>
-          <th>Details</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {currentRequests.map((req) => (
-          <tr key={req.id}>
-            <td>{req.id}</td>
-            <td>{new Date(req.date).toLocaleString()}</td>
-            <td>{`${req.first_name} ${req.last_name}`}</td>
-            <td>{req.address}</td>
-            <td>{req.status}</td>
-            <td>
-              <DetailsButton requestId={req.id} />
-            </td>
-            <td>
-              {req.status && (
-                <ApproveDenyButtons requestId={req.id} updateRequestStatus={updateRequestStatus} />
-              )}
-              <GenerateInvoiceButton request={req} onOpenModal={onOpenModal} />
-            </td>
+    <>
+      <div style={{ marginBottom: '1rem' }}>
+        <WorkRequestButton /> {/* New: Work request button in dashboard */}
+      </div>
+      <table className="universal-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Status</th>
+            <th>Details</th>
+            <th>Actions</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {currentRequests.map((req) => (
+            <tr key={req.id}>
+              <td>{req.id}</td>
+              <td>{new Date(req.date).toLocaleString()}</td>
+              <td>{`${req.first_name} ${req.last_name}`}</td>
+              <td>{req.address}</td>
+              <td>{req.status}</td>
+              <td>
+                <DetailsButton requestId={req.id} />
+              </td>
+              <td>
+                {req.status && (
+                  <ApproveDenyButtons requestId={req.id} updateRequestStatus={updateRequestStatus} />
+                )}
+                <GenerateInvoiceButton request={req} onOpenModal={onOpenModal} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 };
 

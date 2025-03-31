@@ -1,4 +1,6 @@
 import heroImage from '../../assets/sirsawsalotPictures/HeroTrees.png';
+import SignupButton from '../buttons/SignupButton';
+import WorkRequestButton from '../buttons/WorkRequestButton';
 
 const HeroSection = () => {
   const styles = {
@@ -32,6 +34,8 @@ const HeroSection = () => {
       <p style={styles.paragraph}>
         Serving Ottertail County with safety, beauty, and care. Fully dedicated to keeping your trees in shape—whether it’s trimming, removal, or full clean-up.
       </p>
+      <SignupButton /> {/* New: Sign up button at the bottom */}
+      <WorkRequestButton /> {/* New: Work request button */}
     </section>
   );
 };

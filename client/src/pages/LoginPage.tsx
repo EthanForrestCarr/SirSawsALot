@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import EmailInput from '../components/inputs/EmailInput';
 import CurrentPasswordInput from '../components/inputs/CurrentPasswordInput';
+import SignupButton from '../components/buttons/SignupButton';
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -37,6 +38,8 @@ const LoginPage: React.FC = () => {
         <CurrentPasswordInput value={formData.password} handleChange={handleChange} />
         <button type="submit">Log In</button>
       </form>
+      <p>If you don't have an account, you can create one by clicking the button below.</p>
+      <SignupButton />
       {message && <p>{message}</p>}
     </div>
   );

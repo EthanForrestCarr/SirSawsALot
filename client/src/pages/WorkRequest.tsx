@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AuthenticatedWorkRequestForm from '../components/forms/AuthenticatedWorkRequestForm';
 import GuestWorkRequestForm from '../components/forms/GuestWorkRequestForm';
+import SignupButton from '../components/buttons/SignupButton';
 
 const WorkRequest: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -35,6 +36,9 @@ const WorkRequest: React.FC = () => {
 
   return (
     <div style={{ padding: '2rem' }}>
+      <div style={{ marginBottom: '1rem' }}>
+        <SignupButton /> {/* New: Sign up button at the top */}
+      </div>
       <h1>Work Request</h1>
       {showGuestForm ? (
         <GuestWorkRequestForm />
