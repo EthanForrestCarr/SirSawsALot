@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SignOutButton from './SignOutButton';
 
 interface DropdownItem {
   label: string;
@@ -54,9 +55,7 @@ const AccordionButton: React.FC<AccordionButtonProps> = ({ isAdmin, onSelect, on
             {item.label}
           </button>
         ))}
-        <button onClick={() => { onSignOut(); setOpen(false); }} className="dropdown-item">
-          Sign Out
-        </button>
+        <SignOutButton onClick={() => { onSignOut(); setOpen(false); }} className="dropdown-item" />
       </div>
     </div>
   );

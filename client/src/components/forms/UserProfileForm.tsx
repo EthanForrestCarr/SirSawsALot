@@ -5,6 +5,7 @@ import EmailInput from '../inputs/EmailInput';
 import PhoneInput from '../inputs/PhoneInput';
 import AddressInput from '../inputs/AddressInput';
 import '../../styles/Form.css';
+import CancelButton from '../buttons/CancelButton';
 
 interface UserProfileFormProps {
   onSuccess?: () => void; // Optional callback for after successful update
@@ -94,7 +95,9 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSuccess }) => {
           <PhoneInput formData={userInfo} handleChange={handleInputChange} />
           <AddressInput formData={userInfo} handleChange={handleInputChange} />
           <button type="submit">Save</button>
-          <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
+          <CancelButton type="button" onClick={() => setEditMode(false)}>
+            Cancel
+          </CancelButton>
         </form>
       ) : (
         <>

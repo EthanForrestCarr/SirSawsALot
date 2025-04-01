@@ -8,6 +8,7 @@ import ImageInput from '../components/inputs/ImageInput';
 import BranchHeightInput from '../components/inputs/BranchHeightInput';
 import StumpGrindingInput from '../components/inputs/StumpGrindingInput';
 import WoodPreferenceInput from '../components/inputs/WoodPreferenceInput';
+import CancelButton from '../components/buttons/CancelButton';
 
 const RequestDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Get request ID from URL
@@ -83,9 +84,7 @@ const RequestDetailsPage: React.FC = () => {
           <button onClick={handleSave} style={{ marginRight: '1rem', padding: '0.5rem 1rem' }}>
             Save
           </button>
-          <button onClick={() => setIsEditing(false)} style={{ padding: '0.5rem 1rem' }}>
-            Cancel
-          </button>
+          <CancelButton onClick={() => setIsEditing(false)} style={{ padding: '0.5rem 1rem' }} />
         </>
       ) : (
         <>

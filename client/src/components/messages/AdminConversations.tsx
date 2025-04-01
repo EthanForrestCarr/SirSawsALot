@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminMessages from './AdminMessages';
 import NameAddressInput from '../inputs/NameAddressInput';
+import CancelButton from '../buttons/CancelButton';
 
 interface Conversation {
   user_id: number;
@@ -142,9 +143,9 @@ const AdminConversations: React.FC = () => {
       <div style={{ marginTop: '1rem' }}>
         {deleteMode ? (
           <>
-            <button onClick={() => { setDeleteMode(false); setConversationsToDelete([]); }}>
-              Cancel Delete
-            </button>
+            <CancelButton onClick={() => { setDeleteMode(false); setConversationsToDelete([]); }}>
+              Cancel
+            </CancelButton>
             {conversationsToDelete.length > 0 && (
               <button 
                 onClick={() => handleDeleteConversations(conversationsToDelete)}
