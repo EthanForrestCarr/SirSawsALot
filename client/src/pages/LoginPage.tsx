@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import EmailInput from '../components/inputs/EmailInput';
 import CurrentPasswordInput from '../components/inputs/CurrentPasswordInput';
 import SignupButton from '../components/buttons/SignupButton';
+import SubmitButton from '../components/buttons/SubmitButton';
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -36,7 +37,9 @@ const LoginPage: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <EmailInput formData={formData} handleChange={handleChange} />
         <CurrentPasswordInput value={formData.password} handleChange={handleChange} />
-        <button type="submit">Log In</button>
+        <SubmitButton>
+          Log In
+        </SubmitButton>
       </form>
       <p>If you don't have an account, you can create one by clicking the button below.</p>
       <SignupButton />

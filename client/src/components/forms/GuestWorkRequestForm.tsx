@@ -11,6 +11,7 @@ import StumpGrindingInput from '../inputs/StumpGrindingInput';
 import BranchHeightInput from '../inputs/BranchHeightInput';
 import DateInput from '../inputs/DateInput';
 import '../../styles/Form.css';
+import SubmitButton from '../buttons/SubmitButton';
 
 const GuestWorkRequestForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -100,7 +101,9 @@ const GuestWorkRequestForm: React.FC = () => {
         <StumpGrindingInput formData={formData} handleChange={handleChange} />
         <BranchHeightInput formData={formData} handleChange={handleChange} />
         <DateInput selectedDate={selectedDate} onDateChange={setSelectedDate} required />
-        <button type="submit">Submit</button>
+        <SubmitButton>
+          Submit
+        </SubmitButton>
       </form>
       {message && <p>{message}</p>}
     </div>

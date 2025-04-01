@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TextareaAutosize from 'react-textarea-autosize';
 import '../../styles/Form.css'; // import the CSS
+import SubmitButton from '../buttons/SubmitButton';
 
 export interface InvoiceFormData {
   request_id: string;
@@ -250,7 +251,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
           <strong>Total: ${formData.total_amount}</strong>
         </div>
         <br />
-        <button type="submit">Create Invoice</button>
+        <SubmitButton>
+          Create Invoice
+        </SubmitButton>
       </div>
     </form>
   );

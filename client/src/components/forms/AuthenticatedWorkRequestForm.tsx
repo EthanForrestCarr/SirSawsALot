@@ -10,6 +10,7 @@ import PhoneInput from '../inputs/PhoneInput';
 import NameInput from '../inputs/NameInput';
 import EmailInput from '../inputs/EmailInput';
 import AddressInput from '../inputs/AddressInput';
+import SubmitButton from '../buttons/SubmitButton';
 import '../../styles/Form.css';
 
 const AuthenticatedWorkRequestForm: React.FC = () => {
@@ -121,7 +122,9 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
         <StumpGrindingInput formData={formData} handleChange={handleChange} />
         <BranchHeightInput formData={formData} handleChange={handleChange} />
 
-        <button type="submit">Submit</button>
+        <SubmitButton>
+          Submit
+        </SubmitButton>
       </form>
       {message && <p>{message}</p>}
     </div>

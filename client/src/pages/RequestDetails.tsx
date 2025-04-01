@@ -9,6 +9,7 @@ import BranchHeightInput from '../components/inputs/BranchHeightInput';
 import StumpGrindingInput from '../components/inputs/StumpGrindingInput';
 import WoodPreferenceInput from '../components/inputs/WoodPreferenceInput';
 import CancelButton from '../components/buttons/CancelButton';
+import EditButton from '../components/buttons/EditButton'; // new import
 
 const RequestDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Get request ID from URL
@@ -107,9 +108,7 @@ const RequestDetailsPage: React.FC = () => {
               />
             </div>
           )}
-          <button onClick={() => setIsEditing(true)} style={{ marginTop: '1rem', padding: '0.5rem 1rem' }}>
-            Edit
-          </button>
+          <EditButton onClick={() => setIsEditing(true)} style={{ marginTop: '1rem', padding: '0.5rem 1rem' }} />
         </>
       )}
       <button

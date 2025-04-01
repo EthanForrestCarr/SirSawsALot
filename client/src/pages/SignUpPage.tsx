@@ -6,6 +6,7 @@ import EmailInput from '../components/inputs/EmailInput';
 import PhoneInput from '../components/inputs/PhoneInput';
 import AddressInput from '../components/inputs/AddressInput';
 import NewPasswordInput from '../components/inputs/NewPasswordInput';
+import SubmitButton from '../components/buttons/SubmitButton';
 
 const SignupPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -51,7 +52,9 @@ const SignupPage: React.FC = () => {
         <NewPasswordInput value={formData.password} handleChange={handleChange} />
         <AddressInput formData={formData} handleChange={handleChange} />
         <PhoneInput formData={formData} handleChange={handleChange} />
-        <button type="submit">Sign Up</button>
+        <SubmitButton>
+          Sign Up
+        </SubmitButton>
       </form>
       {message && <p>{message}</p>}
     </div>

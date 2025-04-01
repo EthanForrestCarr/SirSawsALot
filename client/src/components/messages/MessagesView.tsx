@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import SubmitButton from '../buttons/SubmitButton';
 
 interface Message {
   id: number;
@@ -62,7 +63,9 @@ const MessagesView: React.FC = () => {
           placeholder="Type your message..."
           style={{ width: '100%', height: '60px' }}
         />
-        <button type="submit" style={{ marginTop: '0.5rem' }}>Submit</button>
+        <SubmitButton style={{ marginTop: '0.5rem' }}>
+          Submit
+        </SubmitButton>
       </form>
     </div>
   );

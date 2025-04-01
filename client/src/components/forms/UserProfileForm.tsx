@@ -6,6 +6,7 @@ import PhoneInput from '../inputs/PhoneInput';
 import AddressInput from '../inputs/AddressInput';
 import '../../styles/Form.css';
 import CancelButton from '../buttons/CancelButton';
+import EditButton from '../buttons/EditButton';
 
 interface UserProfileFormProps {
   onSuccess?: () => void; // Optional callback for after successful update
@@ -105,7 +106,9 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSuccess }) => {
           <p><strong>Email:</strong> {userInfo.email}</p>
           <p><strong>Phone:</strong> {userInfo.phone}</p>
           <p><strong>Address:</strong> {userInfo.address}</p>
-          <button onClick={() => setEditMode(true)}>Edit</button>
+          <EditButton onClick={() => setEditMode(true)}>
+            Edit
+          </EditButton>
         </>
       )}
     </div>
