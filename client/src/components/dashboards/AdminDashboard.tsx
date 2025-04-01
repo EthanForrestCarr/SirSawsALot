@@ -26,6 +26,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ initialView }) => {
   // New state for Invoice Modal
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [prefillData, setPrefillData] = useState<InvoiceFormData | null>(null);
+  const [firstName, setFirstName] = useState('');
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -46,6 +47,19 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ initialView }) => {
   useEffect(() => {
     setView(initialView || 'table');
   }, [initialView]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.get('http://localhost:3000/user', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(response => {
+        setFirstName(response.data.first_name);
+      })
+      .catch(err => console.error('Error fetching user:', err));
+    }
+  }, []);
 
   const updateRequestStatus = async (id: number, status: string) => {
     const token = localStorage.getItem('token');
@@ -78,7 +92,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ initialView }) => {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <h2>Dashboard</h2>
+      <h2>Hi, {firstName}</h2>
       {message && <p>{message}</p>}
 
       {view === 'table' ? (

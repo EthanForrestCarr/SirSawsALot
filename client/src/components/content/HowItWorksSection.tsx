@@ -1,3 +1,5 @@
+import SignupButton from '../buttons/SignupButton';
+
 const HowItWorksSection = () => {
   const styles = {
     section: {
@@ -16,6 +18,7 @@ const HowItWorksSection = () => {
         <li><strong>Real-Time Status:</strong> Track request approval & updates.</li>
         <li><strong>Create an Account:</strong> Secure access, faster scheduling.</li>
       </ol>
+      <SignupButton /> {/* New: Sign up button at the bottom */}
     </section>
   );
 };

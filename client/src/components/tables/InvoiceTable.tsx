@@ -1,6 +1,6 @@
 import React from 'react';
-import axios from 'axios';
 import '../../styles/Table.css';
+import InvoiceActionButtons from '../buttons/InvoiceActionButtons';
 
 interface InvoiceTableProps {
   invoices: any[];
@@ -9,29 +9,6 @@ interface InvoiceTableProps {
 }
 
 const InvoiceTable: React.FC<InvoiceTableProps> = ({ invoices, onUpdate, onView }) => {
-  const handleStatusUpdate = async (id: number, status: string) => {
-    const token = localStorage.getItem('token');
-    try {
-      await axios.patch(`http://localhost:3000/admin/invoices/${id}`, { status }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      onUpdate();
-    } catch (error) {
-      console.error('Error updating invoice status:', error);
-    }
-  };
-
-  const handleDelete = async (id: number) => {
-    const token = localStorage.getItem('token');
-    try {
-      await axios.delete(`http://localhost:3000/admin/invoices/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      onUpdate();
-    } catch (error) {
-      console.error('Error deleting invoice:', error);
-    }
-  };
 
   return (
     <table className="universal-table">
@@ -54,10 +31,7 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ invoices, onUpdate, onView 
             <td>{invoice.status}</td>
             <td>{new Date(invoice.due_date).toLocaleDateString("en-US")}</td>
             <td>
-              <button onClick={() => handleStatusUpdate(invoice.id, 'paid')}>Mark as Paid</button>
-              <button onClick={() => handleStatusUpdate(invoice.id, 'canceled')}>Cancel</button>
-              <button onClick={() => handleDelete(invoice.id)}>Delete</button>
-              <button onClick={() => onView(invoice)}>View Invoice</button> {/* New button */}
+              <InvoiceActionButtons invoice={invoice} onUpdate={onUpdate} onView={onView} />
             </td>
           </tr>
         ))}

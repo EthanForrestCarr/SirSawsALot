@@ -21,6 +21,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ initialView }) => {
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   // Updated view state initialization:
   const [view, setView] = useState<'requests' | 'invoices' | 'messages' | 'profile'>(initialView || 'requests');
+  const [firstName, setFirstName] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,6 +49,19 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ initialView }) => {
     setView(initialView || 'requests');
   }, [initialView]);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.get('http://localhost:3000/user', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(response => {
+        setFirstName(response.data.first_name);
+      })
+      .catch(err => console.error('Error fetching user:', err));
+    }
+  }, []);
+
   const handleViewInvoice = (invoice: any) => {
     setSelectedInvoice(invoice);
     setShowInvoiceModal(true);
@@ -60,7 +74,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ initialView }) => {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <h2>User Dashboard</h2>
+      <h2>Hi, {firstName}</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {view === 'requests' ? (
         <>

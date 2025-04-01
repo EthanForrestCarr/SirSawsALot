@@ -3,7 +3,7 @@ import DetailsButton from '../buttons/DetailsButton';
 import ApproveDenyButtons from '../buttons/ApproveDenyButtons';
 import GenerateInvoiceButton from '../buttons/GenerateInvoiceButton';
 import WorkRequestButton from '../buttons/WorkRequestButton';
-import '../../styles/Table.css'; // added import
+import '../../styles/Table.css';
 
 interface Request {
   id: number;
