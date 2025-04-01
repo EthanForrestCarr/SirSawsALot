@@ -1,0 +1,67 @@
+.testimonials-section {
+    padding: 60px 20px;
+    max-width: 960px;
+    margin: 0 auto;
+    background-color: #fff8f6;
+    border-top: 2px solid #7a0404;
+    border-bottom: 2px solid #7a0404;
+}
+.testimonial-blockquote {
+    font-style: italic;
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px 0;
+    border-left: 4px solid #7a0404;
+}
+.testimonial-footer {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 10px;
+}
+.services-section {
+    padding: 60px 20px;
+    max-width: 960px;
+    margin: 0 auto;
+}
+.service-list {
+    padding-left: 1.2rem;
+}
+.how-it-works-section {
+    padding: 60px 20px;
+    max-width: 960px;
+    margin: 0 auto;
+}
+.hero-section {
+    background-color: #7a0404;
+    color: #fff;
+    text-align: center;
+    padding: 80px 20px;
+    background-size: cover;
+    background-position: center;
+    /* Using a relative path from the CSS file */
+    background-image: url("../assets/sirsawsalotPictures/HeroTrees.png");
+}
+.hero-heading {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+.hero-subheading {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: normal;
+}
+.hero-paragraph {
+    font-size: 1.1rem;
+}
+.cta-section {
+    padding: 60px 20px;
+    max-width: 960px;
+    margin: 0 auto;
+    background-color: #f5f5f5;
+    text-align: center;
+}
+.about-section {
+    padding: 60px 20px;
+    max-width: 960px;
+    margin: 0 auto;
+}

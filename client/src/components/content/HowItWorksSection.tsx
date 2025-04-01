@@ -1,16 +1,9 @@
+import '../../styles/content.css';
 import SignupButton from '../buttons/SignupButton';
 
 const HowItWorksSection = () => {
-  const styles = {
-    section: {
-      padding: '60px 20px',
-      maxWidth: '960px',
-      margin: '0 auto',
-    },
-  };
-
   return (
-    <section style={styles.section}>
+    <section className="how-it-works-section">
       <h2>How It Works</h2>
       <ol>
         <li><strong>Book Online or Call:</strong> Easy scheduling your way.</li>
