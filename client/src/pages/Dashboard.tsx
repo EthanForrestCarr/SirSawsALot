@@ -45,9 +45,14 @@ const Dashboard: React.FC = () => {
         ? viewParam
         : 'requests');
 
-  return isAdmin 
-    ? <AdminDashboard initialView={initialView as any} /> 
-    : <UserDashboard initialView={initialView as any} />;
+  return (
+    <div style={{ marginTop: '50px' }}>
+      { isAdmin 
+        ? <AdminDashboard initialView={initialView as any} /> 
+        : <UserDashboard initialView={initialView as any} />
+      }
+    </div>
+  );
 };
 
 export default Dashboard;

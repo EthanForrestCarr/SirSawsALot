@@ -20,30 +20,38 @@
 }
 .services-section {
     background-color: #fff8f6;
+    border: 2px solid #7a0404;
+    border-radius: 5px;
     padding: 60px 20px;
     max-width: 960px;
-    margin: 0 auto;
+    margin: 16px;
 }
 .service-list {
     padding-left: 1.2rem;
 }
 .how-it-works-section {
     background-color: #fff8f6;
+    border: 2px solid #7a0404;
+    border-radius: 5px;
     padding: 60px 20px;
     max-width: 960px;
-    margin: 0 auto;
+    margin: 16px;
 }
 .hero-section {
+    width: 100vw;           /* always spans full viewport width when viewport is small */
+    max-width: 1920px;      /* prevent stretching beyond the native image resolution */
+    margin-top: 50px;         /* centers the section when the viewport is wider */
     background-color: #7a0404;
     color: #fff;
     text-align: center;
     padding: 60px 20px;
-    width: 100%;
     background-size: cover;
     background-position: center;
     background-image: url("../assets/sirsawsalotPictures/HeroTrees.png");
+    overflow: auto;
 }
 .hero-heading {
+    margin-top: 0;
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
 }
@@ -69,13 +77,8 @@
     margin: 0 auto;
 }
 
-.navbar-button:hover {
-    background-color: #ccc;
-}
-
 .grid-container {
   display: grid;
-  gap: 20px;
 }
 
 @media (min-width: 768px) {
@@ -92,8 +95,6 @@
 
 .card {
   background-color: #fff8f6;
-  padding: 20px;
-  border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }

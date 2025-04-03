@@ -103,7 +103,7 @@
 
 /* Notification button styles */
 .notification {
-  background-color: #555;
+  background-color: #fff8f6;
   color: white;
   text-decoration: none;
   padding: 15px 26px;
@@ -115,7 +115,7 @@
 }
 
 .notification:hover {
-  background: red;
+  background: #7a0404;
 }
 
 .notification .badge {
@@ -124,6 +124,39 @@
   right: -10px;
   padding: 5px 10px;
   border-radius: 50%;
-  background-color: red;
+  background-color: #7a0404;
   color: white;
+}
+
+#signup-button {
+  background-color: #7a0404;
+  color: #fff8f6;
+  padding: 10px 20px;
+  border: 2px solid #7a0404;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Hover effect for the signup button */
+#signup-button:hover {
+  border: 2px solid #666;
+  background-color: #9b0404;
+  color: #fff8f6;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+#work-request-button {
+  background-color: #7a0404;
+  color: #fff8f6;
+  padding: 10px 20px;
+  border: 2px solid #7a0404;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* Hover effect for the work request button */ 
+#work-request-button:hover {
+  border: 2px solid #666;
+  background-color: #9b0404;
+  color: #fff8f6;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 }

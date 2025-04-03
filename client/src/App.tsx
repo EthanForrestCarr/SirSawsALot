@@ -35,7 +35,6 @@ const App: React.FC = () => {
   return (
     <Router>
       <Navbar isAdmin={isAdmin} />
-      <div style={{ marginTop: '120px' }}> {/* Added wrapper to avoid navbar overlap */}
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -45,7 +44,6 @@ const App: React.FC = () => {
           <Route path="/admin/requests/:id" element={<RequestDetailsPage />} />
           <Route path="/profile" element={<UserProfile />} />
         </Routes>
-      </div>
     </Router>
   );
 };

@@ -59,8 +59,8 @@ const Notifications: React.FC = () => {
 
       {showDropdown && (
         <div style={{
-          position: 'absolute', top: '55px', left: '0', // changed from right: '0'
-          background: 'grey', border: '1px solid #ccc', padding: '10px', width: '300px'
+          position: 'absolute', top: '55px', right: '0', // changed from right: '0'
+          background: 'white', border: '1px solid #ccc', padding: '10px', width: '300px'
         }}>
           {notifications.length === 0 ? (
             <p>No new notifications</p>
@@ -68,9 +68,7 @@ const Notifications: React.FC = () => {
             <>
               {notifications.map((notif) => (
                 <div key={notif.id} style={{
-                  marginBottom: '5px',
                   opacity: notif.is_read ? 0.5 : 1,
-                  padding: '8px',
                   borderBottom: '1px solid #ddd',
                 }}>
                   <p>{notif.message}</p>
