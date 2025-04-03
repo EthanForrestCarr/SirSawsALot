@@ -35,26 +35,23 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
 
   return (
     <nav className="navbar">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <h1 className="navbar-brand">
           <Link to="/" className="navbar-link">
             <img src={logo} alt="Sir Sawsalot" className="navbar-logo" />
           </Link>
         </h1>
-        {isLoggedIn && <Notifications />}
-      </div>
 
       <div className="navbar-actions">
-        <div className="dropdown-container">
-          {isLoggedIn && (
+        {isLoggedIn ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Notifications />
             <AccordionButton 
               isAdmin={isAdmin}
               onSelect={handleDashboardOption} 
               onSignOut={handleSignOut} 
             />
-          )}
-        </div>
-        {!isLoggedIn && (
+          </div>
+        ) : (
           <>
             <LoginButton />
           </>

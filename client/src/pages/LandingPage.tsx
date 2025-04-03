@@ -17,8 +17,15 @@ const LandingPage = () => {
   return (
     <div style={styles.container}>
       <HeroSection />
-      <ServicesSection />
-      <HowItWorksSection />
+      {/* Grid container for How It Works and Services */}
+      <div className="grid-container">
+        <div className="card">
+          <HowItWorksSection />
+        </div>
+        <div className="card">
+          <ServicesSection />
+        </div>
+      </div>
       <AboutSection />
       <TestimonialsSection />
       <CallToActionSection />
