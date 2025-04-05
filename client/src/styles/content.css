@@ -12,6 +12,7 @@
     padding: 20px;
     margin: 20px 0;
     border-left: 4px solid #7a0404;
+    box-shadow: #666 0px 0px 5px 0px;
 }
 .testimonial-footer {
     font-size: 0.9rem;
@@ -106,7 +107,6 @@
 
 .card-row {
   display: flex;
-  gap: 20px;
   flex-wrap: wrap;
   max-width: 960px;
   margin: 0 auto;
@@ -118,10 +118,29 @@
 .card-row > section.services-section,
 .card-row > section.how-it-works-section {
   max-width: none;
-  margin: 0;
+  margin: 0 20px;
 }
 
 .full-width-section {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
+}
+
+/* Updated: Add vertical space and red border with rounded corners for applicable landing page sections */
+.testimonials-section,
+.services-section,
+.how-it-works-section,
+.about-section {
+  margin: 20px;           /* vertical space between sections */
+  border: 2px solid #7a0404;     /* red border */
+  border-radius: 10px;           /* curved corners */
+}
+
+/* Override for full-width hero and call to action sections */
+.hero-section,
+.cta-section {
+  margin: 20px 0;                /* vertical spacing only */
+  border: none;                  /* remove border */
+  border-radius: 0;              /* no rounding */
+  padding: 60px 0;               /* remove horizontal padding */
 }
