@@ -1,10 +1,12 @@
 .testimonials-section {
     padding: 60px 20px;
     max-width: 960px;
-    margin: 0 auto;
+    margin: 20px auto;
     background-color: #fff8f6;
     border-top: 2px solid #7a0404;
     border-bottom: 2px solid #7a0404;
+    border: 2px solid #7a0404;
+    border-radius: 10px;
 }
 .testimonial-blockquote {
     font-style: italic;
@@ -22,10 +24,10 @@
 .services-section {
     background-color: #fff8f6;
     border: 2px solid #7a0404;
-    border-radius: 5px;
+    border-radius: 10px;
     padding: 60px 20px;
     max-width: 960px;
-    margin: 16px;
+    margin: 20px;
 }
 .service-list {
     padding-left: 1.2rem;
@@ -33,23 +35,25 @@
 .how-it-works-section {
     background-color: #fff8f6;
     border: 2px solid #7a0404;
-    border-radius: 5px;
+    border-radius: 10px;
     padding: 60px 20px;
     max-width: 960px;
-    margin: 16px;
+    margin: 20px;
 }
 .hero-section {
     width: 100vw;           /* always spans full viewport width when viewport is small */
     max-width: 1920px;      /* prevent stretching beyond the native image resolution */
-    margin-top: 50px;         /* centers the section when the viewport is wider */
+    margin: 20px 0;         /* centers the section when the viewport is wider */
     background-color: #7a0404;
     color: #fff;
     text-align: center;
-    padding: 60px 20px;
+    padding: 60px 0;
     background-size: cover;
     background-position: center;
     background-image: url("../assets/sirsawsalotPictures/HeroTrees.png");
     overflow: auto;
+    border: none;
+    border-radius: 0;
 }
 .hero-heading {
     margin-top: 0;
@@ -65,11 +69,13 @@
     font-size: 1.1rem;
 }
 .cta-section {
-    padding: 60px 20px;
+    padding: 60px 0;
     max-width: 960px;
-    margin: 0 auto;
+    margin: 20px 0;
     background-color: #f5f5f5;
     text-align: center;
+    border: none;
+    border-radius: 0;
 }
 .cta-section.full-width-section {
   width: 100vw;
@@ -80,7 +86,9 @@
     background-color: #fff8f6;
     padding: 60px 20px;
     max-width: 960px;
-    margin: 0 auto;
+    margin: 20px auto;
+    border: 2px solid #7a0404;
+    border-radius: 10px;
 }
 
 .grid-container {
@@ -126,21 +134,32 @@
   margin-left: calc(-50vw + 50%);
 }
 
-/* Updated: Add vertical space and red border with rounded corners for applicable landing page sections */
+/* Common styles: border and rounded corners for applicable landing page sections */
 .testimonials-section,
 .services-section,
 .how-it-works-section,
 .about-section {
-  margin: 20px;           /* vertical space between sections */
+margin: 20px;           /* vertical space between sections */
   border: 2px solid #7a0404;     /* red border */
   border-radius: 10px;           /* curved corners */
 }
 
-/* Override for full-width hero and call to action sections */
-.hero-section,
-.cta-section {
-  margin: 20px 0;                /* vertical spacing only */
-  border: none;                  /* remove border */
-  border-radius: 0;              /* no rounding */
-  padding: 60px 0;               /* remove horizontal padding */
+/* Center the about and testimonials sections */
+.testimonials-section,
+.about-section {
+  margin: 20px auto;           /* vertical spacing and horizontal centering */
+}
+
+/* Leave services and how-it-works sections as is */
+.services-section,
+.how-it-works-section {
+  margin: 20px;                /* vertical spacing only */
+}
+
+/* Ensure 20px horizontal margin on window sides for about owner and testimonials sections */
+@media (max-width: 960px) {
+  .testimonials-section,
+  .about-section {
+    width: calc(100% - 40px);
+  }
 }
