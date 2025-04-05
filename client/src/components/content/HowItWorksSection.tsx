@@ -3,7 +3,7 @@ import SignupButton from '../buttons/SignupButton';
 
 const HowItWorksSection = () => {
   return (
-    <section className="how-it-works-section">
+    <section className="how-it-works-section card">
       <h2>How It Works</h2>
       <ol>
         <li><strong>Book Online or Call:</strong> Easy scheduling your way.</li>

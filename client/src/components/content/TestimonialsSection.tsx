@@ -2,7 +2,7 @@ import '../../styles/content.css';
 
 const TestimonialsSection = () => {
   return (
-    <section className="testimonials-section">
+    <section className="testimonials-section card">
       <h2>Testimonials</h2>
       <blockquote className="testimonial-blockquote">
         "Sir Sawsalot took down a huge maple near our home with absolute care and professionalism."

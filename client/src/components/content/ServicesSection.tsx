@@ -2,7 +2,7 @@ import '../../styles/content.css';
 
 const ServicesSection = () => {
   return (
-    <section className="services-section">
+    <section className="services-section card">
       <h2>Services</h2>
       <p>Our most popular tree care offerings:</p>
       <ul className="service-list">
