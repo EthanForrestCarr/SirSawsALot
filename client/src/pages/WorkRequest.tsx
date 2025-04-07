@@ -35,8 +35,9 @@ const WorkRequest: React.FC = () => {
   const showGuestForm = !token || isAdmin;
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div style={{ padding: '2rem', paddingTop: '80px' }}> {/* Modified: Added paddingTop */}
       <div style={{ marginBottom: '1rem' }}>
+        <p>Don't have an account?</p>
         <SignupButton /> {/* New: Sign up button at the top */}
       </div>
       <h1>Work Request</h1>
