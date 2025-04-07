@@ -5,6 +5,12 @@
   "main": "eslint.config.js",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
+    "build:client": "npm run build --prefix client",
+    "build:server": "npm run build --prefix server",
+    "build": "npm run build:server && npm run build:client",
+    "start:server": "npm run start --prefix server",
+    "start:client": "npm run preview --prefix client",
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
