@@ -17,7 +17,7 @@ const LandingPage = () => {
   return (
     <div style={styles.container}>
       <HeroSection />
-      <div className="card-row">
+      <div className="how-it-works-services-container" style={{ margin: '0 auto', display: 'flex', justifyContent: 'space-between', maxWidth: '960px' }}>
         <HowItWorksSection />
         <ServicesSection />
       </div>
