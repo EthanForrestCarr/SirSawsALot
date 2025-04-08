@@ -45,12 +45,11 @@
 }
 
 .hero-section {
+  /* For smaller viewports we want full width */
   width: 100vw;
-  /* always spans full viewport width when viewport is small */
+  /* Ensure the image is not scaled beyond its native resolution */
   max-width: 1920px;
-  /* prevent stretching beyond the native image resolution */
-  margin: 20px 0;
-  /* centers the section when the viewport is wider */
+  
   background-color: #7a0404;
   color: #fff;
   text-align: center;
@@ -62,6 +61,14 @@
   border-bottom: #e4e0df 2px solid;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border-radius: 0;
+}
+
+/* When the viewport is wider than the image’s native width, keep it centered */
+@media (min-width: 1920px) {
+  .hero-section {
+    width: 1920px;
+    /* No need for any margin adjustments here since the flex container centers it */
+  }
 }
 
 .hero-heading {
