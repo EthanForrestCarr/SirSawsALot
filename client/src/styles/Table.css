@@ -1,4 +1,4 @@
-.universal-table {
+table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1rem;
@@ -8,4 +8,20 @@
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
+}
+
+.responsive-table {
+    overflow-x: auto;
+}
+
+@media (max-width: 600px) {
+  th {
+    display: none;
+  }
+  td {
+    display: block;
+    text-align: right;
+    position: relative;
+    padding-left: 50%;
+  }
 }

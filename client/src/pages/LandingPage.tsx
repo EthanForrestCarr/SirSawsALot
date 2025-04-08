@@ -12,7 +12,7 @@ const LandingPage = () => {
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <HeroSection />
       </div>
-      <div className="how-it-works-services-container" style={{ margin: '0 auto', display: 'flex', justifyContent: 'space-between', maxWidth: '960px' }}>
+      <div className="how-it-works-services-container" style={{ margin: '0 auto', display: 'flex', gap: '20px', justifyContent: 'center', maxWidth: '960px' }}>
         <HowItWorksSection />
         <ServicesSection />
       </div>

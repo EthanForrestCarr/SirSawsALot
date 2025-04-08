@@ -38,7 +38,7 @@ const ServiceChargesTable: React.FC<ServiceChargesTableProps> = ({ invoice }) =>
   const finalTotal = taxableAmount + tax;
 
   return (
-    <div>
+    <div className="responsive-table">
       <table className="universal-table">
         <thead>
           <tr>
@@ -49,45 +49,51 @@ const ServiceChargesTable: React.FC<ServiceChargesTableProps> = ({ invoice }) =>
         </thead>
         <tbody>
           <tr>
-            <td>Service Type</td>
-            <td>{invoice.service_type} ({invoice.job_scope})</td>
-            <td>${servicePrice.toFixed(2)}</td>
+            <td data-label="Service">Service Type</td>
+            <td data-label="Description">
+              {invoice.service_type} ({invoice.job_scope})
+            </td>
+            <td data-label="Price">${servicePrice.toFixed(2)}</td>
           </tr>
           <tr>
-            <td>Stump Grinding</td>
-            <td>{invoice.stump_grinding ? 'Stump grinding included' : 'No stump grinding'}</td>
-            <td>${stumpPrice.toFixed(2)}</td>
+            <td data-label="Service">Stump Grinding</td>
+            <td data-label="Description">
+              {invoice.stump_grinding ? 'Stump grinding included' : 'No stump grinding'}
+            </td>
+            <td data-label="Price">${stumpPrice.toFixed(2)}</td>
           </tr>
           <tr>
-            <td>Wood Keep</td>
-            <td>{invoice.wood_keep ? 'Customer keeps the wood' : 'Wood removal included'}</td>
-            <td>${woodKeepPrice.toFixed(2)}</td>
+            <td data-label="Service">Wood Keep</td>
+            <td data-label="Description">
+              {invoice.wood_keep ? 'Customer keeps the wood' : 'Wood removal included'}
+            </td>
+            <td data-label="Price">${woodKeepPrice.toFixed(2)}</td>
           </tr>
           <tr>
-            <td colSpan={2}>
+            <td data-label="Discount" colSpan={2}>
               <strong>Discount ({invoice.discount || 0}%)</strong>
             </td>
-            <td>- ${discountValue.toFixed(2)}</td>
+            <td data-label="Price">- ${discountValue.toFixed(2)}</td>
           </tr>
           <tr>
-            <td colSpan={2}>
+            <td data-label="Subtotal" colSpan={2}>
               <strong>Subtotal</strong>
             </td>
-            <td>
+            <td data-label="Price">
               <strong>${taxableAmount.toFixed(2)}</strong>
             </td>
           </tr>
           <tr>
-            <td colSpan={2}>
+            <td data-label="Tax" colSpan={2}>
               <strong>Tax (8%)</strong>
             </td>
-            <td>+ ${tax.toFixed(2)}</td>
+            <td data-label="Price">+ ${tax.toFixed(2)}</td>
           </tr>
           <tr>
-            <td colSpan={2}>
+            <td data-label="Total" colSpan={2}>
               <strong>Total</strong>
             </td>
-            <td>
+            <td data-label="Price">
               <strong>${finalTotal.toFixed(2)}</strong>
             </td>
           </tr>

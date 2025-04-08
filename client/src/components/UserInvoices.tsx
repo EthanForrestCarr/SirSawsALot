@@ -44,32 +44,38 @@ const UserInvoices: React.FC<UserInvoicesProps> = ({ onViewInvoice }) => {
       {invoices.length === 0 ? (
         <p>No invoices found.</p>
       ) : (
-        <table className="universal-table">
-          <thead>
-            <tr>
-              <th>Invoice ID</th>
-              <th>Status</th>
-              <th>Total Amount</th>
-              <th>Due Date</th>
-              <th>Created At</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoices.map((inv) => (
-              <tr key={inv.id}>
-                <td>{inv.id}</td>
-                <td>{inv.status}</td>
-                <td>{inv.total_amount ? `$${Number(inv.total_amount).toFixed(2)}` : '-'}</td>
-                <td>{inv.due_date ? new Date(inv.due_date).toLocaleDateString() : '-'}</td>
-                <td>{new Date(inv.created_at).toLocaleString()}</td>
-                <td>
-                  <button onClick={() => onViewInvoice(inv)}>View Invoice</button>
-                </td>
+        <div className="responsive-table">
+          <table className="universal-table">
+            <thead>
+              <tr>
+                <th>Invoice ID</th>
+                <th>Status</th>
+                <th>Total Amount</th>
+                <th>Due Date</th>
+                <th>Created At</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {invoices.map((inv) => (
+                <tr key={inv.id}>
+                  <td data-label="Invoice ID">{inv.id}</td>
+                  <td data-label="Status">{inv.status}</td>
+                  <td data-label="Total Amount">
+                    {inv.total_amount ? `$${Number(inv.total_amount).toFixed(2)}` : '-'}
+                  </td>
+                  <td data-label="Due Date">
+                    {inv.due_date ? new Date(inv.due_date).toLocaleDateString() : '-'}
+                  </td>
+                  <td data-label="Created At">{new Date(inv.created_at).toLocaleString()}</td>
+                  <td data-label="Actions">
+                    <button onClick={() => onViewInvoice(inv)}>View Invoice</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

@@ -7,9 +7,9 @@ const ServicesSection = () => {
       <p>Our most popular tree care offerings:</p>
       <ul className="service-list">
         <li><strong>Hazard Mitigation:</strong> Remove dangerous limbs.</li>
-        <li><strong>Aesthetic Trimming:</strong> Shape trees beautifully.</li>
+        <li><strong>Aesthetic Trimming:</strong> Get your trees in shape.</li>
         <li><strong>Tree Removal:</strong> Full-service removal for dead/dying trees.</li>
-        <li><strong>Stump Grinding:</strong> Finish the job completely with clean results.</li>
+        <li><strong>Stump Grinding:</strong> Finish the job with clean results.</li>
       </ul>
     </section>
   );
