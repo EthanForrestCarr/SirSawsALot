@@ -8,18 +8,18 @@ import CallToActionSection from '../components/content/CallToActionSection';
 const LandingPage = () => {
 
   return (
-    <>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div>
         <HeroSection />
       </div>
-      <div className="how-it-works-services-container" style={{ margin: '0 auto', display: 'flex', gap: '20px', justifyContent: 'center', maxWidth: '960px' }}>
+      <div className="how-it-works-services-container">
         <HowItWorksSection />
         <ServicesSection />
       </div>
       <AboutSection />
       <TestimonialsSection />
       <CallToActionSection />
-    </>
+    </div>
   );
 };
 

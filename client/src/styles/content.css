@@ -28,7 +28,6 @@
   border-radius: 10px;
   padding: 60px 20px;
   max-width: 960px;
-  margin: 20px;
 }
 
 .service-list {
@@ -41,7 +40,6 @@
   border-radius: 10px;
   padding: 60px 20px;
   max-width: 960px;
-  margin: 20px;
 }
 
 .hero-section {
@@ -63,11 +61,9 @@
   border-radius: 0;
 }
 
-/* When the viewport is wider than the image’s native width, keep it centered */
 @media (min-width: 1920px) {
   .hero-section {
     width: 1920px;
-    /* No need for any margin adjustments here since the flex container centers it */
   }
 }
 
@@ -89,19 +85,13 @@
 
 .cta-section {
   padding: 60px 0;
-  max-width: 960px;
+  width: 100vw;
   margin: 20px 0;
   background-color: #f5f5f5;
   text-align: center;
   border-top: #e4e0df 2px solid;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border-radius: 0;
-}
-
-.cta-section.full-width-section {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  max-width: none;
 }
 
 .about-section {
@@ -140,27 +130,15 @@
 .testimonials-section,
 .services-section,
 .how-it-works-section,
-.about-section {
+.about-section,
+.testimonials-section {
   margin: 20px;
   /* vertical space between sections */
   border: 2px solid #7a0404;
   /* red border */
   border-radius: 10px;
   /* curved corners */
-}
-
-/* Center the about and testimonials sections */
-.testimonials-section,
-.about-section {
-  margin: 20px auto;
-  /* vertical spacing and horizontal centering */
-}
-
-/* Leave services and how-it-works sections as is */
-.services-section,
-.how-it-works-section {
-  margin: 20px;
-  /* vertical spacing only */
+  width: calc(100% - 40px);
 }
 
 /* Ensure 20px horizontal margin on window sides for about owner and testimonials sections */
@@ -238,7 +216,6 @@
   flex-wrap: wrap;
   justify-content: space-between;
   max-width: 960px;
-  margin: 0 auto;
   text-align: left;
 }
 

@@ -43,7 +43,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
 
       <div className="navbar-actions">
         {isLoggedIn ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <Notifications />
             <AccordionButton 
               isAdmin={isAdmin}

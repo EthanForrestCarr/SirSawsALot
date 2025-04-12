@@ -1,5 +1,5 @@
 .navbar {
-  position: fixed; /* Added fixed positioning to always sit at the top */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -10,7 +10,7 @@
   color: #666;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch; /* allow child items to fill the navbar height */
   border-bottom: #e4e0df 2px solid;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -21,13 +21,22 @@
 }
 
 .navbar-logo {
-  height: 50px; /* Adjust the height as needed */
+  height: 50px;
 }
 
 .navbar-actions {
   display: flex;
   align-items: center;
   position: relative; /* added so the panel positions relative to navbar-actions */
+}
+
+.navbar-actions > button {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px; /* adjust horizontal padding as needed */
+  border-radius: none !important;
 }
 
 .navbar-button {
@@ -78,8 +87,7 @@
   background-color: #fff8f6;
   color: #666;
   cursor: pointer;
-  padding: 35px 1rem;
-  height: 50px;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,6 +98,9 @@
   transition: 0.4s;
   border-radius: 0 !important;
   min-width: 100px;
+  min-height: 100% !important;
+  padding: 0 !important;   /* remove extra padding */
+  margin: 0 !important;    /* remove extra margin */
 }
 
 .accordion.active, .accordion:hover {
@@ -122,7 +133,7 @@
 
 /* Override padding for dropdown items to reduce extra white space */
 .dropdown-item {
-  padding: 5px 10px !important;
+  padding: 10px 10px !important;
   margin: 0 !important;
   border-radius: 0 !important; /* squared corners */
 }
@@ -131,4 +142,7 @@
   position: relative; /* added so the panel is positioned relative to the wrapper */
   width: fit-content !important;  /* use fit-content so wrapper matches the accordion’s width */
   display: inline-block;  /* ensures the wrapper width fits its children */
+  min-height: 100% !important;
+  display: flex;
+  align-items: stretch;
 }

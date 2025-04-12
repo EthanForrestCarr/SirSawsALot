@@ -11,7 +11,9 @@
     display: block;
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid #ccc;
+    color: black;
+    background-color: #ccc;
+    border: 1px solid #7a0404;
     border-radius: 4px;
     margin-bottom: 1rem;
 }
@@ -19,13 +21,18 @@
     display: block;
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid #ccc;
+    color: black;
+    background-color: #ccc;
+    border: 1px solid #7a0404;
     border-radius: 4px;
     margin-bottom: 1rem;
 }
 .checkbox-field {
     display: block;
     margin-bottom: 0.5rem;
+    color: black;
+    background-color: #ccc;
+    border: 1px solid #7a0404;
 }
 .input-error {
     color: red;
@@ -38,9 +45,10 @@
     top: calc(100% + 4px);
     left: 0;
     width: 100%;
-    border: 1px solid #ccc;
+    color: black;
+    background-color: #ccc;
+    border: 1px solid #7a0404;
     border-top: none;
-    background: grey;
     z-index: 1000;
     max-height: 200px;
     overflow-y: auto;
