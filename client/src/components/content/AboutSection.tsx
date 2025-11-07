@@ -1,4 +1,5 @@
 import '../../styles/content.css';
+import jonahImage from '../../assets/sirsawsalotPictures/JonahHove.png';
 
 const AboutSection = () => {
   return (
@@ -12,8 +13,8 @@ const AboutSection = () => {
         </div>
         <div className="about-image-container">
           <img
-            src="/src/assets/sirsawsalotPictures/FireFighter.jpeg"
-            alt="Fire Fighter of Sir Sawsalot"
+            src={jonahImage}
+            alt="About Sir Sawsalot"
             className="about-image"
           />
         </div>
