@@ -47,14 +47,21 @@ async function main() {
     }
 
     const sqlFile = path.resolve(__dirname, '../..', 'db', 'initialize.sql');
-    const sql = fs.readFileSync(sqlFile, 'utf8');
+    const rawSql = fs.readFileSync(sqlFile, 'utf8');
 
-    if (/\bDROP\b/i.test(sql) && process.env.FORCE_DB_RESET !== 'true') {
-      log('initialize.sql contains DROP statements; set FORCE_DB_RESET=true to proceed. Skipping.');
+    // Allow DROP statements if DB appears empty; otherwise require FORCE_DB_RESET
+    if (/\bDROP\b/i.test(rawSql) && existingUsersTable && process.env.FORCE_DB_RESET !== 'true') {
+      log('initialize.sql contains DROP statements and tables exist; set FORCE_DB_RESET=true to proceed. Skipping.');
       return;
     }
 
-    log(`Running initialize.sql (${sql.length} bytes)...`);
+    // Strip psql meta-commands (e.g., \connect) not understood by the server protocol
+    const sql = rawSql
+      .split(/\r?\n/)
+      .filter((line) => !line.trim().startsWith('\\'))
+      .join('\n');
+
+    log(`Running initialize.sql (${sql.length} bytes after filtering)...`);
     await client.query(sql);
     log('Schema initialization completed successfully.');
   } finally {
