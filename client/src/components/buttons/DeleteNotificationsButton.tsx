@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import "../../styles/Button.css";
 
 interface DeleteNotificationsButtonProps {
@@ -8,11 +8,8 @@ interface DeleteNotificationsButtonProps {
 
 const DeleteNotificationsButton: React.FC<DeleteNotificationsButtonProps> = ({ onDelete }) => {
     const deleteNotifications = async () => {
-        const token = localStorage.getItem('token');
         try {
-            await axios.delete('http://localhost:3000/notifications', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            await api.delete('/notifications');
             onDelete(); // Refresh notifications list after deletion
         } catch (error) {
             console.error('Error deleting notifications:', error);

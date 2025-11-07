@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import NameInput from '../components/inputs/NameInput';
 import EmailInput from '../components/inputs/EmailInput';
@@ -30,7 +30,7 @@ const SignupPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/auth/signup', formData);
+  const response = await api.post('/auth/signup', formData);
       const { token } = response.data;
       if (token) {
         localStorage.setItem('token', token);

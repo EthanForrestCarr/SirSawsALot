@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import NameInput from '../components/inputs/NameInput';
 import PhoneInput from '../components/inputs/PhoneInput';
 import DescriptionInput from '../components/inputs/DescriptionInput';
@@ -21,11 +21,8 @@ const RequestDetailsPage: React.FC = () => {
 
   useEffect(() => {
     const fetchRequestDetails = async () => {
-      const token = localStorage.getItem('token');
       try {
-        const response = await axios.get(`http://localhost:3000/admin/requests/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await api.get(`/admin/requests/${id}`);
         setRequest(response.data);
         setFormData(response.data); // Initialize form data
       } catch (error: any) {
@@ -45,14 +42,9 @@ const RequestDetailsPage: React.FC = () => {
   };
 
   const handleSave = async () => {
-    const token = localStorage.getItem('token');
     console.log('Saving request with data:', formData); // Log the form data being sent
     try {
-      const response = await axios.put(
-        `http://localhost:3000/admin/requests/${id}`,
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await api.put(`/admin/requests/${id}`, formData);
       console.log('Response from server:', response.data); // Log the response from the server
       setRequest(response.data);
       setIsEditing(false);

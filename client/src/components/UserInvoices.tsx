@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 
 interface Invoice {
   id: number;
@@ -19,11 +19,8 @@ const UserInvoices: React.FC<UserInvoicesProps> = ({ onViewInvoice }) => {
 
   useEffect(() => {
     const fetchInvoices = async () => {
-      const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://localhost:3000/requests', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await api.get('/requests');
         // Filter work requests that contain an invoice and map to invoice objects
         const fetchedInvoices = response.data.requests
           .filter((req: any) => req.invoice)

@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 
 interface InvoiceActionButtonsProps {
   invoice: any;
@@ -9,11 +9,8 @@ interface InvoiceActionButtonsProps {
 
 const InvoiceActionButtons: React.FC<InvoiceActionButtonsProps> = ({ invoice, onUpdate, onView }) => {
   const handleStatusUpdate = async (status: string) => {
-    const token = localStorage.getItem('token');
     try {
-      await axios.patch(`http://localhost:3000/admin/invoices/${invoice.id}`, { status }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.patch(`/admin/invoices/${invoice.id}`, { status });
       onUpdate();
     } catch (error) {
       console.error('Error updating invoice status:', error);
@@ -21,11 +18,8 @@ const InvoiceActionButtons: React.FC<InvoiceActionButtonsProps> = ({ invoice, on
   };
 
   const handleDelete = async () => {
-    const token = localStorage.getItem('token');
     try {
-      await axios.delete(`http://localhost:3000/admin/invoices/${invoice.id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.delete(`/admin/invoices/${invoice.id}`);
       onUpdate();
     } catch (error) {
       console.error('Error deleting invoice:', error);

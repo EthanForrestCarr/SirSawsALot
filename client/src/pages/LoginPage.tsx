@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import EmailInput from '../components/inputs/EmailInput';
 import CurrentPasswordInput from '../components/inputs/CurrentPasswordInput';
@@ -21,7 +21,7 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', formData);
+  const response = await api.post('/auth/login', formData);
       setMessage(response.data.message || 'Login successful!');
       localStorage.setItem('token', response.data.token);
       navigate('/dashboard'); // Navigate to the dashboard

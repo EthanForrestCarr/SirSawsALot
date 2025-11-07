@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 
 interface DateInputProps {
   selectedDate: string;
@@ -14,7 +14,7 @@ const DateInput: React.FC<DateInputProps> = ({ selectedDate, onDateChange }) => 
   useEffect(() => {
     const fetchBlockedDates = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/calendar/unavailable-dates');
+  const response = await api.get('/calendar/unavailable-dates');
         setBlockedDates(response.data.map((date: string) => new Date(date).toISOString().split('T')[0]));
       } catch (error) {
         console.error('Error fetching blocked dates:', error);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import AuthenticatedWorkRequestForm from '../components/forms/AuthenticatedWorkRequestForm';
 import GuestWorkRequestForm from '../components/forms/GuestWorkRequestForm';
 import SignupButton from '../components/buttons/SignupButton';
@@ -13,9 +13,7 @@ const WorkRequest: React.FC = () => {
     const fetchUserData = async () => {
       if (token) {
         try {
-          const response = await axios.get('http://localhost:3000/user', {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const response = await api.get('/user');
           if (response.data && response.data.is_admin) {
             setIsAdmin(true);
           }

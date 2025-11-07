@@ -17,9 +17,24 @@ const app: Application = express();
 const PORT = process.env.PORT || 3000;
 
 // CORS Configuration
+const allowedOrigins = (process.env.CORS_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
 app.use(
   cors({
-    origin: 'http://localhost:5173', // Update for production
+    origin: (origin, callback) => {
+      // Always allow server-to-server or tools with no origin
+      if (!origin) return callback(null, true);
+
+      // If no explicit allowlist is provided in production, allow everything (Render static + custom domains)
+      if (allowedOrigins.length === 0 && process.env.NODE_ENV === 'production') {
+        return callback(null, true);
+      }
+
+      const isAllowedByList = allowedOrigins.includes(origin);
+      const isRenderDomain = /(?:^https?:\/\/)?[^\/]*render\.com(?::\d+)?(\/|$)/i.test(origin);
+
+      if (isAllowedByList || isRenderDomain) return callback(null, true);
+      return callback(new Error('Not allowed by CORS'));
+    },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   })

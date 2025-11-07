@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 
 interface SubmitInvoiceProps {
   invoice: any;
@@ -9,11 +9,9 @@ interface SubmitInvoiceProps {
 const SubmitInvoice: React.FC<SubmitInvoiceProps> = ({ invoice, onSuccess }) => {
   const handleSubmitInvoice = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.patch(
-        `http://localhost:3000/admin/invoices/${invoice.id}`,
+      const response = await api.patch(
+        `/admin/invoices/${invoice.id}`,
         { status: 'submitted' },
-        { headers: { Authorization: `Bearer ${token}` } }
       );
       alert(response.data.message);
       onSuccess();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import DateInput from '../inputs/DateInput';
 import BlockDateButton from '../buttons/BlockDateButton';
 import '../../styles/Form.css';
@@ -12,7 +12,7 @@ const BlockDateForm: React.FC = () => {
     useEffect(() => {
         const fetchBlockedDates = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/calendar/unavailable-dates');
+                const response = await api.get('/calendar/unavailable-dates');
                 setBlockedDates(response.data);
             } catch (error) {
                 console.error('Error fetching blocked dates:', error);
@@ -24,12 +24,8 @@ const BlockDateForm: React.FC = () => {
 
     const handleBlockDate = async (e: React.FormEvent) => {
         e.preventDefault();
-        const token = localStorage.getItem('token');
-
         try {
-            const response = await axios.post('http://localhost:3000/calendar/block-date', { date }, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await api.post('/calendar/block-date', { date });
             setMessage(response.data.message || 'Date blocked successfully!');
             setBlockedDates([...blockedDates, date]); // Update the UI immediately
         } catch (error: any) {
@@ -38,11 +34,8 @@ const BlockDateForm: React.FC = () => {
     };
 
     const handleUnblockDate = async (blockedDate: string) => {
-        const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:3000/calendar/unblock-date/${blockedDate}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            await api.delete(`/calendar/unblock-date/${blockedDate}`);
 
             setBlockedDates(blockedDates.filter((d) => d !== blockedDate)); // Update UI
             console.log(`✅ Successfully unblocked ${blockedDate}`);

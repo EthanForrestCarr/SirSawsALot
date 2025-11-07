@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import UserRequestsTable from '../tables/UserRequestsTable';
 import InvoiceViewModal from '../modals/InvoiceViewModal';
@@ -32,9 +32,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ initialView }) => {
         return;
       }
       try {
-        const response = await axios.get('http://localhost:3000/requests', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await api.get('/requests');
         setRequests(response.data.requests || []);
       } catch (err: any) {
         setError(err.response?.data?.message || 'Error fetching requests.');
@@ -52,9 +50,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ initialView }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get('http://localhost:3000/user', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      api.get('/user')
       .then(response => {
         setFirstName(response.data.first_name);
       })

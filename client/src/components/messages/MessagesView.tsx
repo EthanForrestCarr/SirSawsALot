@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import SubmitButton from '../buttons/SubmitButton';
 
 interface Message {
@@ -16,10 +16,7 @@ const MessagesView: React.FC = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:3000/messages', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await api.get('/messages');
         setMessages(response.data);
       } catch (error) {
         console.error('Error fetching messages:', error);
@@ -32,11 +29,9 @@ const MessagesView: React.FC = () => {
     e.preventDefault();
     if (!newMessage.trim()) return;
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        'http://localhost:3000/messages',
+      const response = await api.post(
+        '/messages',
         { message: newMessage },
-        { headers: { Authorization: `Bearer ${token}` } }
       );
       setMessages(prev => [...prev, response.data]);
       setNewMessage('');

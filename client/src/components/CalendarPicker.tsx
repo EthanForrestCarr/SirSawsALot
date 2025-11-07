@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { enUS } from 'date-fns/locale';
@@ -26,9 +26,7 @@ const CalendarPicker: React.FC = () => {
       if (!token) return;
 
       try {
-        const response = await axios.get('http://localhost:3000/auth/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await api.get('/auth/me');
         setIsAdmin(response.data.is_admin); // Set the admin status
         console.log("🔍 Fetched User Role:", response.data.is_admin);
       } catch (error) {
@@ -37,13 +35,10 @@ const CalendarPicker: React.FC = () => {
     };
 
     const fetchCalendarData = async () => {
-      const token = localStorage.getItem('token');
       try {
         const [requestsRes, blockedRes] = await Promise.all([
-          axios.get('http://localhost:3000/admin/all-requests', {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get('http://localhost:3000/calendar/unavailable-dates'),
+          api.get('/admin/all-requests'),
+          api.get('/calendar/unavailable-dates'),
         ]);
 
         const workRequests = requestsRes.data.map((req: any) => ({
@@ -95,9 +90,7 @@ const CalendarPicker: React.FC = () => {
       if (!confirmUnblock) return;
 
       try {
-        await axios.delete(`http://localhost:3000/calendar/unblock-date/${format(event.start, 'yyyy-MM-dd')}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        });
+        await api.delete(`/calendar/unblock-date/${format(event.start, 'yyyy-MM-dd')}`);
 
         setEvents((prevEvents) => prevEvents.filter((e) => e.id !== event.id));
         console.log(`✅ Successfully unblocked date: ${format(event.start, 'yyyy-MM-dd')}`);
@@ -115,10 +108,10 @@ const CalendarPicker: React.FC = () => {
     try {
       const formattedDate = format(new Date(start), 'yyyy-MM-dd');
 
-      const response = await axios.patch(
-        `http://localhost:3000/admin/requests/${event.id}`,
+      const response = await api.patch(
+        `/admin/requests/${event.id}`,
         { date: formattedDate },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' } }
+        { headers: { 'Content-Type': 'application/json' } }
       );
 
       console.log(`✅ Successfully updated request ${event.id} to ${formattedDate}`, response.data);

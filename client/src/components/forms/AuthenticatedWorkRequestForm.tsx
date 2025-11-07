@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import DateInput from '../inputs/DateInput';
 import DescriptionInput from '../inputs/DescriptionInput';
 import ImageInput from '../inputs/ImageInput';
@@ -38,9 +38,7 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await axios.get('http://localhost:3000/user', {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const response = await api.get('/user');
 
           if (response.data) {
             setFormData((prev) => ({
@@ -83,7 +81,6 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
     try {
       const payload = new FormData();
       for (const key in formData) {
@@ -95,9 +92,8 @@ const AuthenticatedWorkRequestForm: React.FC = () => {
       }
       payload.append('date', selectedDate);
 
-      const response = await axios.post('http://localhost:3000/requests', payload, {
+      const response = await api.post('/requests', payload, {
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });

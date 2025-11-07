@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 
 interface Message {
   id: number;
@@ -21,10 +21,7 @@ const AdminMessages: React.FC<AdminMessagesProps> = ({ userId, userName: initial
 
   const fetchMessages = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:3000/messages/user/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get(`/messages/user/${userId}`);
       setMessages(response.data);
     } catch (error) {
       console.error('Error fetching conversation:', error);
@@ -40,11 +37,9 @@ const AdminMessages: React.FC<AdminMessagesProps> = ({ userId, userName: initial
     e.preventDefault();
     if (!newMessage.trim()) return;
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        `http://localhost:3000/messages/user/${userId}`,
+      const response = await api.post(
+        `/messages/user/${userId}`,
         { message: newMessage },
-        { headers: { Authorization: `Bearer ${token}` } }
       );
       setMessages(prev => [...prev, response.data]);
       setNewMessage('');

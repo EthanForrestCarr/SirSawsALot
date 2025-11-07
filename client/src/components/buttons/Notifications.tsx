@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import MarkAllAsReadButton from './MarkAllAsReadButton';
 import DeleteNotificationsButton from './DeleteNotificationsButton';
 
@@ -23,11 +23,8 @@ const Notifications: React.FC = () => {
   }, []);
 
   const fetchNotifications = async () => {
-    const token = localStorage.getItem('token');
     try {
-      const response = await axios.get('http://localhost:3000/notifications', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get('/notifications');
 
       setNotifications(response.data);
       setUnreadCount(response.data.filter((n: Notification) => !n.is_read).length);

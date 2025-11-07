@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import AdminMessages from './AdminMessages';
 import NameAddressInput from '../inputs/NameAddressInput';
 import CancelButton from '../buttons/CancelButton';
@@ -23,10 +23,7 @@ const AdminConversations: React.FC = () => {
   useEffect(() => {
     const fetchConversations = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:3000/messages/conversations', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await api.get('/messages/conversations');
         setConversations(response.data);
       } catch (error) {
         console.error('Error fetching conversations:', error);
@@ -41,10 +38,7 @@ const AdminConversations: React.FC = () => {
       return;
     }
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:3000/user/search?q=${encodeURIComponent(query)}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get(`/user/search?q=${encodeURIComponent(query)}`);
       setSearchResults(response.data);
     } catch (error) {
       console.error('Error searching users:', error);
@@ -54,13 +48,8 @@ const AdminConversations: React.FC = () => {
 
   const handleDeleteConversations = async (convs: Conversation[]) => {
     try {
-      const token = localStorage.getItem('token');
       await Promise.all(
-        convs.map(conv =>
-          axios.delete(`http://localhost:3000/messages/user/${conv.user_id}`, {
-            headers: { Authorization: `Bearer ${token}` }
-          })
-        )
+        convs.map(conv => api.delete(`/messages/user/${conv.user_id}`))
       );
       setConversations(prev => prev.filter(conv => !convs.some(d => d.user_id === conv.user_id)));
       setConversationsToDelete([]);

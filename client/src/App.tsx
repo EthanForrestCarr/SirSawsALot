@@ -8,7 +8,7 @@ import WorkRequestForm from './pages/WorkRequest';
 import Dashboard from './pages/Dashboard'; // ✅ New Dashboard
 import RequestDetailsPage from './pages/RequestDetails';
 import UserProfile from './pages/UserProfile';
-import axios from 'axios';
+import api from './utils/axiosConfig';
 import './styles/pdfStyles.css';
 import './styles/Input.css';
 
@@ -20,9 +20,7 @@ const App: React.FC = () => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await axios.get('http://localhost:3000/user', {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          const response = await api.get('/user');
           setIsAdmin(response.data.is_admin);
         } catch (error) {
           console.error('Error fetching user data:', error);

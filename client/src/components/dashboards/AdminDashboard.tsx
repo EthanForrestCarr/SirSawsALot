@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import CalendarPicker from '../CalendarPicker';
 import Pagination from '../buttons/Pagination';
 import AdminRequestsTable from '../tables/AdminRequestsTable';
@@ -30,11 +30,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ initialView }) => {
 
   useEffect(() => {
     const fetchRequests = async () => {
-      const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://localhost:3000/admin/requests', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await api.get('/admin/requests');
         setRequests(response.data.requests || []);
       } catch (error: any) {
         setMessage(error.response?.data?.message || 'Failed to fetch requests.');
@@ -51,9 +48,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ initialView }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get('http://localhost:3000/user', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      api.get('/user')
       .then(response => {
         setFirstName(response.data.first_name);
       })
@@ -62,13 +57,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ initialView }) => {
   }, []);
 
   const updateRequestStatus = async (id: number, status: string) => {
-    const token = localStorage.getItem('token');
     try {
-      await axios.patch(
-        `http://localhost:3000/admin/requests/${id}`,
-        { status },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.patch(`/admin/requests/${id}`, { status });
       setRequests((prev) =>
         prev.map((req) => (req.id === id ? { ...req, status } : req))
       );

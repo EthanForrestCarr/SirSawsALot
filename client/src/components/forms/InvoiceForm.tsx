@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import TextareaAutosize from 'react-textarea-autosize';
 import '../../styles/Form.css'; // import the CSS
 import SubmitButton from '../buttons/SubmitButton';
@@ -113,10 +113,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onUpdate, initialData }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
     try {
-      await axios.post('http://localhost:3000/admin/invoices', formData, {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      await api.post('/admin/invoices', formData, {
+        headers: { 'Content-Type': 'application/json' },
       });
       onUpdate();
       // Optionally clear the form after submission.

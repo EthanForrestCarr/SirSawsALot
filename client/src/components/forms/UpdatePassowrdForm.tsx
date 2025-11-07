@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import CurrentPasswordInput from '../inputs/CurrentPasswordInput';
 import NewPasswordInput from '../inputs/NewPasswordInput';
 import '../../styles/Form.css';
@@ -22,13 +22,8 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({ onSuccess }) =>
   };
 
   const updatePassword = async () => {
-    const token = localStorage.getItem('token');
     try {
-      await axios.post(
-        'http://localhost:3000/user/password',
-        passwordData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post('/user/password', passwordData);
       setPasswordData({ currentPassword: '', newPassword: '' });
       setMessage('Password updated successfully.');
       if (onSuccess) onSuccess();

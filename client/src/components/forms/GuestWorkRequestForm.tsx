@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import NameInput from '../inputs/NameInput';
 import EmailInput from '../inputs/EmailInput';
 import PhoneInput from '../inputs/PhoneInput';
@@ -64,7 +64,7 @@ const GuestWorkRequestForm: React.FC = () => {
       }
       payload.append('date', selectedDate);
 
-      const response = await axios.post('http://localhost:3000/requests/guest', payload, {
+      const response = await api.post('/requests/guest', payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setMessage(response.data.message || 'Work request submitted successfully!');

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import InvoiceTable from './tables/InvoiceTable';
 import InvoiceModal from './modals/InvoiceFormModal';
 import { InvoiceFormData } from './forms/InvoiceForm';
@@ -21,10 +21,7 @@ const AdminInvoices: React.FC = () => {
 
   const fetchInvoices = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:3000/admin/invoices', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get('/admin/invoices');
       console.log("Fetched invoices:", response.data);
       setInvoices(response.data);
     } catch (err) {

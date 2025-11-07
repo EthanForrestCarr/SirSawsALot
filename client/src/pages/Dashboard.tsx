@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import UserDashboard from '../components/dashboards/UserDashboard';
 import AdminDashboard from '../components/dashboards/AdminDashboard';
 
@@ -19,9 +19,7 @@ const Dashboard: React.FC = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:3000/user', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await api.get('/user');
         setIsAdmin(response.data.is_admin);
       } catch (error) {
         localStorage.removeItem('token'); // Clear invalid token

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import NameInput from '../inputs/NameInput';
 import EmailInput from '../inputs/EmailInput';
 import PhoneInput from '../inputs/PhoneInput';
@@ -25,11 +25,8 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSuccess }) => {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://localhost:3000/user', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await api.get('/user');
         setUserInfo({
           firstName: response.data.first_name || '',
           lastName: response.data.last_name || '',
@@ -51,7 +48,6 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSuccess }) => {
   };
 
   const saveUserInfo = async () => {
-    const token = localStorage.getItem('token');
     try {
       // Convert camelCase to snake_case when sending data
       const payload = {
@@ -61,9 +57,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSuccess }) => {
         phone: userInfo.phone,
         address: userInfo.address,
       };
-      const response = await axios.put('http://localhost:3000/user', payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.put('/user', payload);
       setUserInfo({
         firstName: response.data.first_name || '',
         lastName: response.data.last_name || '',

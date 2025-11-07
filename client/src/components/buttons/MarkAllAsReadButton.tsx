@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import api from '../../utils/axiosConfig';
 import "../../styles/Button.css";
 
 interface MarkAllAsReadButtonProps {
@@ -8,11 +8,8 @@ interface MarkAllAsReadButtonProps {
 
 const MarkAllAsReadButton: React.FC<MarkAllAsReadButtonProps> = ({ onMarkAsRead }) => {
     const markAllAsRead = async () => {
-        const token = localStorage.getItem('token');
         try {
-            await axios.patch('http://localhost:3000/notifications/mark-read', {}, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            await api.patch('/notifications/mark-read', {});
             onMarkAsRead(); // Refresh notifications list after marking as read
         } catch (error) {
             console.error('Error marking notifications as read:', error);
